@@ -1,0 +1,222 @@
+// dataTickets.ts
+export const dataHistory = [
+  {
+    id: 1,
+    branch: "Tech",
+    client: "Carvajal Noth",
+    phoneNumber: "(226) 755-3917",
+    lastSent: "01/07/2025",
+    lastReceived: "01/07/2025",
+    typeOfMessage: "One way",
+    status: "Error",
+    templateName: "Cost Repair Template",
+    templateDescription: "Tool replacement cost approval request.",
+    chat: [
+      {
+        from: "admin",
+        keyword: "Tool info and code here",
+        date: "12/12/2024 at 9:12 AM",
+        message:
+          "Your Milwaukee repair request for {{}} been inspected and qualifies for warranty coverage. You will have to pay $150 for labor cost. If you want to proceed with this repair please answer this text. You can pay when you pick up the tool.",
+      },
+    ],
+    errorMessage:
+      "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.  ",
+    reason: "Customer did not respond",
+    template: "Estimate",
+    closed: "01/07/2025",
+    closedBy: "Wool sr.",
+  },
+  {
+    id: 2,
+    branch: "Office",
+    client: "Joe Doe",
+    phoneNumber: "(226) 755-3917",
+    lastSent: "01/07/2025",
+    lastReceived: "01/07/2025",
+    typeOfMessage: "One way",
+    status: "In Progress",
+    templateName: "Cost Repair Template",
+    templateDescription: "Tool replacement cost approval request.",
+    chat: [
+      {
+        from: "admin",
+        keyword: "Tool info and code here",
+        date: "12/12/2024 at 9:12 AM",
+        message:
+          "Your Milwaukee repair request for {{}} has been inspected and qualifies for warranty coverage. You will have to pay $150 for labor cost. If you want to proceed with this repair please answer this text. You can pay when you pick up the tool.",
+      },
+    ],
+    reason: "Customer did not respond",
+    template: "Estimate",
+    closed: "01/07/2025",
+    closedBy: "Wool sr.",
+  },
+  {
+    id: 3,
+    branch: "Office",
+    client: "Doron smith",
+    phoneNumber: "(226) 755-3917",
+    lastSent: "01/07/2025",
+    lastReceived: "01/07/2025",
+    typeOfMessage: "One way",
+    status: "In Progress",
+    templateName: "Cost Repair Template",
+    templateDescription: "Tool replacement cost approval request.",
+    chat: [
+      {
+        from: "admin",
+        keyword: "Tool info and code here",
+        date: "12/12/2024 at 9:12 AM",
+        message:
+          "Your Milwaukee repair request for {{}} has been inspected and qualifies for warranty coverage. You will have to pay $150 for labor cost. If you want to proceed with this repair please answer this text. You can pay when you pick up the tool.",
+      },
+    ],
+    reason: "Customer Contacted",
+    template: "Estimate",
+    closed: "01/07/2025",
+    closedBy: "Wool sr.",
+  },
+  {
+    id: 4,
+    branch: "Tech",
+    client: "Bruce Willis",
+    phoneNumber: "(226) 755-3917",
+    lastSent: "01/07/2025",
+    lastReceived: "01/07/2025",
+    typeOfMessage: "One way",
+    status: "Error",
+    templateName: "Cost Repair Template",
+    templateDescription: "Tool replacement cost approval request.",
+    chat: [
+      {
+        from: "admin",
+        keyword: "Tool info and code here",
+        date: "12/12/2024 at 9:12 AM",
+        message:
+          "Your Milwaukee repair request for {{}} has been inspected and qualifies for warranty coverage. You will have to pay $150 for labor cost. If you want to proceed with this repair please answer this text. You can pay when you pick up the tool.",
+      },
+    ],
+    errorMessage:
+      "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.  ",
+    reason: "Customer Contacted",
+    template: "Estimate",
+    closed: "01/07/2025",
+    closedBy: "Wool sr.",
+  },
+
+  {
+    id: 4,
+    branch: "Tech",
+    client: "Bruce Banner",
+    phoneNumber: "(358) 755-3920",
+    lastSent: "01/07/2025",
+    lastReceived: "01/07/2025",
+    typeOfMessage: "Two way",
+    status: "Error",
+    date: "12/12/2024 at 9:12 AM",
+    templateName: "Cost Repair Template",
+    templateDescription: "Tool replacement cost approval request.",
+    chat: [
+      {
+        from: "admin",
+        date: "12/12/2024 at 9:12 AM",
+        keyword: "Tool info and code here",
+        message:
+          "Your Milwaukee repair request for {{}} has been inspected and qualifies for warranty coverage. You will have to pay $150 for labor cost. If you want to proceed with this repair please answer this text. You can pay when you pick up the tool.",
+      },
+      {
+        from: "customer",
+        date: "12/12/2025 at 9:30 AM",
+        message: "Ok, yes. I want to proceed.",
+      },
+      {
+        from: "admin",
+        date: "12/20/2024 at 9:32 AM",
+        keyword: "Factory Service Centre",
+        message:
+          "Your tool is ready. You can pick your tool up at the facility Factory Service Centre, from Mondays to Fridays 8am to 4:30pm. Please remember there’s a $150 fee you have to pay. Any unaclaimed tools will be disposed after 35 days of this notification.",
+      },
+    ],
+    reason: "Customer Contacted",
+    template: "Estimate",
+    closed: "01/07/2025",
+    closedBy: "Wool sr.",
+  },
+  {
+    id: 5,
+    branch: "Tech",
+    client: "Bruce Banner",
+    phoneNumber: "(358) 755-3920",
+    lastSent: "01/07/2025",
+    lastReceived: "01/07/2025",
+    typeOfMessage: "Two way",
+    status: "completed",
+    date: "12/12/2024 at 9:12 AM",
+    templateName: "Cost Repair Template",
+    templateDescription: "Tool replacement cost approval request.",
+    chat: [
+      {
+        from: "admin",
+        date: "12/12/2024 at 9:12 AM",
+        keyword: "Tool info and code here",
+        message:
+          "Your Milwaukee repair request for {{}} has been inspected and qualifies for warranty coverage. You will have to pay $150 for labor cost. If you want to proceed with this repair please answer this text. You can pay when you pick up the tool.",
+      },
+      {
+        from: "customer",
+        date: "12/12/2025 at 9:30 AM",
+        message: "Ok, yes. I want to proceed.",
+      },
+      {
+        from: "admin",
+        date: "12/20/2024 at 9:32 AM",
+        keyword: "Factory Service Centre",
+        message:
+          "Your tool is ready. You can pick your tool up at the facility Factory Service Centre, from Mondays to Fridays 8am to 4:30pm. Please remember there’s a $150 fee you have to pay. Any unaclaimed tools will be disposed after 35 days of this notification.",
+      },
+    ],
+    reason: "Customer Contacted",
+    template: "Pick Up",
+    closed: "01/08/2025",
+    closedBy: "Doron Awl",
+  },
+  {
+    id: 6,
+    branch: "Tech",
+    client: "Bruce Banner",
+    phoneNumber: "(358) 755-3920",
+    lastSent: "01/07/2025",
+    lastReceived: "01/07/2025",
+    typeOfMessage: "Two way",
+    status: "completed",
+    date: "12/12/2024 at 9:12 AM",
+    templateName: "Cost Repair Template",
+    templateDescription: "Tool replacement cost approval request.",
+    chat: [
+      {
+        from: "admin",
+        date: "12/12/2024 at 9:12 AM",
+        keyword: "Tool info and code here",
+        message:
+          "Your Milwaukee repair request for {{}} has been inspected and qualifies for warranty coverage. You will have to pay $150 for labor cost. If you want to proceed with this repair please answer this text. You can pay when you pick up the tool.",
+      },
+      {
+        from: "customer",
+        date: "12/12/2025 at 9:30 AM",
+        message: "Ok, yes. I want to proceed.",
+      },
+      {
+        from: "admin",
+        date: "12/20/2024 at 9:32 AM",
+        keyword: "Factory Service Centre",
+        message:
+          "Your tool is ready. You can pick your tool up at the facility Factory Service Centre, from Mondays to Fridays 8am to 4:30pm. Please remember there’s a $150 fee you have to pay. Any unaclaimed tools will be disposed after 35 days of this notification.",
+      },
+    ],
+    reason: "Customer Contacted",
+    template: "Estimate",
+    closed: "01/07/2025",
+    closedBy: "Wool sr.",
+  },
+];

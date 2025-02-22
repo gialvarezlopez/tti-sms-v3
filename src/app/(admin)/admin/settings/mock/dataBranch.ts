@@ -1,0 +1,80 @@
+export const dataBranches = [
+  {
+    id: "1",
+    name: "Branch One",
+    address: "7303 Warden Ave, Suite 202, Alberta, AB L3R 5Y6, CA",
+    province: {
+      id: "1",
+      name: "Alberta",
+    },
+    number: "(226) 755-3917",
+    status: "Active",
+    distributionList: "test@gmail.com",
+    city: "Markham",
+    country: "canada",
+    postalCode: "L3R 5Y6",
+  },
+  {
+    id: "2",
+    name: "Branch Two",
+    address:
+      "3381 Steeles Avenue East. Suite 400 British Columbia, BC M2H 3S7, CA",
+    province: {
+      id: "2",
+      name: "British Columbia",
+    },
+    number: "(226) 755-4000",
+    status: "Active",
+    distributionList: "test02@gmail.com",
+    city: "Toronto",
+    country: "canada",
+    postalCode: "M2H 3S7",
+  },
+  {
+    id: "3",
+    name: "Branch Three",
+    address: "7303 Warden Ave, Suite 202, Manitoba, MB L3R 5Y6, CA",
+    province: {
+      id: "3",
+      name: "Manitoba",
+    },
+    number: "(226) 755-5000",
+    status: "Inactive",
+    distributionList: "test05@gmail.com",
+    city: "Markham",
+    country: "canada",
+    postalCode: "L3R 5Y6",
+  },
+  {
+    id: "4",
+    name: "Branch Four",
+    address:
+      "3381 Steeles Avenue East. Suite 400 New Brunswick, NB M2H 3S7, CA",
+    province: {
+      id: "4",
+      name: "New Brunswick",
+    },
+    number: "(226) 755-8000",
+    status: "Inactive",
+    distributionList: "test08@gmail.com",
+    city: "Toronto",
+    country: "canada",
+    postalCode: "M2H 3S7",
+  },
+  {
+    id: "5",
+    name: "Branch Five",
+    address:
+      "3381 Steeles Avenue East. Suite 400 Newfoundland and Labrador, NL M2H 3S7, CA",
+    province: {
+      id: "5",
+      name: "Newfoundland and Labrador",
+    },
+    number: "(226) 755-8000",
+    status: "Inactive",
+    distributionList: "test08@gmail.com",
+    city: "Toronto",
+    country: "canada",
+    postalCode: "M2H 3S7",
+  },
+];
