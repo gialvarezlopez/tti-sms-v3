@@ -106,7 +106,7 @@ const Home = () => {
   useEffect(() => {
     setTimeout(() => {
       setLoading(false); // Después de 3 segundos, los datos estarán cargados
-    }, 2000);
+    }, 500);
   }, []);
 
   return (
