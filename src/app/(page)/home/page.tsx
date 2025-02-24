@@ -102,11 +102,11 @@ const Home = () => {
     setClearSelected(value);
   };
 
-  // Simulamos un retraso en la carga de los datos
+  // We simulate a delay in loading the data
   useEffect(() => {
     setTimeout(() => {
-      setLoading(false); // Después de 3 segundos, los datos estarán cargados
-    }, 2000);
+      setLoading(false);
+    }, 500);
   }, []);
 
   return (

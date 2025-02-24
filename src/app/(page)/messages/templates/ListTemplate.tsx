@@ -163,7 +163,7 @@ const ListTemplate = ({ dataTemplates }: Props) => {
       : dataTemplates; // Si es "all" o no hay filtro, mostrar todos
     */
   useEffect(() => {
-    setTimeout(() => setLoading(false), 2000);
+    setTimeout(() => setLoading(false), 500);
   }, []);
 
   useEffect(() => {
