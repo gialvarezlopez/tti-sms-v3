@@ -12,7 +12,14 @@ import {
   IconPageName,
 } from "../../../assets/images";
 import Image from "next/image";
-import { ArrowLeftToLine, ArrowRightToLine } from "lucide-react";
+import {
+  ArrowLeftToLine,
+  ArrowRightToLine,
+  History,
+  House,
+  MessageSquare,
+  Settings,
+} from "lucide-react";
 
 type Props = {
   setIsSidebarOpen: Dispatch<SetStateAction<boolean>>;
@@ -34,7 +41,6 @@ const SideBar = ({ setIsSidebarOpen }: Props) => {
     return pathname?.startsWith(link); // Starts with for other routes
   };
 
-  // Leer el estado de `localStorage` solo en el cliente
   useEffect(() => {
     if (typeof window !== "undefined") {
       const storedSidebarState = localStorage.getItem("sidebarOpen") === "true";
@@ -86,7 +92,11 @@ const SideBar = ({ setIsSidebarOpen }: Props) => {
                 isActive("/") ? "menu-item-active" : "menu-item-transition"
               }`}
             >
-              <Image alt="" src={IconHome} />
+              <House
+                className={`w-4 ${
+                  isActive("/") && !isOpen ? "text-white" : "text-[#B8B8B8]"
+                } `}
+              />
 
               <span
                 className={`${
@@ -111,7 +121,13 @@ const SideBar = ({ setIsSidebarOpen }: Props) => {
                   : "menu-item-transition"
               }`}
             >
-              <Image alt="" src={IconMessage} />
+              <MessageSquare
+                className={`w-4 ${
+                  isActive("/messages") && !isOpen
+                    ? "text-white"
+                    : "text-[#B8B8B8]"
+                } `}
+              />
               <span
                 className={`${
                   !isOpen
@@ -134,7 +150,13 @@ const SideBar = ({ setIsSidebarOpen }: Props) => {
                   : "menu-item-transition"
               }`}
             >
-              <Image alt="" src={IconHistory} />
+              <History
+                className={`w-4 ${
+                  isActive("/history") && !isOpen
+                    ? "text-white"
+                    : "text-[#B8B8B8]"
+                } `}
+              />
 
               <span
                 className={`${
@@ -162,7 +184,13 @@ const SideBar = ({ setIsSidebarOpen }: Props) => {
                   : "menu-item-transition"
               }`}
             >
-              <Image alt="" src={IconSettings} />
+              <Settings
+                className={`w-4 ${
+                  isActive("/admin/settings") && !isOpen
+                    ? "text-white"
+                    : "text-[#B8B8B8]"
+                } `}
+              />
 
               <span
                 className={`${

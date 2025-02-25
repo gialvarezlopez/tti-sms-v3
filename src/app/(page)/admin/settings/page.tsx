@@ -2,14 +2,18 @@
 import React, { Suspense, useState } from "react";
 //import { useRouter } from "next/navigation";
 import { useSearchParams } from "next/navigation";
-import Filter from "./Filters";
+//import Filter from "./Filters";
 import UsersList from "./users/UsersList";
 import BranchesList from "./branch/BranchesList";
 import { BranchProps, UserProps } from "@/types/types";
 import AlertDelete from "./shared/AlertDelete";
 import { SETTINGS_PARAMETER_URL } from "@/lib/constants";
+import dynamic from "next/dynamic";
+const Filter = dynamic(() => import("./Filters"), {
+  ssr: false,
+});
 
-const Home = () => {
+const Setting = () => {
   const searchParams = useSearchParams();
 
   const [clearRowsSelected, setClearRowsSelected] = useState(false);
@@ -61,7 +65,7 @@ const Home = () => {
 const Page = () => {
   return (
     <Suspense fallback={<div>Loading...</div>}>
-      <Home />
+      <Setting />
     </Suspense>
   );
 };

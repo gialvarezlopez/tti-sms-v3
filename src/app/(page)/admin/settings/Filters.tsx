@@ -59,7 +59,6 @@ const Filter = ({
 
   //const [isOpenDropdown, setIsOpenDropdown] = useState(false);
   const [selectedValue, setSelectedValue] = useState("users");
-
   //const type = searchParams ? searchParams.get("type") : null;
 
   const FormSchema = z.object({
@@ -121,10 +120,12 @@ const Filter = ({
 
   // Retrieve the value of the `type` parameter from the URL when the component is mounted
   useEffect(() => {
-    const currentUrl = new URL(window.location.href);
-    const typeFromUrl = currentUrl.searchParams.get("type");
-    if (typeFromUrl) {
-      setSelectedValue(typeFromUrl);
+    if (typeof window !== "undefined") {
+      const currentUrl = new URL(window.location.href);
+      const typeFromUrl = currentUrl.searchParams.get("type");
+      if (typeFromUrl) {
+        setSelectedValue(typeFromUrl);
+      }
     }
   }, []);
 

@@ -19,9 +19,6 @@ export default function PageLayout({
         } z-auto relative`}
         id="container_message"
       >
-        <div className="flex justify-end">
-          {isSidebarOpen ? "true" : "false"}
-        </div>
         {children}
       </div>
     </div>

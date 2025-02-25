@@ -6,7 +6,7 @@ import { z } from "zod";
 import { Form } from "@/components/ui/form";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
-import FieldsFilterBranch from "@/app/(admin)/admin/settings/shared/filter/FieldsFilterBranch";
+import FieldsFilterBranch from "@/app/(page)/admin/settings/shared/filter/FieldsFilterBranch";
 import { IconFilter } from "../../../../assets/images";
 import FieldsFilterHistory from "./FieldsFilterHistory";
 
