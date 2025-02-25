@@ -1,8 +1,6 @@
 "use client";
 import React, { Suspense, useState } from "react";
-//import { useRouter } from "next/navigation";
 import { useSearchParams } from "next/navigation";
-//import Filter from "./Filters";
 import UsersList from "./users/UsersList";
 import BranchesList from "./branch/BranchesList";
 import { BranchProps, UserProps } from "@/types/types";
@@ -23,8 +21,6 @@ const Setting = () => {
   const type = searchParams ? searchParams.get("type") : null;
   return (
     <div>
-      {" "}
-      {/* Envolvemos con Suspense */}
       <div className="flex gap-6 justify-between">
         <h1 className="font-bold text-4xl">Settings</h1>
       </div>
@@ -61,7 +57,6 @@ const Setting = () => {
   );
 };
 
-// Aquí envolvemos el componente completo en Suspense
 const Page = () => {
   return (
     <Suspense fallback={<div>Loading...</div>}>
@@ -71,5 +66,3 @@ const Page = () => {
 };
 
 export default Page;
-
-//export default Home;

@@ -112,7 +112,7 @@ const Home = () => {
   return (
     <div>
       <div className="flex gap-6 justify-between">
-        <h1 className="font-bold text-4xl">Welcome Sara</h1>
+        <h1 className="font-bold text-2xl md:text-4xl">Welcome Sara</h1>
         {/*
         <div className="w-full max-w-[485px]">
           <FilterTop />

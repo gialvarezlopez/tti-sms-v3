@@ -120,11 +120,11 @@ const FormFilterBranch = () => {
   }, [isOpen]);
 
   return (
-    <div>
+    <div className="flex-1 md:flex-none">
       <Button
         type="button"
         variant={"outline"}
-        className={`flex gap-3 items-center  ${
+        className={`flex gap-3 items-center w-full md:w-auto  ${
           isOpen ? "border-[2px] border-red-500" : "btn-white-normal"
         }`}
         onClick={openModal}

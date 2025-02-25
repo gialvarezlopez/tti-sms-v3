@@ -58,7 +58,7 @@ const SideBar = ({ setIsSidebarOpen }: Props) => {
 
   return (
     <div
-      className={`px-2 ${
+      className={`px-2 transition-all duration-300 ease-in-out ${
         isOpen ? "w-[227px]" : "w-[60px]"
       }  fixed h-full bg-[#141414] z-[2] flex flex-col justify-between pb-14`}
     >
