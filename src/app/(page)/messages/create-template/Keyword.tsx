@@ -32,7 +32,7 @@ const Keyword = ({
   }, [append, keywordOption]);
   return (
     <>
-      <div className="flex justify-between gap-3 md:gap-0 pt-6 w-full">
+      <div className="flex justify-between gap-3 md:gap-0 pt-6 w-full flex-col md:flex-row">
         <div className="flex-1">
           <div className="flex gap-3 items-center flex-1">
             <span className="text-xl font-bold">Keyword</span>
@@ -43,7 +43,7 @@ const Keyword = ({
         </div>
         <Button
           type="button"
-          className={`bg-customRed-v3 px-8 min-w-[161px] flex justify-end`}
+          className={`bg-customRed-v3 px-8 min-w-[161px] flex md:justify-end`}
           variant={"destructive"}
           onClick={() => setOpenKeyword(true)}
         >

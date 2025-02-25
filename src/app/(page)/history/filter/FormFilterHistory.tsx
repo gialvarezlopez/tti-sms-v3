@@ -104,11 +104,11 @@ const FormFilterHistory = () => {
   }, [isOpen]);
 
   return (
-    <div>
+    <div className="flex-1">
       <Button
         type="button"
         variant={"outline"}
-        className={`flex gap-3 items-center  ${
+        className={`flex gap-3 items-center w-full md:w-auto  ${
           isOpen ? "border-[2px] border-red-500" : "btn-white-normal"
         }`}
         onClick={openModal}
@@ -128,7 +128,7 @@ const FormFilterHistory = () => {
       {/* Floating Modal (div) */}
       {isOpen && (
         <div
-          className={`absolute bg-white  rounded-lg w-[386px] shadow-md z-50 border border-gray-300 ${
+          className={`absolute bg-white  rounded-lg w-full md:w-[386px] shadow-md z-50 border border-gray-300 ${
             windowWidth <= 768
               ? "top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2"
               : ""
@@ -147,9 +147,10 @@ const FormFilterHistory = () => {
           </div>
           <Form {...form}>
             <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-3">
-              <div className="flex-1 overflow-y-auto max-h-[300px]">
+              <div className="flex-1 overflow-y-auto max-h-[calc(100vh-150px)] md:max-h-[300px]">
                 <FieldsFilterHistory />
               </div>
+
               <div className="pb-3">
                 <Separator className="my-2" />
                 <div className="flex gap-3 justify-between px-4 py-2">

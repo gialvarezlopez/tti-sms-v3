@@ -148,7 +148,7 @@ const FieldsTemplate = ({
   return (
     <div>
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-        <div>
+        <div className="col-span-2 md:col-span-1">
           <FormField
             control={control}
             name="name"
@@ -166,7 +166,7 @@ const FieldsTemplate = ({
           />
         </div>
 
-        <div>
+        <div className="col-span-2 md:col-span-1">
           <div className="flex gap-3 justify-between">
             <FormLabel className="text-base font-semibold">Branch</FormLabel>
           </div>

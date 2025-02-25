@@ -67,7 +67,7 @@ const FormBuildMessage = ({ onClose, ticket, isFromModal = true }: Props) => {
   }, [ticket, isFromModal]);
 
   return (
-    <div>
+    <div className="w-full">
       <div className={`${isFromModal ? "px-6" : ""}`}>
         <div className=" flex gap-3 justify-between">
           <div>Estimate Template</div>

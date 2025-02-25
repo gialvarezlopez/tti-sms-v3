@@ -14,7 +14,7 @@ const Features = ({ ticket }: Props) => {
 
   return (
     <>
-      <div className="grid grid-cols-2 gap-3 border-b border-[#d5d8df]  px-6 py-2">
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-3 border-b border-[#d5d8df]  px-6 py-2">
         <div className="flex gap-1">
           <span className="font-normal text-[#1D2433]/60">Client: </span>
           <span className="font-bold text-base text-customBlack-v1">
@@ -30,7 +30,7 @@ const Features = ({ ticket }: Props) => {
           </span>
         </div>
       </div>
-      <div className="grid grid-cols-2 gap-3 border-b border-[#d5d8df]  px-6 py-2">
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-3 border-b border-[#d5d8df]  px-6 py-2">
         <div className="flex gap-1">
           <span className="font-normal text-[#1D2433]/60">Status: </span>
           <span className="font-bold text-base text-customBlack-v1">

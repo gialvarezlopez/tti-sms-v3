@@ -327,17 +327,19 @@ const Filter = ({
 
           {/* Contenedor de botones ajustado */}
           <div className="flex flex-row gap-3 md:gap-3 mt-3 md:mt-0 w-auto justify-end">
-            <Button
-              type="submit"
-              variant={"outline"}
-              className="flex gap-3 items-center btn-white-normal px-8"
-              onClick={handleDeleteSelected}
-              disabled={
-                !(usersSelected.length > 0 || branchesSelected.length > 0)
-              }
-            >
-              Delete
-            </Button>
+            <div className="flex-1 md:flex-none">
+              <Button
+                type="submit"
+                variant={"outline"}
+                className="flex gap-3 items-center btn-white-normal px-8 w-full md:w-auto"
+                onClick={handleDeleteSelected}
+                disabled={
+                  !(usersSelected.length > 0 || branchesSelected.length > 0)
+                }
+              >
+                Delete
+              </Button>
+            </div>
             <FormFilterBranch />
             <ModalAdd selectedValue={selectedValue} />
           </div>
