@@ -33,6 +33,7 @@ const FilterTop = () => {
   });
 
   function onSubmit(data: z.infer<typeof FormSchema>) {
+    /*
     toast({
       title: "You submitted the following values:",
       description: (
@@ -41,6 +42,7 @@ const FilterTop = () => {
         </pre>
       ),
     });
+    */
   }
 
   return (

@@ -37,6 +37,7 @@ const Actions = ({ rowSelected, handleClearSelected }: Props) => {
   });
 
   function onSubmit(data: z.infer<typeof FormSchema>) {
+    /*
     toast({
       title: "You submitted the following values:",
       description: (
@@ -45,6 +46,7 @@ const Actions = ({ rowSelected, handleClearSelected }: Props) => {
         </pre>
       ),
     });
+    */
   }
 
   return (

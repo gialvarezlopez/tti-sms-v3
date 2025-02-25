@@ -5,7 +5,7 @@ import { Separator } from "@/components/ui/separator";
 import CalendarField from "@/components/ui/CalendarField";
 import CustomMultiSelect from "@/components/ui/CustomMultiSelect";
 import { TypeComboBoxProps } from "@/types/types";
-import { dataBranches } from "@/app/(admin)/admin/settings/mock/dataBranch";
+import { dataBranches } from "@/app/(page)/admin/settings/mock/dataBranch";
 
 const dataTypeOfMessage = [
   {

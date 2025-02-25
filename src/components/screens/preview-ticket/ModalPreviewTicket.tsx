@@ -20,9 +20,15 @@ type Props = {
   ticket: TicketsProps;
   modalOpen: boolean;
   onClose: () => void;
+  hideButtonsActions?: boolean;
 };
 
-const ModalPreviewTicket = ({ ticket, modalOpen, onClose }: Props) => {
+const ModalPreviewTicket = ({
+  ticket,
+  modalOpen,
+  onClose,
+  hideButtonsActions,
+}: Props) => {
   const [isOpen] = useState(modalOpen);
 
   const handleResendMessage = () => {
@@ -44,26 +50,41 @@ const ModalPreviewTicket = ({ ticket, modalOpen, onClose }: Props) => {
               <Features ticket={ticket} />
             </div>
           </div>
+
           <DialogFooter>
             <div className="flex flex-grow gap-3 justify-end px-6 py-5">
-              <Button
-                type="button"
-                className="btn-white-normal w-full md:w-[33%] semibold"
-                variant={"outline"}
-                onClick={onClose}
-              >
-                Cancel
-              </Button>
-              <Button
-                type="submit"
-                className="bg-customRed-v3 w-full md:w-[33%]"
-                variant={"destructive"}
-                onClick={handleResendMessage}
-              >
-                {generateSlug(ticket.typeOfMessage) === MESSAGE_EXCHANGE.ONE_WAY
-                  ? "Resend Message"
-                  : "Resend Reminder"}
-              </Button>
+              {hideButtonsActions ? (
+                <Button
+                  type="button"
+                  className="btn-white-normal w-full md:w-[33%] semibold"
+                  variant={"outline"}
+                  onClick={onClose}
+                >
+                  Close
+                </Button>
+              ) : (
+                <>
+                  <Button
+                    type="button"
+                    className="btn-white-normal w-full md:w-[33%] semibold"
+                    variant={"outline"}
+                    onClick={onClose}
+                  >
+                    Cancel
+                  </Button>
+                  <Button
+                    type="submit"
+                    className="bg-customRed-v3 w-full md:w-[33%]"
+                    variant={"destructive"}
+                    onClick={handleResendMessage}
+                  >
+                    {generateSlug(ticket.typeOfMessage) ===
+                    MESSAGE_EXCHANGE.ONE_WAY
+                      ? "Resend Message"
+                      : "Resend Reminder"}
+                  </Button>
+                </>
+              )}
             </div>
           </DialogFooter>
         </DialogContent>

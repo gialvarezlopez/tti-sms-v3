@@ -15,9 +15,10 @@ import { highlightKeyword } from "@/lib/utils";
 
 type Props = {
   ticket: TicketsProps;
+  isFromModal: boolean;
 };
 
-const FieldsResendMessage = ({ ticket }: Props) => {
+const FieldsResendMessage = ({ ticket, isFromModal }: Props) => {
   const { control } = useFormContext();
   const [modelNumber, setModelNumber] = useState<string>("");
 
@@ -40,7 +41,26 @@ const FieldsResendMessage = ({ ticket }: Props) => {
 
   return (
     <div className="pb-2">
-      <div className="w-full md:w-1/2">
+      <div className="w-full grid grid-cols-2 gap-3">
+        <FormField
+          control={control}
+          name="clientName"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Client Name</FormLabel>
+              <FormControl>
+                <Input
+                  placeholder={"Client Name"}
+                  type="text"
+                  {...field}
+                  readOnly={isFromModal}
+                />
+              </FormControl>
+              <CustomFormMessage className="w-full" />
+            </FormItem>
+          )}
+        />
+
         <FormField
           control={control}
           name="phoneNumber"
@@ -54,6 +74,7 @@ const FieldsResendMessage = ({ ticket }: Props) => {
                   type="text"
                   {...field}
                   upperCase={true}
+                  readOnly={isFromModal}
                 />
               </FormControl>
               <CustomFormMessage className="w-full" />
@@ -98,6 +119,7 @@ const FieldsResendMessage = ({ ticket }: Props) => {
                       handleModelNumberChange(e);
                     }}
                     autoComplete="off"
+                    readOnly={isFromModal}
                   />
                 </FormControl>
                 <CustomFormMessage className="w-full" />

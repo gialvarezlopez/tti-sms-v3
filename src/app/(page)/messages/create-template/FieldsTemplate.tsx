@@ -12,7 +12,7 @@ import CustomMultiSelect from "@/components/ui/CustomMultiSelect";
 import { KeywordProps, ResponseProps, TypeComboBoxProps } from "@/types/types";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Textarea } from "@/components/ui/textarea";
-import { dataBranches } from "@/app/(admin)/admin/settings/mock/dataBranch";
+import { dataBranches } from "@/app/(page)/admin/settings/mock/dataBranch";
 import Keyword from "./Keyword";
 import Response from "./Response";
 import { MESSAGE_EXCHANGE } from "@/lib/constants";

@@ -21,6 +21,7 @@ const FormBuildMessage = ({ onClose, ticket, isFromModal = true }: Props) => {
   const [openConfirm, setOpenConfirm] = useState(false);
 
   const FormSchema = z.object({
+    clientName: z.string().min(2, "Enter the client name"),
     phoneNumber: z
       .string()
       .regex(/^\(\d{3}\) \d{3}-\d{4}$/, {
@@ -33,6 +34,7 @@ const FormBuildMessage = ({ onClose, ticket, isFromModal = true }: Props) => {
   const form = useForm<z.infer<typeof FormSchema>>({
     resolver: zodResolver(FormSchema),
     defaultValues: {
+      clientName: "",
       phoneNumber: "",
       modelNumber: "",
     },
@@ -54,13 +56,15 @@ const FormBuildMessage = ({ onClose, ticket, isFromModal = true }: Props) => {
   }
 
   useEffect(() => {
-    if (ticket) {
+    if (ticket && isFromModal) {
       reset({
         phoneNumber: ticket?.phoneNumber,
+        clientName: ticket?.client,
+        modelNumber: ticket?.chat[0]?.keyword,
       });
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [ticket]);
+  }, [ticket, isFromModal]);
 
   return (
     <div>
@@ -87,7 +91,7 @@ const FormBuildMessage = ({ onClose, ticket, isFromModal = true }: Props) => {
                   : ""
               }`}
             >
-              <FieldsResendMessage ticket={ticket} />
+              <FieldsResendMessage ticket={ticket} isFromModal={isFromModal} />
             </div>
           </div>
           <div className="pb-5">
