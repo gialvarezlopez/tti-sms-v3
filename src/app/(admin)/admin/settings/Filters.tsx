@@ -74,6 +74,7 @@ const Filter = ({
   });
 
   function onSubmit(data: z.infer<typeof FormSchema>) {
+    /*
     toast({
       title: "You submitted the following values:",
       description: (
@@ -82,6 +83,7 @@ const Filter = ({
         </pre>
       ),
     });
+    */
   }
 
   // Centralized function to update URL parameters

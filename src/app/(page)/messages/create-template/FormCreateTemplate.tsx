@@ -229,13 +229,6 @@ const FormCreateTemplate = () => {
       const slugType = generateSlug(result[0].type ?? "");
 
       // Make sure the value is strictly "one-way" or "two-way"
-      /*
-      const messageExchangeType: keyof typeof MESSAGE_EXCHANGE | undefined =
-        slugType === MESSAGE_EXCHANGE.ONE_WAY ||
-        slugType === MESSAGE_EXCHANGE.TWO_WAY
-          ? slugType
-          : undefined;
-      */
       const messageExchangeType: "one-way" | "two-way" | undefined =
         slugType === MESSAGE_EXCHANGE.ONE_WAY ||
         slugType === MESSAGE_EXCHANGE.TWO_WAY
@@ -243,7 +236,6 @@ const FormCreateTemplate = () => {
           : undefined;
 
       if (result) {
-        console.log("result", result);
         const data = {
           name: result[0].title,
           branches: result[0].branches,
@@ -255,7 +247,7 @@ const FormCreateTemplate = () => {
           invalidReply: result[0].invalidReply,
           timeToRespond: result[0].timeToRespond,
         };
-        console.log("data", data);
+
         reset(data);
       }
     }

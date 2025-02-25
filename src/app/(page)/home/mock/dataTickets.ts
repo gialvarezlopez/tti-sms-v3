@@ -15,7 +15,7 @@ export const dataTickets = [
     chat: [
       {
         from: "admin",
-        keyword: "Tool info and code here",
+        keyword: "SV or MODEL Number",
         date: "12/12/2024 at 9:12 AM",
         message:
           "Your Milwaukee repair request for {{}} been inspected and qualifies for warranty coverage. You will have to pay $150 for labor cost. If you want to proceed with this repair please answer this text. You can pay when you pick up the tool.",
@@ -39,7 +39,7 @@ export const dataTickets = [
     chat: [
       {
         from: "admin",
-        keyword: "Tool info and code here",
+        keyword: "SV or MODEL Number",
         date: "12/12/2024 at 9:12 AM",
         message:
           "Your Milwaukee repair request for {{}} has been inspected and qualifies for warranty coverage. You will have to pay $150 for labor cost. If you want to proceed with this repair please answer this text. You can pay when you pick up the tool.",
@@ -61,7 +61,7 @@ export const dataTickets = [
     chat: [
       {
         from: "admin",
-        keyword: "Tool info and code here",
+        keyword: "SV or MODEL Number",
         date: "12/12/2024 at 9:12 AM",
         message:
           "Your Milwaukee repair request for {{}} has been inspected and qualifies for warranty coverage. You will have to pay $150 for labor cost. If you want to proceed with this repair please answer this text. You can pay when you pick up the tool.",
@@ -83,7 +83,7 @@ export const dataTickets = [
     chat: [
       {
         from: "admin",
-        keyword: "Tool info and code here",
+        keyword: "SV or MODEL Number",
         date: "12/12/2024 at 9:12 AM",
         message:
           "Your Milwaukee repair request for {{}} has been inspected and qualifies for warranty coverage. You will have to pay $150 for labor cost. If you want to proceed with this repair please answer this text. You can pay when you pick up the tool.",
@@ -110,7 +110,7 @@ export const dataTickets = [
       {
         from: "admin",
         date: "12/12/2024 at 9:12 AM",
-        keyword: "Tool info and code here",
+        keyword: "SV or MODEL Number",
         message:
           "Your Milwaukee repair request for {{}} has been inspected and qualifies for warranty coverage. You will have to pay $150 for labor cost. If you want to proceed with this repair please answer this text. You can pay when you pick up the tool.",
       },

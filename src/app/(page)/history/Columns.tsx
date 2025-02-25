@@ -43,6 +43,7 @@ const PreviewCell = ({
           ticket={ticket}
           modalOpen={isOpen}
           onClose={handleClose}
+          hideButtonsActions={true}
         />
       )}
     </div>
