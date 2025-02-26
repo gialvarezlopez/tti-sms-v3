@@ -11,14 +11,14 @@ import { IconFilterList } from "@/assets/images";
 const FormFilterBranch = () => {
   const [isOpen, setIsOpen] = useState(false);
 
+  const bodyRef = useRef<HTMLElement | null>(null);
+  const buttonRef = useRef<HTMLButtonElement>(null);
+
   // State to store button positions
   const [buttonPosition, setButtonPosition] = useState({ top: 0, left: 0 });
 
   // State to store the width of the window
   const [windowWidth, setWindowWidth] = useState(window.innerWidth);
-
-  // Button reference
-  const buttonRef = useRef<HTMLButtonElement>(null);
 
   const openModal = () => setIsOpen(true);
 
@@ -105,6 +105,12 @@ const FormFilterBranch = () => {
       updateButtonPosition();
     }
 
+    if (isOpen && window.innerWidth <= 768) {
+      bodyRef.current?.classList.add("no-scroll");
+    } else {
+      bodyRef.current?.classList.remove("no-scroll");
+    }
+
     // We add a listener to resize the window
     const handleResize = () => {
       setWindowWidth(window.innerWidth);
@@ -120,7 +126,7 @@ const FormFilterBranch = () => {
   }, [isOpen]);
 
   return (
-    <div className="flex-1 md:flex-none">
+    <div className="flex-1 md:flex-none relative">
       <Button
         type="button"
         variant={"outline"}
@@ -144,7 +150,7 @@ const FormFilterBranch = () => {
       {/* Floating Modal (div) */}
       {isOpen && (
         <div
-          className={`absolute bg-white  rounded-lg w-[386px] shadow-md z-50 border border-gray-300 ${
+          className={`fixed md:absolute  w-full md:w-[386px] md:rounded-lg md:shadow-md md:border md:bg-white md:border-gray-300  z-50 ${
             windowWidth <= 768
               ? "top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2"
               : ""
@@ -152,42 +158,48 @@ const FormFilterBranch = () => {
           style={{
             //top: windowWidth > 768 ? buttonPosition.top + 5 : undefined,
             top: windowWidth > 768 ? 40 : undefined,
-            left: windowWidth > 768 ? buttonPosition.left - 600 : undefined,
+            //left: windowWidth > 768 ? buttonPosition.left - 600 : undefined,
+            left: windowWidth > 768 ? -335 : undefined,
           }}
         >
-          <div className="flex justify-between items-center px-4 py-2">
-            <h3 className="text-sm font-semibold">Filters</h3>
-            <button onClick={closeModal} className="text-xl font-bold">
-              X
-            </button>
-          </div>
-          <Form {...form}>
-            <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-3">
-              <div className="flex-1 overflow-y-auto max-h-[300px]">
-                <FieldsFilterBranch />
-              </div>
-              <div className="pb-3">
-                <Separator className="my-2" />
-                <div className="flex gap-3 justify-between px-4 py-2">
-                  <Button
-                    type="reset"
-                    className="btn-white-normal"
-                    variant={"outline"}
-                    onClick={resetAll}
-                  >
-                    Reset All
-                  </Button>
-                  <Button
-                    type="submit"
-                    className="bg-customRed-v3"
-                    variant={"destructive"}
-                  >
-                    Apply Now
-                  </Button>
+          <div className=" mx-4 md:mx-0 bg-white md:bg-transparent">
+            <div className="flex justify-between items-center px-4 py-2">
+              <h3 className="text-sm font-semibold">Filters</h3>
+              <button onClick={closeModal} className="text-xl font-bold">
+                X
+              </button>
+            </div>
+            <Form {...form}>
+              <form
+                onSubmit={form.handleSubmit(onSubmit)}
+                className="space-y-3"
+              >
+                <div className="flex-1 overflow-y-auto max-h-[300px]">
+                  <FieldsFilterBranch />
                 </div>
-              </div>
-            </form>
-          </Form>
+                <div className="pb-3">
+                  <Separator className="my-2" />
+                  <div className="flex gap-3 justify-between px-4 py-2">
+                    <Button
+                      type="reset"
+                      className="btn-white-normal"
+                      variant={"outline"}
+                      onClick={resetAll}
+                    >
+                      Reset All
+                    </Button>
+                    <Button
+                      type="submit"
+                      className="bg-customRed-v3"
+                      variant={"destructive"}
+                    >
+                      Apply Now
+                    </Button>
+                  </div>
+                </div>
+              </form>
+            </Form>
+          </div>
         </div>
       )}
     </div>

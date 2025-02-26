@@ -159,4 +159,8 @@ body {
     opacity: 1;
     transform: scale(1);
   }
+
+  .no-scroll {
+    overflow: hidden;
+  }
 }

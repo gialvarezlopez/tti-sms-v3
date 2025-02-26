@@ -35,7 +35,7 @@ const Keyword = ({
       <div className="flex justify-between gap-3 md:gap-0 pt-6 w-full flex-col md:flex-row">
         <div className="flex-1">
           <div className="flex gap-3 items-center flex-1">
-            <span className="text-xl font-bold">Keyword</span>
+            <span className="text-base md:text-xl font-bold">Keyword</span>
             <span className="flex gap-1 items-center text-customRed-v1">
               <InfoAddKeyword />
             </span>
