@@ -12,16 +12,14 @@ import FieldsFilterHome from "./FieldsFilterHome";
 const FormFilterHome = () => {
   const [isOpen, setIsOpen] = useState(false);
 
-  const bodyRef = useRef(document.body);
+  const bodyRef = useRef<HTMLElement | null>(null);
+  const buttonRef = useRef<HTMLButtonElement>(null);
 
   // State to store button positions
   const [buttonPosition, setButtonPosition] = useState({ top: 0, left: 0 });
 
   // State to store the width of the window
   const [windowWidth, setWindowWidth] = useState<number | undefined>(undefined);
-
-  // Button reference
-  const buttonRef = useRef<HTMLButtonElement>(null);
 
   const openModal = () => setIsOpen(true);
 
@@ -103,21 +101,22 @@ const FormFilterHome = () => {
 
   useEffect(() => {
     if (isOpen && window.innerWidth <= 768) {
-      bodyRef.current.classList.add("no-scroll");
+      bodyRef.current?.classList.add("no-scroll");
     } else {
-      bodyRef.current.classList.remove("no-scroll");
-    }
-    // Esta parte solo se ejecutará en el cliente
-    if (windowWidth === undefined) {
-      setWindowWidth(window.innerWidth); // Inicializa el ancho de la ventana solo cuando se montó el componente
+      bodyRef.current?.classList.remove("no-scroll");
     }
 
-    // Si el modal está abierto, actualiza la posición del botón
+    // This part will only be executed on the client
+    if (windowWidth === undefined) {
+      setWindowWidth(window.innerWidth);
+    }
+
+    // If the modal is open, update the button position
     if (isOpen && windowWidth !== undefined) {
       updateButtonPosition();
     }
 
-    // Agregar un listener para manejar el redimensionamiento de la ventana
+    // Add a listener to handle window resizing
     const handleResize = () => {
       setWindowWidth(window.innerWidth);
       updateButtonPosition();
@@ -125,7 +124,7 @@ const FormFilterHome = () => {
 
     window.addEventListener("resize", handleResize);
 
-    // Limpiar el listener cuando el componente se desmonte
+    // Clear the listener when the component is unmounted
     return () => {
       window.removeEventListener("resize", handleResize);
     };

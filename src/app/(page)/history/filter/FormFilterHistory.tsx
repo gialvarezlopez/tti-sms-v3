@@ -20,16 +20,14 @@ import {
 const FormFilterHistory = () => {
   const [isOpen, setIsOpen] = useState(false);
 
-  const bodyRef = useRef(document.body);
+  const bodyRef = useRef<HTMLElement | null>(null);
+  const buttonRef = useRef<HTMLButtonElement>(null);
 
   // State to store button positions
   const [buttonPosition, setButtonPosition] = useState({ top: 0, left: 0 });
 
   // State to store the width of the window
   const [windowWidth, setWindowWidth] = useState(window.innerWidth);
-
-  // Button reference
-  const buttonRef = useRef<HTMLButtonElement>(null);
 
   const openModal = () => setIsOpen(true);
 
@@ -99,9 +97,9 @@ const FormFilterHistory = () => {
     }
 
     if (isOpen && window.innerWidth <= 768) {
-      bodyRef.current.classList.add("no-scroll");
+      bodyRef.current?.classList.add("no-scroll");
     } else {
-      bodyRef.current.classList.remove("no-scroll");
+      bodyRef.current?.classList.remove("no-scroll");
     }
 
     // We add a listener to resize the window
