@@ -14,7 +14,7 @@ const Page = () => {
     <div>
       <div>
         <div className="flex justify-between gap-3">
-          <h2 className="font-bold text-2xl mb-6">Templates</h2>
+          <h2 className="font-bold text-xl md:text-2xl mb-6">Templates</h2>
         </div>
       </div>
 

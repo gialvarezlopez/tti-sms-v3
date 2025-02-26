@@ -15,7 +15,7 @@ export default function PageLayout({
 
       <div
         className={`flex-1 px-3 md:px-6 py-7 rounded-tl-[20px] min-h-[100vh]  bg-[#F9F9F9] transition-all duration-300 ease-in-out ${
-          isSidebarOpen ? "md:ml-[227px]" : "ml-[65px]"
+          isSidebarOpen ? "md:ml-[227px]" : "ml-[60px]"
         } z-auto relative`}
         id="container_message"
       >

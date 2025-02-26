@@ -10,7 +10,7 @@ export default function PageLayout({
   return (
     <div className="flex flex-col justify-between">
       <div className="flex gap-6 justify-between">
-        <h1 className="font-bold text-4xl">Message</h1>
+        <h1 className="font-bold text-2xl md:text-4xl">Message</h1>
       </div>
 
       <div className="rounded-lg bg-white my-6 px-2 md:px-4 flex-1 min-h-[calc(100vh-150px)]">

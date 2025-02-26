@@ -22,7 +22,7 @@ const Setting = () => {
   return (
     <div>
       <div className="flex gap-6 justify-between">
-        <h1 className="font-bold text-4xl">Settings</h1>
+        <h1 className="font-bold text-2xl md:text-4xl">Settings</h1>
       </div>
       <div className="rounded-lg bg-white my-6 p-4">
         <p className="py-2">
