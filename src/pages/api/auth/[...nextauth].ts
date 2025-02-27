@@ -9,11 +9,14 @@ import axios from "axios";
 import { UserProps } from "@/types/types";
 
 import { JWT } from "next-auth/jwt";
+import axiosInstance from "@/lib/axiosInstance";
+import { usersRoutes } from "@/config/apiRoutes";
 
 // Define the type for the object returned from authorize
 interface CustomUser extends NextAuthUser {
   id: string;
-  accessToken: string;
+  username: string;
+  jwt: string;
   roles: string[];
   branch: {
     name: string;
@@ -36,25 +39,33 @@ export const authOptions: NextAuthOptions = {
     CredentialsProvider({
       name: "Credentials",
       credentials: {
-        email: { label: "Email", type: "email" },
+        username: { label: "Email", type: "email" },
         password: { label: "Password", type: "password" },
       },
       async authorize(credentials) {
         try {
-          const baseUrl = process.env.NEXT_PUBLIC_API_URL;
-          const { data } = await axios.post<UserProps>(
-            `${baseUrl}/api/v1/user/login`,
+          const baseUrl = process.env.NEXT_PUBLIC_API_TEST_URL;
+          //console.log("baseUrl", baseUrl);
+          const { data } = await axiosInstance.post<UserProps>(
+            `${baseUrl}${usersRoutes.login}`,
             {
-              email: credentials?.email,
+              username: credentials?.username,
               password: credentials?.password,
             }
           );
+
           if (data) {
             const user: CustomUser = {
-              id: data.id || "",
-              name: `${data.first_name} ${data.last_name}`,
-              email: data.email || "",
-              accessToken: data.token || "",
+              id: "", // data?.data?.id || "",
+              name: "", // `${data.first_name} ${data.last_name}`,
+              username: "", //data.username || "",
+              jwt: data?.data?.jwt || "", // data.token || "",
+              roles: [],
+              branch: {
+                name: "",
+                id: "",
+              },
+              /*
               roles: Array.isArray(data.roles)
                 ? data.roles
                 : [data.roles || ""],
@@ -62,6 +73,7 @@ export const authOptions: NextAuthOptions = {
                 name: data.branch.name || "",
                 id: data.branch.id || "",
               },
+              */
             };
 
             return user;

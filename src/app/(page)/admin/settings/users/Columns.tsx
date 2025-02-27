@@ -109,7 +109,7 @@ const DeleteCell = ({
 
         first_name: user.first_name,
         //last_name: "Doe",
-        email: user.email,
+        username: user.username,
         roles: user.roles,
         branch: {
           id: user.branch.id,
