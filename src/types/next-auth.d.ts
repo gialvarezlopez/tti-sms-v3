@@ -4,7 +4,7 @@ declare module "next-auth" {
   interface Session {
     user: {
       id: string;
-      accessToken: string;
+      jwt: string;
       roles: string[];
       branch: {
         name: string;
@@ -15,7 +15,7 @@ declare module "next-auth" {
 
   interface User extends NextAuthUser {
     id: string;
-    accessToken: string;
+    jwt: string;
     roles: string[];
     branch: {
       name: string;

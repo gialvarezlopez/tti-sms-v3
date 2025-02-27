@@ -3,9 +3,10 @@ export type UserProps = {
   status?: string;
   //user: {
   //id?: string;
+  email?: string;
   first_name?: string;
   last_name?: string;
-  email?: string;
+  username?: string;
   roles?: string[];
   last_login?: string;
   active?: boolean;
@@ -14,7 +15,11 @@ export type UserProps = {
   created_at?: string;
   branch: BranchProps;
   // };
-  token?: string;
+  data?: {
+    jwt: string;
+    tokenType: string;
+    expiresIn: string;
+  };
 };
 
 export type ProvincesProps = {

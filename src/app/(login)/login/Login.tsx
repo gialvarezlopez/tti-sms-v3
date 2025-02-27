@@ -1,3 +1,4 @@
+//Login.stx
 "use client";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
@@ -28,7 +29,7 @@ const LoginPage = () => {
   const router = useRouter();
 
   const FormSchema = z.object({
-    email: z
+    username: z
       .string()
       .email("Invalid email format") // Validación para formato de correo
       .min(1, "Enter the email"), // Asegura que no esté vacío
@@ -43,7 +44,7 @@ const LoginPage = () => {
   const form = useForm<z.infer<typeof FormSchema>>({
     resolver: zodResolver(FormSchema),
     defaultValues: {
-      email: "",
+      username: "",
       password: "",
       remember: true,
     },
@@ -55,32 +56,31 @@ const LoginPage = () => {
   } = form;
 
   async function onSubmit(data: z.infer<typeof FormSchema>) {
-    console.log("data", data);
+    //console.log("data", data);
 
     setLoading(true); // Empieza el loading
 
     const result = await signIn("credentials", {
       redirect: false,
-      email: data.email,
+      username: data.username,
       password: data.password,
     });
 
     if (result?.error) {
       setError(`${result?.error}`);
       setLoading(false); // Termina el loading
-      //router.push("/home"); //Quitar esto despues
     } else {
       const session = await getSession();
-      if (session && session.user?.accessToken) {
+      console.log("session", session);
+      if (session && session.user?.jwt) {
         // Set the session cookie that lasts for 30 days
-        Cookies.set("session-token", session.user?.accessToken, {
+        Cookies.set("session-token", session.user?.jwt, {
           expires: 30,
           secure: process.env.NODE_ENV === "production", // Ensures that the cookie is only sent over HTTPS in production
           sameSite: "strict",
         });
         router.push("/");
       }
-      //await router.replace("/dashboard/home");
     }
   }
 

@@ -109,7 +109,7 @@ Props) => {
                 <p className="font-bold mt-2">
                   {users?.map((user, index) => (
                     <p key={index}>
-                      {user.first_name} - {user.email}
+                      {user.first_name} - {user.username}
                     </p>
                   ))}
 
