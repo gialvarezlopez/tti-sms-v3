@@ -1,10 +1,12 @@
 import React, { useState } from "react";
 import Image from "next/image";
 
-import { dataTemplates } from "@/components/screens/templates/dataMock";
+//import { dataTemplates } from "@/components/screens/templates/dataMock";
 import TypeTemplateSection from "./TypeTemplateSection";
 import { Separator } from "@/components/ui/separator";
 import { IconKeyboardTab, IconTwoWay } from "@/assets/images";
+import { useGetTemplates } from "@/hooks/useTemplates";
+import { TemplateProps } from "@/types/types";
 
 type Props = {
   setTemplateSelected?: React.Dispatch<
@@ -21,9 +23,24 @@ const TemplateSelection = ({
 }: Props) => {
   const [selected, setSelected] = useState<string | undefined>("");
 
+  const {
+    data: dataTemplates,
+    error,
+    isLoading,
+    refetch,
+  } = useGetTemplates({
+    page: 1,
+    limit: 100,
+    search: "",
+  });
+
   // Filtrar objetos por tipo
-  const oneWayItems = dataTemplates.filter((item) => item.type === "One Way");
-  const twoWayItems = dataTemplates.filter((item) => item.type === "Two Way");
+  const oneWayItems = dataTemplates.filter(
+    (item: TemplateProps) => item.isTwoWay === false
+  );
+  const twoWayItems = dataTemplates.filter(
+    (item: TemplateProps) => item.isTwoWay === true
+  );
 
   const handleSelected = (item?: string) => {
     if (item) {

@@ -26,6 +26,7 @@ import {
 } from "@/components/ui/pagination";
 
 import { AlertCircle } from "lucide-react";
+import { SortDirection } from "@tanstack/react-table";
 
 // Defines a type for the isColumnSelected prop
 type IsColumnSelectedFn<T> = (column: ColumnDef<T>, action?: string) => void;
@@ -40,7 +41,7 @@ export type DataTableProps<T> = {
   search: string;
   fetchData: (page: number, pageSize: number, search: string) => void;
   sortBy: string;
-  sortOrder: "asc" | "desc";
+  sortOrder: "asc" | "desc" | null;
   onSortChange: (field: keyof T) => void;
   isColumnSelected: IsColumnSelectedFn<T>;
   clearSelected?: boolean;
@@ -67,9 +68,8 @@ const DataTable = <T extends Record<string, any>>({
   messageNoRecord,
 }: DataTableProps<T>) => {
   // Memorize sorted data
-  //const { data: session } = useSession();
   const sortedData = React.useMemo(() => {
-    if (!sortBy) return data; // Si no hay columna para ordenar, retorna los datos originales
+    if (!sortBy) return data; // If there is no column to sort, return the original data
 
     const sortDirection = sortOrder === "asc" ? 1 : -1;
 
@@ -281,7 +281,7 @@ const DataTable = <T extends Record<string, any>>({
                             ) : (
                               <span className="pl-2">&darr;</span>
                             )
-                          ) : null}
+                          ) : null}{" "}
                         </TableHead>
                       );
                     })}

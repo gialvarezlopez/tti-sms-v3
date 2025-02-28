@@ -12,6 +12,7 @@ import {
 import { IconWarning } from "@/assets/images";
 import { Separator } from "@/components/ui/separator";
 import { TemplateProps } from "@/types/types";
+import { useDeleteTemplate } from "@/hooks/useTemplates";
 
 type Props = {
   rowSelected: TemplateProps;
@@ -19,6 +20,7 @@ type Props = {
 };
 
 const ModalDeleteTicket = ({ rowSelected, onCloseMenu }: Props) => {
+  const { mutate, isPending } = useDeleteTemplate();
   const [isOpen, setIsOpen] = useState(false);
   const closeModal = () => {
     setIsOpen(false);
@@ -26,10 +28,17 @@ const ModalDeleteTicket = ({ rowSelected, onCloseMenu }: Props) => {
   };
 
   const handleDelete = () => {
-    showToast("success", "Success!", "Template delete successfully.");
     console.log("rowSelected", rowSelected);
-    closeModal();
-    onCloseMenu();
+    mutate(rowSelected?.id as string, {
+      onSuccess(data) {
+        closeModal();
+        onCloseMenu();
+      },
+    });
+    //showToast("suaccess", "Success!", "Template delete successfully.");
+    //console.log("rowSelected", rowSelected);
+    //closeModal();
+    //onCloseMenu();
   };
 
   return (
@@ -68,8 +77,10 @@ const ModalDeleteTicket = ({ rowSelected, onCloseMenu }: Props) => {
                   className="bg-customRed-v3 w-full md:w-[33%]"
                   variant={"destructive"}
                   onClick={handleDelete}
+                  disabled={isPending}
+                  isLoading={isPending}
                 >
-                  Delete
+                  {isPending ? "Deleting" : "Delete"}
                 </Button>
               </div>
             </div>
