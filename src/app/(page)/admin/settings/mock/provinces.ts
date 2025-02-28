@@ -1,51 +1,51 @@
 export const dataProvinces = [
   {
-    id: "1",
+    id: "AB",
     name: "Alberta",
     abbreviation: "AB",
   },
   {
-    id: "2",
+    id: "BC",
     name: "British Columbia",
     abbreviation: "BC",
   },
   {
-    id: "3",
+    id: "MB",
     name: "Manitoba",
     abbreviation: "MB",
   },
   {
-    id: "4",
+    id: "NB",
     name: "New Brunswick",
     abbreviation: "NB",
   },
   {
-    id: "5",
+    id: "NL",
     name: "Newfoundland and Labrador",
     abbreviation: "NL",
   },
   {
-    id: "6",
+    id: "NS",
     name: "Nova Scotia",
     abbreviation: "NS",
   },
   {
-    id: "7",
+    id: "ON",
     name: "Ontario",
     abbreviation: "ON",
   },
   {
-    id: "8",
+    id: "PE",
     name: "Prince Edward Island",
     abbreviation: "PE",
   },
   {
-    id: "9",
+    id: "QC",
     name: "Quebec",
     abbreviation: "QC",
   },
   {
-    id: "10",
+    id: "SK",
     name: "Saskatchewan",
     abbreviation: "SK",
   },

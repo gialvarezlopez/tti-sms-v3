@@ -1,29 +1,18 @@
 // config/apiRoutes.ts
-//const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL;
-
 const usersRoutes = {
   login: `/api/v1/auth/login`,
-  /*
-  changePassword: `/api/v1/usuario/actualizarPassword`,
-  validatePassword: `/api/v1/usuario/compararPassword`,
-  validateAccount: (activationId: string) =>
-    `/api/v1/usuario/validarCuenta/${activationId}`,
-  update: `/api/v1/usuario/actualizar`,
-  checkToken: `/api/v1/usuario/refresh-token`,
-  register: `/api/v1/usuario/registrar`,
-  adminCompany: (companyId: string) =>
-    `/api/v1/usuario/administrar/${companyId}`,
-  delete: (userId: string) => `/api/v1/usuario/eliminar/${userId}`,
-  */
+  list: `/api/v1/users`,
+  new: `/api/v1/users`,
+  single: (id: string) => `/api/v1/users/${id}`, //View, Delete, Update
 };
 
-const employeesRoutes = {
-  registerEmployee: `/api/v1/usuario/registrarEmpleado`,
-  list: `/api/v1/usuario/listarEmpleados`,
-  update: (employeeId: string) =>
-    `/api/v1/usuario/empleado/actualizar/${employeeId}`,
+const branchesRoutes = {
+  list: `/api/v1/branches`,
+  new: `/api/v1/branches`,
+  single: (id: string) => `/api/v1/branches/${id}`, //View, Delete, Update
 };
 
+/*
 const companyRoutes = {
   list: `/api/v1/empresa/listar`,
   create: `/api/v1/empresa/crear`,
@@ -32,5 +21,5 @@ const companyRoutes = {
   update: (companyId: string) => `/api/v1/empresa/actualizar/${companyId}`,
   delete: (companyId: string) => `/api/v1/empresa/eliminar/${companyId}`,
 };
-
-export { usersRoutes, employeesRoutes, companyRoutes };
+*/
+export { usersRoutes, branchesRoutes };

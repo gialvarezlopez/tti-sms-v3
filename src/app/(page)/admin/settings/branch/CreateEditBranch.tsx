@@ -10,6 +10,7 @@ import StepTwoFieldsBranch from "./StepTwoFieldsBranch";
 import { FormFields } from "./FormFieldType";
 import { BranchProps } from "@/types/types";
 import { dataProvinces } from "../mock/provinces";
+import { useCreateBranch, useUpdateBranch } from "@/hooks/useBranches";
 
 type Props = {
   setIsOpen: (value: React.SetStateAction<boolean>) => void;
@@ -17,6 +18,12 @@ type Props = {
 };
 
 const CreateEditBranch = ({ setIsOpen, branch }: Props) => {
+  const branchId = branch?.id ?? "";
+  const { mutate: createBranch, isPending: isCreating } = useCreateBranch();
+  const { mutate: updateBranch, isPending: isUpdating } = useUpdateBranch(
+    branchId as string
+  );
+
   const [currentStep, setCurrentStep] = useState(1);
   const [loadingProvinces, setLoadingProvinces] = useState(true);
 
@@ -93,12 +100,28 @@ const CreateEditBranch = ({ setIsOpen, branch }: Props) => {
   } = form;
 
   function onSubmit(data: z.infer<typeof FormSchema>) {
-    setIsOpen(false);
+    //setIsOpen(false);
+    /*
     console.log("data", data);
     const message = branch
       ? "Branch updated successfully"
       : "Branch created successfully";
     showToast("success", "Success!", message);
+    */
+
+    if (branch) {
+      updateBranch(data, {
+        onSuccess(data) {
+          setIsOpen(false);
+        },
+      });
+    } else {
+      createBranch(data, {
+        onSuccess(data) {
+          setIsOpen(false);
+        },
+      });
+    }
   }
 
   const handleClose = () => {
@@ -147,7 +170,10 @@ const CreateEditBranch = ({ setIsOpen, branch }: Props) => {
       const data = {
         name: branch.name,
         address: branch.address,
-        province: branch?.province?.id as string,
+        province:
+          typeof branch.province === "string"
+            ? branch?.province
+            : (branch?.province?.id as string),
         number: branch.number,
         status: branch.status,
         distributionList: branch.distributionList,
@@ -155,7 +181,6 @@ const CreateEditBranch = ({ setIsOpen, branch }: Props) => {
         country: branch.country,
         postalCode: branch.postalCode,
       };
-
       console.log("data", data);
       reset(data);
       /*
@@ -183,7 +208,11 @@ const CreateEditBranch = ({ setIsOpen, branch }: Props) => {
               <StepOneFieldsBranch
                 handleChange={handleChange}
                 dataProvinces={dataProvinces}
-                currentProvince={branch?.province?.id || ""}
+                currentProvince={
+                  typeof branch?.province === "string"
+                    ? branch.province // Si province es un string, usamos el string directamente
+                    : branch?.province?.id ?? "" // Si province es un objeto ProvincesProps, usamos su id
+                }
               />
             )}
             {currentStep === 2 && <StepTwoFieldsBranch />}
@@ -196,6 +225,7 @@ const CreateEditBranch = ({ setIsOpen, branch }: Props) => {
                 className="btn-white-normal w-1/2 md:w-[33%]"
                 variant={"outline"}
                 onClick={currentStep === 2 ? handlePrev : handleClose}
+                disabled={isCreating || isUpdating}
               >
                 {currentStep === 2 ? "Back" : "Cancel"}
               </Button>
@@ -206,8 +236,10 @@ const CreateEditBranch = ({ setIsOpen, branch }: Props) => {
                   className="bg-customRed-v3 w-1/2 md:w-[33%]"
                   variant={"destructive"}
                   onClick={form.handleSubmit(onSubmit)}
+                  disabled={isCreating || isUpdating}
+                  isLoading={isCreating || isUpdating}
                 >
-                  Update
+                  {isUpdating ? "Updating..." : "Update"}
                 </Button>
               ) : (
                 <Button
@@ -217,8 +249,14 @@ const CreateEditBranch = ({ setIsOpen, branch }: Props) => {
                   onClick={
                     currentStep === 2 ? form.handleSubmit(onSubmit) : handleNext
                   }
+                  disabled={isCreating || isUpdating}
+                  isLoading={isCreating || isUpdating}
                 >
-                  {currentStep === 2 ? "Create" : "Next"}
+                  {currentStep === 2 ? (
+                    <>{isCreating ? "Creating..." : "Create"}</>
+                  ) : (
+                    "Next"
+                  )}
                 </Button>
               )}
             </div>
