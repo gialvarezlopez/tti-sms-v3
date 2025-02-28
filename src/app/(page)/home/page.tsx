@@ -4,11 +4,8 @@ import React, { useEffect, useState } from "react";
 import { ColumnDef } from "@tanstack/react-table";
 import DataTable from "@/components/ui/DataTable";
 import { columns } from "./Columns";
-
 import Actions from "./Actions";
 import { TicketsProps } from "@/types/types";
-
-//import FilterTop from "./SearchTop";
 import { dataTickets } from "./mock/dataTickets";
 import { dataCard } from "./mock/dataCards";
 

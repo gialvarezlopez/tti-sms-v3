@@ -1,6 +1,6 @@
 "use client";
-import React, { Suspense, useState } from "react";
-import { useSearchParams } from "next/navigation";
+import React, { Suspense, useEffect, useState } from "react";
+import { useRouter, useSearchParams } from "next/navigation";
 import UsersList from "./users/UsersList";
 import BranchesList from "./branch/BranchesList";
 import { BranchProps, UserProps } from "@/types/types";
@@ -12,6 +12,7 @@ const Filter = dynamic(() => import("./Filters"), {
 });
 
 const Setting = () => {
+  const router = useRouter();
   const searchParams = useSearchParams();
 
   const [clearRowsSelected, setClearRowsSelected] = useState(false);
@@ -19,6 +20,24 @@ const Setting = () => {
   const [branchesSelected, setBranchesSelected] = useState<BranchProps[]>([]);
 
   const type = searchParams ? searchParams.get("type") : null;
+
+  /*
+  const removeQueryParams = () => {
+    const params = new URLSearchParams(window.location.search);
+    params.delete("page");
+    params.delete("sortBy");
+    params.delete("sortOrder");
+
+    // Updates the URL without the removed parameters
+    router.push(`${window.location.pathname}?${params.toString()}`);
+  };
+
+  useEffect(() => {
+    if (type) {
+      removeQueryParams();
+    }
+  }, [type]);
+  */
   return (
     <div>
       <div className="flex gap-6 justify-between">

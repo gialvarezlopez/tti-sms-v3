@@ -173,7 +173,13 @@ export const columns: ColumnDef<BranchProps>[] = [
       );
     },
     cell: ({ row }) => {
-      return <span>{row.original.province?.name}</span>; //capitalizeFirstLetter(row.original.tipoCliente);
+      return (
+        <span>
+          {typeof row.original?.province === "string"
+            ? row.original?.province
+            : row.original?.province?.name}
+        </span>
+      ); //capitalizeFirstLetter(row.original.tipoCliente);
     },
   },
 
