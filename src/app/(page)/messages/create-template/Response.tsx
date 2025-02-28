@@ -69,7 +69,7 @@ const Response = ({
   return (
     <>
       <Separator className="mt-6" />
-      <div className="flex justify-between gap-3 pt-6 w-full">
+      <div className="flex justify-between gap-3 pt-6 w-full flex-col md:flex-row">
         <div className="flex gap-3 items-center flex-1 text-xl font-bold">
           Automatic Responses{" "}
         </div>

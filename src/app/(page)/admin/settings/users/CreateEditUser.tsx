@@ -2,12 +2,15 @@ import React, { useEffect } from "react";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
-import { showToast } from "@/lib/toastUtil"; // Make sure to import toastUtil
+import { showToast } from "@/lib/toastUtil";
 import { Form } from "@/components/ui/form";
 import { Separator } from "@/components/ui/separator";
 import { Button } from "@/components/ui/button";
 import FieldsUser from "./FieldsUser";
 import { UserProps } from "@/types/types";
+import { useCreateUser, useUpdateUser } from "@/hooks/useUsers";
+import { useGetBranches } from "@/hooks/useBranches";
+//import { dataBranches } from "../mock/dataBranch";
 
 type Props = {
   setIsOpen: (value: React.SetStateAction<boolean>) => void;
@@ -15,45 +18,52 @@ type Props = {
 };
 
 const CreateEditUser = ({ setIsOpen, user }: Props) => {
+  const userId = user?.id ?? "";
+  const { mutate: createUser, isPending: isCreating } = useCreateUser();
+  const { mutate: updateUser, isPending: isUpdating } = useUpdateUser(
+    userId as string
+  );
+
+  const {
+    data: dataBranches,
+    error,
+    isLoading,
+    refetch,
+  } = useGetBranches({
+    page: 1,
+    limit: 100,
+    search: "",
+  });
+
   const FormSchema = z
     .object({
-      username: z.string().min(3, { message: "Username is required" }), // Ahora solo es un string
-      branch: z.string().min(1, { message: "Select one branch" }).optional(),
+      name: z.string().min(3, { message: "Username is required" }),
+      branch_id: z.string().min(1, { message: "Select one branch" }).optional(),
       email: z.string().email({ message: "Invalid email address" }),
-      userType: z.string().min(1, { message: "Select an option" }).optional(),
+      role: z.string().min(1, { message: "Select an option" }).optional(),
       password: user
         ? z.string().optional()
-        : z.string().min(2, { message: "Enter password" }), // Condicional
+        : z.string().min(2, { message: "Enter password" }),
       confirm_password: user
         ? z.string().optional()
         : z
             .string()
             .min(6, { message: "Password must be at least 6 characters" }),
-      //password: z.string().min(2, { message: "Enter password" }),
-      //password: z.string().min(2, { message: "Enter password" }).optional(),
-      /*
-      confirm_password: z
-        .string()
-        .min(6, {
-          message: "Password must be at least 6 characters",
-        })
-        .optional(),
-        */
     })
     .refine((data) => data.password === data.confirm_password, {
       message: "Passwords do not match",
-      path: ["confirm_password"], // Indica el campo que debe mostrar el error
+      path: ["confirm_password"],
     });
 
   const form = useForm<z.infer<typeof FormSchema>>({
     resolver: zodResolver(FormSchema),
     defaultValues: {
-      username: "",
+      name: "",
       email: "",
       confirm_password: undefined,
       password: undefined,
-      branch: "",
-      userType: "",
+      branch_id: "",
+      role: "",
     },
     //shouldUnregister: true,
   });
@@ -64,13 +74,25 @@ const CreateEditUser = ({ setIsOpen, user }: Props) => {
   } = form;
 
   function onSubmit(data: z.infer<typeof FormSchema>) {
-    //setIsOpen(false);
-    console.log("data", data);
-    const message = user
-      ? "User updated successfully"
-      : "User created successfully";
-    showToast("success", "Success!", message);
-    setIsOpen(false);
+    //console.log("data", data);
+    const formattedData = {
+      ...data,
+      branch_id: data.branch_id,
+    };
+
+    if (user) {
+      updateUser(data, {
+        onSuccess(data) {
+          setIsOpen(false);
+        },
+      });
+    } else {
+      createUser(data, {
+        onSuccess(data) {
+          setIsOpen(false);
+        },
+      });
+    }
   }
 
   const handleClose = () => {
@@ -79,10 +101,12 @@ const CreateEditUser = ({ setIsOpen, user }: Props) => {
 
   useEffect(() => {
     if (user) {
-      console.log("user", user);
+      //console.log("user", user);
       const data = {
-        username: user.first_name ?? "",
-        userType: (user.roles && user.roles[0]?.toLocaleLowerCase()) ?? "",
+        name: user.name ?? "",
+        role:
+          (user.primaryRole && user.primaryRole.name?.toLocaleLowerCase()) ??
+          "",
         email: user.email ?? "",
         branch: String(user.branch?.id ?? ""),
       };
@@ -96,7 +120,7 @@ const CreateEditUser = ({ setIsOpen, user }: Props) => {
       <Form {...form}>
         <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-3">
           <div className="flex-1 overflow-y-auto max-h-[calc(100vh-300px)] px-6 pb-2">
-            <FieldsUser user={user} />
+            <FieldsUser user={user} dataBranches={dataBranches?.data} />
           </div>
           <div className="pb-3 pt-2">
             <Separator className="my-2" />
@@ -107,6 +131,7 @@ const CreateEditUser = ({ setIsOpen, user }: Props) => {
                 className="btn-white-normal w-1/2 md:w-[33%]"
                 variant={"outline"}
                 onClick={handleClose}
+                disabled={isCreating || isUpdating}
               >
                 Cancel
               </Button>
@@ -114,8 +139,10 @@ const CreateEditUser = ({ setIsOpen, user }: Props) => {
                 type="submit"
                 className="bg-customRed-v3 w-1/2 md:w-[33%]"
                 variant={"destructive"}
+                disabled={isCreating || isUpdating}
+                isLoading={isCreating || isUpdating}
               >
-                {user ? "Update" : "Create"}
+                {isCreating ? "Submitting " : <>{user ? "Update" : "Create"}</>}
               </Button>
             </div>
           </div>

@@ -137,20 +137,22 @@ const DataTable = <T extends Record<string, any>>({
       ...prev,
       pageIndex: newPageIndex,
     }));
-    fetchData(newPageIndex + 1, pagination.pageSize, search); // Fetch data on page change
+    fetchData(newPageIndex + 1, pagination.pageSize, search);
   };
 
   const renderPaginationItems = () => {
     const items = [];
     const currentPage = pagination.pageIndex;
     const totalPage = totalPages;
-    const maxVisiblePages = 5;
+    const maxVisiblePages = 2; //Num pages
 
-    if (totalPage <= maxVisiblePages) {
+    if (totalPage <= maxVisiblePages + 4) {
       for (let i = 0; i < totalPage; i++) {
         items.push(
           <PaginationItem key={i} active={i === currentPage}>
-            <PaginationLink onClick={() => handlePageChange(i)}>
+            <PaginationLink
+              onClick={() => (i !== currentPage ? handlePageChange(i) : "")}
+            >
               {i + 1}
             </PaginationLink>
           </PaginationItem>
@@ -159,58 +161,51 @@ const DataTable = <T extends Record<string, any>>({
     } else {
       const firstPage = 0;
       const lastPage = totalPage - 1;
-      const pagesToShow = new Set<number>();
 
-      // Always show the first page
-      pagesToShow.add(firstPage);
+      items.push(
+        <PaginationItem key={firstPage} active={firstPage === currentPage}>
+          <PaginationLink onClick={() => handlePageChange(firstPage)}>
+            {firstPage + 1}
+          </PaginationLink>
+        </PaginationItem>
+      );
 
-      // Show pages before current page (if any)
-      if (currentPage > 3) {
-        pagesToShow.add(firstPage + 1);
-        pagesToShow.add(-1); // Ellipsis
+      if (currentPage > 2) {
+        items.push(
+          <PaginationItem key="ellipsis-start">
+            <PaginationEllipsis />
+          </PaginationItem>
+        );
       }
 
-      // Show pages around current page
-      for (
-        let i = Math.max(firstPage + 1, currentPage - 2);
-        i <= Math.min(lastPage - 1, currentPage + 2);
-        i++
-      ) {
-        pagesToShow.add(i);
+      const start = Math.max(1, currentPage - 1);
+      const end = Math.min(lastPage - 1, currentPage + 1);
+
+      for (let i = start; i <= end; i++) {
+        items.push(
+          <PaginationItem key={i} active={i === currentPage}>
+            <PaginationLink onClick={() => handlePageChange(i)}>
+              {i + 1}
+            </PaginationLink>
+          </PaginationItem>
+        );
       }
 
-      // Show pages after current page (if any)
-      if (currentPage < totalPage - 4) {
-        pagesToShow.add(-2); // Ellipsis
-        pagesToShow.add(lastPage - 1);
+      if (currentPage < totalPage - 3) {
+        items.push(
+          <PaginationItem key="ellipsis-end">
+            <PaginationEllipsis />
+          </PaginationItem>
+        );
       }
 
-      // Always show the last page
-      pagesToShow.add(lastPage);
-
-      // Render pagination items
-      let lastItem: number | "ellipsis" | null = null;
-      pagesToShow.forEach((page) => {
-        if (page === -1 || page === -2) {
-          if (lastItem !== "ellipsis") {
-            items.push(
-              <PaginationItem key={`ellipsis-${page}`}>
-                <PaginationEllipsis />
-              </PaginationItem>
-            );
-            lastItem = "ellipsis";
-          }
-        } else {
-          items.push(
-            <PaginationItem key={page} active={page === currentPage}>
-              <PaginationLink onClick={() => handlePageChange(page)}>
-                {page + 1}
-              </PaginationLink>
-            </PaginationItem>
-          );
-          lastItem = page;
-        }
-      });
+      items.push(
+        <PaginationItem key={lastPage} active={lastPage === currentPage}>
+          <PaginationLink onClick={() => handlePageChange(lastPage)}>
+            {lastPage + 1}
+          </PaginationLink>
+        </PaginationItem>
+      );
     }
 
     return items;
@@ -318,10 +313,11 @@ const DataTable = <T extends Record<string, any>>({
                 >
                   Previous
                 </PaginationPrevious>
+
                 <PaginationNext
                   onClick={() => table.nextPage()}
                   disabled={!table.getCanNextPage()}
-                  className="cursor-pointer border-[#1D2433]/80"
+                  className="cursor-pointer border border-[#1D2433]/80"
                 >
                   Next
                 </PaginationNext>

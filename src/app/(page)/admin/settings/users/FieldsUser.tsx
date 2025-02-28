@@ -16,15 +16,16 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { USER_ROLE } from "@/lib/constants";
-import { dataBranches } from "../mock/dataBranch";
+//import { dataBranches } from "../mock/dataBranch";
 import { Eye, EyeOff } from "lucide-react";
-import { UserProps } from "@/types/types";
+import { BranchProps, UserProps } from "@/types/types";
 
 type Props = {
   user?: UserProps;
+  dataBranches: BranchProps[];
 };
 
-const FieldsUser = ({ user }: Props) => {
+const FieldsUser = ({ user, dataBranches }: Props) => {
   const { control } = useFormContext();
 
   const [showNewPassword, setShowNewPassword] = useState(false);
@@ -39,7 +40,7 @@ const FieldsUser = ({ user }: Props) => {
     <div className="grid grid-cols-2 gap-3">
       <FormField
         control={control}
-        name="username"
+        name="name"
         render={({ field }) => (
           <FormItem>
             <FormLabel>User Name</FormLabel>
@@ -54,14 +55,15 @@ const FieldsUser = ({ user }: Props) => {
 
       <FormField
         control={control}
-        name="userType"
+        name="role"
         render={({ field }) => (
           <FormItem>
             <FormLabel>User type</FormLabel>
             <Select
               value={
                 (field.value ||
-                  (user?.roles && user?.roles[0]?.toLocaleLowerCase())) ??
+                  (user?.primaryRole &&
+                    user?.primaryRole.name?.toLocaleLowerCase())) ??
                 ""
               }
               onValueChange={field.onChange}
@@ -111,7 +113,7 @@ const FieldsUser = ({ user }: Props) => {
       <div className="col-span-2">
         <FormField
           control={control}
-          name="branch"
+          name="branch_id"
           render={({ field }) => (
             <FormItem>
               <FormLabel>Branch</FormLabel>
@@ -125,15 +127,16 @@ const FieldsUser = ({ user }: Props) => {
                   </SelectTrigger>
                 </FormControl>
                 <SelectContent>
-                  {dataBranches.map((branch) => (
-                    <SelectItem
-                      key={branch.id}
-                      value={String(branch.id)}
-                      bg="#FFF2F2"
-                    >
-                      {branch.name}
-                    </SelectItem>
-                  ))}
+                  {dataBranches &&
+                    dataBranches?.map((branch) => (
+                      <SelectItem
+                        key={branch.id}
+                        value={String(branch.id)}
+                        bg="#FFF2F2"
+                      >
+                        {branch.name}
+                      </SelectItem>
+                    ))}
                 </SelectContent>
               </Select>
               <CustomFormMessage className="w-full" />

@@ -34,7 +34,7 @@ const Features = ({ template }: Props) => {
         </div>
       </div>
       */}
-      <div className="grid grid-cols-2 gap-3 border-b border-[#d5d8df]  px-6 py-2">
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-3 border-b border-[#d5d8df]  px-6 py-2">
         {/*
         <div className="flex gap-1">
           <span className="font-normal text-[#1D2433]/60">Status: </span>

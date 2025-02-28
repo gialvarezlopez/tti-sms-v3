@@ -1,40 +1,55 @@
+export type RoleProps = {
+  id?: string;
+  name?: string;
+  description?: string;
+  createdAt?: string;
+  updatedAt?: string;
+};
 export type UserProps = {
   id?: string;
   status?: string;
-  //user: {
-  //id?: string;
+  email?: string;
+  name?: string;
   first_name?: string;
   last_name?: string;
-  email?: string;
-  roles?: string[];
-  last_login?: string;
+  username?: string;
+  primaryRole?: RoleProps;
+  lastLogin?: string;
   active?: boolean;
   last_update?: string | null;
   image?: string;
-  created_at?: string;
-  branch: BranchProps;
+  createdAt?: string;
+  updatedAt?: string;
+  branchId?: string;
+  branch?: BranchProps;
   // };
-  token?: string;
+  data?: {
+    jwt: string;
+    tokenType: string;
+    expiresIn: string;
+  };
 };
 
 export type ProvincesProps = {
-  id?: string;
+  id: string;
   name: string;
   abbreviation?: string;
 };
 
 export type BranchProps = {
   id?: string;
-  name: string;
+  name?: string;
   address?: string;
-  province?: ProvincesProps;
+  province?: ProvincesProps | string;
   number?: string;
+  sendingNumberId?: string;
   status?: string;
   distributionList?: string;
   city?: string;
   country?: string;
   postalCode?: string;
-  created_at?: string;
+  createdAt?: string;
+  updatedAt?: string;
 };
 
 export type TicketsProps = {

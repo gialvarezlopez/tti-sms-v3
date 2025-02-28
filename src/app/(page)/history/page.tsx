@@ -112,7 +112,7 @@ const Home = () => {
   return (
     <div>
       <div className="flex gap-6 justify-between">
-        <h1 className="font-bold text-4xl">History</h1>
+        <h1 className="font-bold text-2xl md:text-4xl">History</h1>
       </div>
       <p className="py-2">All your closed tickets are here for consultation.</p>
 

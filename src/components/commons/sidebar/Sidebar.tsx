@@ -1,6 +1,8 @@
 "use client";
 import React, { Dispatch, SetStateAction, useEffect, useState } from "react";
 import Link from "next/link";
+import { signOut } from "next-auth/react";
+import Cookies from "js-cookie";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { usePathname } from "next/navigation";
 import {
@@ -56,9 +58,17 @@ const SideBar = ({ setIsSidebarOpen }: Props) => {
     localStorage.setItem("sidebarOpen", JSON.stringify(newState)); // Guardar en localStorage
   };
 
+  const handleSignOut = async () => {
+    // Eliminar la cookie session-token al hacer sign-out
+    Cookies.remove("session-token");
+
+    // Realizar el sign-out utilizando next-auth/react con redirección a /login
+    await signOut({ redirect: true, callbackUrl: "/login" });
+  };
+
   return (
     <div
-      className={`px-2 ${
+      className={`px-2 transition-all duration-300 ease-in-out ${
         isOpen ? "w-[227px]" : "w-[60px]"
       }  fixed h-full bg-[#141414] z-[2] flex flex-col justify-between pb-14`}
     >
@@ -204,13 +214,12 @@ const SideBar = ({ setIsSidebarOpen }: Props) => {
             </Link>
           </li>
           <li className="relative group">
-            <Link
-              href="/login"
-              className={`inline-flex w-full gap-5 items-center text-white font-normal text-sm ${
+            <span
+              //href="/login"
+              className={`inline-flex w-full gap-5 items-center text-white font-normal text-sm cursor-pointer ${
                 isOpen ? "p-4 py-3 " : "p-2 py-2 justify-center"
-              } rounded-lg menu-item ${
-                isActive("/login") ? "menu-item-active" : "menu-item-transition"
-              }`}
+              } rounded-lg menu-item menu-item-transition`}
+              onClick={handleSignOut}
             >
               <Image alt="" src={IconPageName} />
 
@@ -223,8 +232,9 @@ const SideBar = ({ setIsSidebarOpen }: Props) => {
               >
                 Log Out
               </span>
-            </Link>
+            </span>
           </li>
+
           <li
             className={`inline-flex w-full gap-5 items-center text-white font-normal text-sm ${
               isOpen ? "p-4 py-3 " : "p-2 py-2 justify-center"

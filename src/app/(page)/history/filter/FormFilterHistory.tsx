@@ -9,18 +9,25 @@ import { Separator } from "@/components/ui/separator";
 import FieldsFilterBranch from "@/app/(page)/admin/settings/shared/filter/FieldsFilterBranch";
 import { IconFilter } from "../../../../assets/images";
 import FieldsFilterHistory from "./FieldsFilterHistory";
+import {
+  Dialog,
+  DialogContent,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
 
 const FormFilterHistory = () => {
   const [isOpen, setIsOpen] = useState(false);
+
+  const bodyRef = useRef<HTMLElement | null>(null);
+  const buttonRef = useRef<HTMLButtonElement>(null);
 
   // State to store button positions
   const [buttonPosition, setButtonPosition] = useState({ top: 0, left: 0 });
 
   // State to store the width of the window
   const [windowWidth, setWindowWidth] = useState(window.innerWidth);
-
-  // Button reference
-  const buttonRef = useRef<HTMLButtonElement>(null);
 
   const openModal = () => setIsOpen(true);
 
@@ -89,6 +96,12 @@ const FormFilterHistory = () => {
       updateButtonPosition();
     }
 
+    if (isOpen && window.innerWidth <= 768) {
+      bodyRef.current?.classList.add("no-scroll");
+    } else {
+      bodyRef.current?.classList.remove("no-scroll");
+    }
+
     // We add a listener to resize the window
     const handleResize = () => {
       setWindowWidth(window.innerWidth);
@@ -104,11 +117,11 @@ const FormFilterHistory = () => {
   }, [isOpen]);
 
   return (
-    <div>
+    <div className="flex-1 relative">
       <Button
         type="button"
         variant={"outline"}
-        className={`flex gap-3 items-center  ${
+        className={`flex gap-3 items-center w-full md:w-auto  ${
           isOpen ? "border-[2px] border-red-500" : "btn-white-normal"
         }`}
         onClick={openModal}
@@ -128,52 +141,93 @@ const FormFilterHistory = () => {
       {/* Floating Modal (div) */}
       {isOpen && (
         <div
-          className={`absolute bg-white  rounded-lg w-[386px] shadow-md z-50 border border-gray-300 ${
+          className={`fixed md:absolute  w-full md:w-[386px] md:rounded-lg md:shadow-md md:border md:bg-white md:border-gray-300  z-50 ${
             windowWidth <= 768
               ? "top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2"
               : ""
           }`}
           style={{
-            //top: windowWidth > 768 ? buttonPosition.top + 5 : undefined,
             top: windowWidth > 768 ? 40 : undefined,
-            left: windowWidth > 768 ? buttonPosition.left - 550 : undefined,
+            left: windowWidth > 768 ? -286 : undefined,
           }}
         >
-          <div className="flex justify-between items-center px-4 py-2">
-            <h3 className="text-sm font-semibold">Filters</h3>
-            <button onClick={closeModal} className="text-xl font-bold">
-              X
-            </button>
-          </div>
-          <Form {...form}>
-            <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-3">
-              <div className="flex-1 overflow-y-auto max-h-[300px]">
-                <FieldsFilterHistory />
-              </div>
-              <div className="pb-3">
-                <Separator className="my-2" />
-                <div className="flex gap-3 justify-between px-4 py-2">
-                  <Button
-                    type="reset"
-                    className="btn-white-normal"
-                    variant={"outline"}
-                    onClick={resetAll}
-                  >
-                    Reset All
-                  </Button>
-                  <Button
-                    type="submit"
-                    className="bg-customRed-v3"
-                    variant={"destructive"}
-                  >
-                    Apply Now
-                  </Button>
+          <div className=" mx-4 md:mx-0 bg-white md:bg-transparent">
+            <div className="flex justify-between items-center px-4 py-2">
+              <h3 className="text-sm font-semibold">Filters</h3>
+              <button onClick={closeModal} className="text-xl font-bold">
+                X
+              </button>
+            </div>
+            <Form {...form}>
+              <form
+                onSubmit={form.handleSubmit(onSubmit)}
+                className="space-y-3"
+              >
+                <div className="flex-1 overflow-y-auto max-h-[calc(100vh-150px)] md:max-h-[300px]">
+                  <FieldsFilterHistory />
                 </div>
-              </div>
-            </form>
-          </Form>
+                <ButtonGroup resetAll={resetAll} />
+              </form>
+            </Form>
+          </div>
         </div>
       )}
+      <>
+        {/*
+          <Dialog open={isOpen} onOpenChange={closeModal}>
+            <DialogContent className="sm:max-w-md md:max-w-[650px] p-0 max-h-[90vh]">
+              <DialogHeader>
+                <DialogTitle className="flex gap-3 items-center px-6 pt-6 pb-3 font-bold text-2xl">
+                  Filters
+                </DialogTitle>
+                <Separator className="my-2" />
+              </DialogHeader>
+              <div className="h-full flex flex-col">
+                <Form {...form}>
+                  <form
+                    onSubmit={form.handleSubmit(onSubmit)}
+                    className="space-y-3"
+                  >
+                    <div className="flex-1 overflow-y-auto max-h-[calc(100vh-300px)] md:max-h-[300px]">
+                      <FieldsFilterHistory />
+                    </div>
+                    <ButtonGroup resetAll={resetAll} />
+                  </form>
+                </Form>
+              </div>
+            </DialogContent>
+          </Dialog>
+          */}
+      </>
+    </div>
+  );
+};
+
+interface ButtonGroupProps {
+  resetAll: () => void; // resetAll debe ser una función
+}
+
+export const ButtonGroup = ({ resetAll }: ButtonGroupProps) => {
+  return (
+    <div className="pb-3">
+      <Separator className="my-2" />
+      <div className="flex gap-3 justify-between px-4 py-2">
+        <Button
+          type="reset"
+          className="btn-white-normal w-full md:auto"
+          variant={"outline"}
+          onClick={resetAll}
+        >
+          Reset All
+        </Button>
+        <Button
+          type="submit"
+          className="bg-customRed-v3 w-full md:auto"
+          variant={"destructive"}
+        >
+          Apply Now
+        </Button>
+      </div>
     </div>
   );
 };

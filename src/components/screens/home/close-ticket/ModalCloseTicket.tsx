@@ -36,11 +36,11 @@ const CloseTicket = ({ rowSelected, handleClearSelected }: Props) => {
   }, [tickets]);
 
   return (
-    <div>
+    <div className="flex-1">
       <Button
         disabled={!rowSelected.length}
         type="button"
-        className="btn-white-bold"
+        className="btn-white-bold w-full md:w-auto"
         onClick={() => setIsOpen(true)}
       >
         Close Ticket

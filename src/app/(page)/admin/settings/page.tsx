@@ -1,8 +1,6 @@
 "use client";
-import React, { Suspense, useState } from "react";
-//import { useRouter } from "next/navigation";
-import { useSearchParams } from "next/navigation";
-//import Filter from "./Filters";
+import React, { Suspense, useEffect, useState } from "react";
+import { useRouter, useSearchParams } from "next/navigation";
 import UsersList from "./users/UsersList";
 import BranchesList from "./branch/BranchesList";
 import { BranchProps, UserProps } from "@/types/types";
@@ -14,6 +12,7 @@ const Filter = dynamic(() => import("./Filters"), {
 });
 
 const Setting = () => {
+  const router = useRouter();
   const searchParams = useSearchParams();
 
   const [clearRowsSelected, setClearRowsSelected] = useState(false);
@@ -21,12 +20,28 @@ const Setting = () => {
   const [branchesSelected, setBranchesSelected] = useState<BranchProps[]>([]);
 
   const type = searchParams ? searchParams.get("type") : null;
+
+  /*
+  const removeQueryParams = () => {
+    const params = new URLSearchParams(window.location.search);
+    params.delete("page");
+    params.delete("sortBy");
+    params.delete("sortOrder");
+
+    // Updates the URL without the removed parameters
+    router.push(`${window.location.pathname}?${params.toString()}`);
+  };
+
+  useEffect(() => {
+    if (type) {
+      removeQueryParams();
+    }
+  }, [type]);
+  */
   return (
     <div>
-      {" "}
-      {/* Envolvemos con Suspense */}
       <div className="flex gap-6 justify-between">
-        <h1 className="font-bold text-4xl">Settings</h1>
+        <h1 className="font-bold text-2xl md:text-4xl">Settings</h1>
       </div>
       <div className="rounded-lg bg-white my-6 p-4">
         <p className="py-2">
@@ -61,7 +76,6 @@ const Setting = () => {
   );
 };
 
-// Aquí envolvemos el componente completo en Suspense
 const Page = () => {
   return (
     <Suspense fallback={<div>Loading...</div>}>
@@ -71,5 +85,3 @@ const Page = () => {
 };
 
 export default Page;
-
-//export default Home;

@@ -13,9 +13,9 @@ const Page = () => {
   const ticket = dataTickets.filter((item) => item.id === +elementId)[0] ?? 1;
   return (
     <div>
-      <div className="flex justify-between gap-3 mb-6">
-        <h2 className="font-bold text-2xl">New Message</h2>
-        <div className="text-customRed-v1 font-semibold text-sm">
+      <div className="flex justify-between gap-3 mb-6 flex-col md:flex-row">
+        <h2 className="font-bold text-2xl md:order-first">New Message</h2>
+        <div className="text-customRed-v1 font-semibold text-sm order-first md:order-last">
           <Link
             href="/messages/new-message"
             className=" flex gap-2 items-center"

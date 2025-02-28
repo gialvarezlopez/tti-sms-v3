@@ -105,15 +105,12 @@ const DeleteCell = ({
     const newUsers: UserProps[] = [
       {
         id: user.id,
-        //status: "active",
-
-        first_name: user.first_name,
-        //last_name: "Doe",
-        email: user.email,
-        roles: user.roles,
+        name: user.name,
+        username: user.email,
+        primaryRole: user.primaryRole,
         branch: {
-          id: user.branch.id,
-          name: user.branch.name,
+          id: user?.branch?.id,
+          name: user?.branch?.name,
         },
       },
     ];
@@ -186,7 +183,7 @@ export const columns: ColumnDef<UserProps>[] = [
 
   {
     accessorKey: "name",
-    id: "user.first_name",
+    //id: "user.name",
     header: () => {
       return (
         <Button variant="ghost" className="px-0">
@@ -197,14 +194,14 @@ export const columns: ColumnDef<UserProps>[] = [
     cell: ({ row }) => {
       return (
         <span className="text-nowrap md:text-wrap">
-          {row.original.first_name} {row.original.last_name}
+          {row.original.name} {row.original.last_name}
         </span>
       );
     },
   },
   {
     accessorKey: "email",
-    id: "user.email",
+    //id: "user.email",
     header: () => {
       return (
         <Button variant="ghost" className="px-0">
@@ -218,8 +215,8 @@ export const columns: ColumnDef<UserProps>[] = [
   },
 
   {
-    accessorKey: "role",
-    id: "user.role",
+    accessorKey: "primaryRole.name",
+    id: "primaryRole.name",
     header: () => {
       return (
         <Button variant="ghost" className="px-0">
@@ -230,14 +227,14 @@ export const columns: ColumnDef<UserProps>[] = [
     cell: ({ row }) => {
       return (
         <span className="text-nowrap">
-          {row.original.roles && row.original.roles[0]}
+          {row.original.primaryRole && row.original.primaryRole.name}
         </span>
       );
     },
   },
   {
-    accessorKey: "created_at",
-    id: "user.created_at",
+    accessorKey: "createdAt",
+    id: "createdAt",
     header: () => {
       return (
         <Button variant="ghost" className="px-0">
@@ -246,13 +243,13 @@ export const columns: ColumnDef<UserProps>[] = [
       );
     },
     cell: ({ row }) => {
-      return <span className="text-nowrap">{row.original.created_at}</span>;
+      return <span className="text-nowrap">{row.original.createdAt}</span>;
     },
   },
 
   {
-    accessorKey: "branch",
-    //id: "user.branch.name",
+    accessorKey: "branch.name",
+    id: "branch.name",
     header: () => {
       return (
         <Button variant="ghost" className="px-0">
@@ -265,30 +262,10 @@ export const columns: ColumnDef<UserProps>[] = [
       // Asegúrate de que 'branch' existe y tiene un 'name' válido.
       const branchName = branch?.name || "No branch assigned";
 
-      return <span className="text-nowrap md:text-wrap">{branchName}</span>;
+      return <span className="text-nowrap">{branchName}</span>;
     },
   },
 
-  /*
-  {
-    accessorKey: "branch",
-    id: "user.branch.name",
-    header: ({}: { column: ColumnDef<UserProps> }) => {
-      return (
-        <Button variant="ghost" className="px-0">
-          Branch
-        </Button>
-      );
-    },
-    cell: ({ row }: { row: Row<UserProps> }) => {
-      return (
-        <span className="text-nowrap md:text-wrap">
-          {row.original.user.branch?.name || ""}
-        </span>
-      );
-    },
-  },
-  */
   {
     id: "actions",
     cell: ({ row }) => <Cell row={row.original} />,

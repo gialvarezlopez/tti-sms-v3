@@ -23,7 +23,7 @@ const Fields = () => {
       <div className="space-y-1">
         <FormField
           control={control}
-          name="email"
+          name="username"
           render={({ field }) => (
             <FormItem>
               <FormLabel className="text-base font-semibold">Email</FormLabel>

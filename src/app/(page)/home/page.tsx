@@ -4,11 +4,8 @@ import React, { useEffect, useState } from "react";
 import { ColumnDef } from "@tanstack/react-table";
 import DataTable from "@/components/ui/DataTable";
 import { columns } from "./Columns";
-
 import Actions from "./Actions";
 import { TicketsProps } from "@/types/types";
-
-//import FilterTop from "./SearchTop";
 import { dataTickets } from "./mock/dataTickets";
 import { dataCard } from "./mock/dataCards";
 
@@ -112,7 +109,7 @@ const Home = () => {
   return (
     <div>
       <div className="flex gap-6 justify-between">
-        <h1 className="font-bold text-4xl">Welcome Sara</h1>
+        <h1 className="font-bold text-2xl md:text-4xl">Welcome Sara</h1>
         {/*
         <div className="w-full max-w-[485px]">
           <FilterTop />
