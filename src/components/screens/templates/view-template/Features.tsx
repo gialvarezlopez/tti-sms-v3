@@ -2,9 +2,10 @@ import React from "react";
 //import { TYPE_OF_MESSAGE } from "@/lib/constants";
 //import { convertToSnakeCase, statusType } from "@/lib/utils";
 import { TemplateProps } from "@/types/types";
-import { formatTextWithBold } from "@/lib/utils";
+import { formatDate, formatTextWithBold } from "@/lib/utils";
 //import OneWay from "./OneWay";
 //import TwoWay from "./TwoWay";
+import { templateType } from "../../../../lib/utils";
 
 type Props = {
   //ticket: TicketsProps;
@@ -48,13 +49,13 @@ const Features = ({ template }: Props) => {
             Type of message:{" "}
           </span>
           <span className="font-bold text-base text-customBlack-v1">
-            {template.type}
+            {templateType(template?.isTwoWay ?? false)}
           </span>
         </div>
         <div className="flex gap-1">
           <span className="font-normal text-[#1D2433]/60">Date created: </span>
           <span className="font-bold text-base text-customBlack-v1">
-            {template.created_at}
+            {formatDate(template.createdAt ?? "")}
           </span>
         </div>
       </div>
@@ -62,7 +63,7 @@ const Features = ({ template }: Props) => {
         <div className="flex gap-3">
           <span className="font-normal text-[#1D2433]/60">Template Name: </span>
           <span className="font-bold text-base text-customBlack-v1">
-            {template.title}
+            {template.name}
           </span>
         </div>
         <div className="">
@@ -74,7 +75,7 @@ const Features = ({ template }: Props) => {
       </div>
       <div className="grid grid-cols-1 gap-1   px-6 pt-2 pb-6">
         <span className="font-normal text-[#1D2433]/60">Message: </span>
-        <div>{formatTextWithBold(template.message ?? "")}</div>
+        <div>{formatTextWithBold(template.content ?? "")}</div>
         {/*<span className="">{ticket?.chat[0]?.message}</span>*/}
 
         {/*

@@ -21,23 +21,6 @@ const Setting = () => {
 
   const type = searchParams ? searchParams.get("type") : null;
 
-  /*
-  const removeQueryParams = () => {
-    const params = new URLSearchParams(window.location.search);
-    params.delete("page");
-    params.delete("sortBy");
-    params.delete("sortOrder");
-
-    // Updates the URL without the removed parameters
-    router.push(`${window.location.pathname}?${params.toString()}`);
-  };
-
-  useEffect(() => {
-    if (type) {
-      removeQueryParams();
-    }
-  }, [type]);
-  */
   return (
     <div>
       <div className="flex gap-6 justify-between">

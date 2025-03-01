@@ -12,6 +12,7 @@ import {
   useQueryClient,
 } from "@tanstack/react-query";
 import { PaginateParams, UserProps } from "@/types/types";
+import { showToast } from "@/lib/toastUtil";
 
 const useGetBranches = ({ page, limit, search }: PaginateParams) => {
   return useQuery({
@@ -61,22 +62,18 @@ const useCreateBranch = () => {
     onSettled: () =>
       queryClient.invalidateQueries({ queryKey: ["branch-list"] }),
     onSuccess: (value) => {
-      toast({
-        variant: "success",
-        title: "Success!",
-        description: value?.message ?? "Branch created successfully",
-      });
+      showToast(
+        "success",
+        "Success!",
+        `${value?.message ?? "Branch created successfully"}`
+      );
     },
     onError: (error) => {
       const errorMessage =
         error instanceof Error
           ? error.message
           : "An unexpected error has occurred.";
-      toast({
-        variant: "destructive",
-        title: "Error!",
-        description: errorMessage,
-      });
+      showToast("destructive", "Error!", `${errorMessage}`);
     },
   });
 };
@@ -104,22 +101,18 @@ const useUpdateBranch = (id: string) => {
     onSettled: () =>
       queryClient.invalidateQueries({ queryKey: ["branch-list"] }),
     onSuccess: (value) => {
-      toast({
-        variant: "success",
-        title: "Success!",
-        description: value?.message ?? "Branch updated successfully",
-      });
+      showToast(
+        "success",
+        "Success!",
+        `${value?.message ?? "Branch updated successfully"}`
+      );
     },
     onError: (error) => {
       const errorMessage =
         error instanceof Error
           ? error.message
           : "An unexpected error has occurred.";
-      toast({
-        variant: "destructive",
-        title: "Error!",
-        description: errorMessage,
-      });
+      showToast("destructive", "Error!", `${errorMessage}`);
     },
   });
 };
@@ -149,29 +142,20 @@ const useDeleteBranch = () => {
     onSettled: () =>
       queryClient.invalidateQueries({ queryKey: ["branch-list"] }),
     onSuccess: (value) => {
-      toast({
-        variant: "success",
-        title: "Success!",
-        description: value?.message ?? "Branch deleted successfully",
-      });
+      showToast(
+        "success",
+        "Success!",
+        `${value?.message ?? "Branch deleted successfully"}`
+      );
     },
     onError: (error) => {
       const errorMessage =
         error instanceof Error
           ? error.message
           : "An unexpected error has occurred.";
-      toast({
-        variant: "destructive",
-        title: "Error!",
-        description: errorMessage,
-      });
+      showToast("destructive", "Error!", `${errorMessage}`);
     },
   });
 };
 
-export {
-  useGetBranches,
-  useCreateBranch /*useAuditDeleteMultiple, useAuditSingleProduct*/,
-  useUpdateBranch,
-  useDeleteBranch,
-};
+export { useGetBranches, useCreateBranch, useUpdateBranch, useDeleteBranch };

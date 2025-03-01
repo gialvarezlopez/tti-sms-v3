@@ -16,13 +16,13 @@ type Props = {
   responseOption: ResponseProps;
   errors: FieldErrors<{
     responses: {
-      name: string;
-      replay: string;
+      response: string;
+      reply: string;
     }[];
     branch?: string[] | undefined;
   }>;
-  setMessage: React.Dispatch<React.SetStateAction<string>>;
-  message: string;
+  //setMessage: React.Dispatch<React.SetStateAction<string>>;
+  //message: string;
 };
 
 const Response = ({
@@ -30,9 +30,9 @@ const Response = ({
   responseOption,
   setResponseOption,
   errors,
-  setMessage,
-  message,
-}: Props) => {
+}: //setMessage,
+//message,
+Props) => {
   const { control } = useFormContext<FormValues>();
   const { fields, append, remove } = useFieldArray<FormValues>({
     control,
@@ -47,13 +47,13 @@ const Response = ({
       responseOption.automaticReply
     ) {
       const exists = fields.some(
-        (field) => field.value === responseOption.responseName
+        (field) => field.response === responseOption.responseName
       );
 
       if (!exists) {
         append({
           id: String(Date.now()),
-          value: responseOption.responseName,
+          response: responseOption.responseName,
           reply: responseOption.automaticReply,
         });
       }
@@ -69,31 +69,33 @@ const Response = ({
   return (
     <>
       <Separator className="mt-6" />
-      <div className="flex justify-between gap-3 pt-6 w-full flex-col md:flex-row">
-        <div className="flex gap-3 items-center flex-1 text-xl font-bold">
-          Automatic Responses{" "}
+      <div className="flex flex-col">
+        <div className="flex justify-between gap-3 md:pt-6 w-full flex-col md:flex-row order-2">
+          <div className="flex gap-3 items-center flex-1 text-xl font-bold">
+            Automatic Responses{" "}
+          </div>
+          <Button
+            type="button"
+            className={`bg-customRed-v3 px-8`}
+            variant={"destructive"}
+            onClick={() => setOpenResponse(true)}
+          >
+            Add Responses
+          </Button>
         </div>
-        <Button
-          type="button"
-          className={`bg-customRed-v3 px-8`}
-          variant={"destructive"}
-          onClick={() => setOpenResponse(true)}
-        >
-          Add Responses
-        </Button>
-      </div>
-      {errors && errors.responses?.message && (
-        <div className="mt-3 font-medium bg-customRed-v4 text-[#1D2433] formMessageError rounded relative text-xs inline-block showIconError w-full">
-          {errors.responses?.message}
+        {errors && errors.responses?.message && (
+          <div className="mt-3 font-medium bg-customRed-v4 text-[#1D2433] formMessageError rounded relative text-xs inline-block showIconError w-full">
+            {errors.responses?.message}
+          </div>
+        )}
+        <div className="mt-6 order-1 md:order-2">
+          <InputTypeResponse
+            fields={fields as unknown as AutomaticResponsesTemplates[]}
+            remove={remove}
+            //setMessage={setMessage}
+            //message={message}
+          />
         </div>
-      )}
-      <div className="mt-6">
-        <InputTypeResponse
-          fields={fields as unknown as AutomaticResponsesTemplates[]}
-          remove={remove}
-          setMessage={setMessage}
-          message={message}
-        />
       </div>
     </>
   );

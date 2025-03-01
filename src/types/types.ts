@@ -1,3 +1,4 @@
+import { boolean } from "zod";
 export type RoleProps = {
   id?: string;
   name?: string;
@@ -89,22 +90,30 @@ export type KeywordTemplates = {
 
 export type AutomaticResponsesTemplates = {
   id?: string;
-  value: string;
+  response: string;
   reply: string;
 };
 
 export type TemplateProps = {
   id?: string;
-  title: string;
+  name: string;
   slug?: string;
-  type: string;
+  //type: string;
+  isTwoWay?: boolean;
+  //messageExchangeType?: string;
   branches?: string[];
   description?: string;
-  message?: string;
+  content?: string;
   keywords?: KeywordTemplates[];
   responses?: AutomaticResponsesTemplates[];
   invalidReply?: string;
-  created_at?: string;
+  createdAt?: string;
+  updatedAt?: string;
+  createdBy?: {
+    id: UserProps["id"];
+    name: UserProps["name"];
+    email: UserProps["email"];
+  };
 };
 
 export type TypeComboBoxProps = {
@@ -114,9 +123,12 @@ export type TypeComboBoxProps = {
 
 export type KeywordProps = {
   id?: string;
-  name: string;
+  keyword: string;
   type: string;
   value?: string;
+  template_id?: string;
+  created_at?: string;
+  updated_at?: string;
 };
 
 export type ResponseProps = {
@@ -133,7 +145,7 @@ export type PhoneNumberProps = {
 };
 
 export interface PaginateParams {
-  page: number;
+  page?: number;
   limit?: number | string;
   search?: string;
 }
@@ -149,5 +161,5 @@ export interface RefetchOptions {
   pagination: PaginationOptions;
   search: string;
   sortBy?: string;
-  sortOrder?: "asc" | "desc";
+  sortOrder?: "asc" | "desc" | null;
 }

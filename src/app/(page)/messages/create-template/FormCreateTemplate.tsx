@@ -14,10 +14,18 @@ import ModalKeyword from "@/components/screens/add-keyword/ModalKeyword";
 import { KeywordProps, ResponseProps } from "@/types/types";
 import { showToast } from "@/lib/toastUtil";
 import ModalResponse from "@/components/screens/add-response/ModalResponse";
-import { cleanOnlyWhiteSpace, generateSlug } from "@/lib/utils";
+import { cleanOnlyWhiteSpace, generateSlug, templateType } from "@/lib/utils";
 import { ArrowLeft } from "lucide-react";
 import { dataTemplates } from "@/components/screens/templates/dataMock";
 import { MESSAGE_EXCHANGE } from "@/lib/constants";
+import {
+  useCreateTemplate,
+  useSingleTemplate,
+  useUpdateTemplate,
+} from "@/hooks/useTemplates";
+import { useGetBranches } from "@/hooks/useBranches";
+import { dataBranches } from "../../admin/settings/mock/dataBranch";
+import CustomFormMessage from "@/components/ui/CustomFormMessage";
 
 const FormCreateTemplate = () => {
   const router = useRouter();
@@ -27,7 +35,7 @@ const FormCreateTemplate = () => {
   const [clearMessage, setClearMessage] = useState(false);
   const [openKeyword, setOpenKeyword] = useState(false);
   const [keywordOption, setKeywordOption] = useState<KeywordProps>({
-    name: "",
+    keyword: "",
     value: "",
     type: "",
   });
@@ -38,6 +46,29 @@ const FormCreateTemplate = () => {
     automaticReply: "",
   });
 
+  const {
+    data: currentTemplate,
+    isLoading,
+    error,
+  } = useSingleTemplate(elementId as string);
+
+  const { mutate: updateTemplate, isPending: isUpdatingTemplate } =
+    useUpdateTemplate(elementId as string);
+
+  const { mutate: createTemplate, isPending: isCreatingTemplate } =
+    useCreateTemplate();
+
+  const {
+    data: responseBranches,
+    error: errorBranches,
+    isLoading: isLoadingBranches,
+    refetch,
+  } = useGetBranches({
+    page: 1,
+    limit: 50,
+    search: "",
+  });
+
   const FormSchema = z
     .object({
       name: z.string().min(1, "Please provide a reason"),
@@ -46,13 +77,13 @@ const FormCreateTemplate = () => {
         .min(1, "Please select at least one branch")
         .optional(),
       description: z.string().min(1, "Enter the description"),
-      message: z
+      content: z
         .string()
         .min(10, {
-          message: "Message must be at least 10 characters.",
+          message: "Message content must be at least 10 characters.",
         })
         .max(400, {
-          message: "Message must not be longer than 400 characters.",
+          message: "Message content must not be longer than 400 characters.",
         }),
       messageExchangeType: z.enum(
         [MESSAGE_EXCHANGE.ONE_WAY, MESSAGE_EXCHANGE.TWO_WAY],
@@ -63,8 +94,8 @@ const FormCreateTemplate = () => {
       keywords: z
         .array(
           z.object({
-            name: z.string().min(1, "Please enter the name"),
-            value: z
+            keyword: z.string().min(1, "Please enter the name"),
+            type: z
               .union([
                 z.string().min(1, "Enter the value"),
                 z.number().refine((val) => !isNaN(val), {
@@ -91,7 +122,7 @@ const FormCreateTemplate = () => {
       responses: z
         .array(
           z.object({
-            value: z.string().min(1, "Please enter the value"),
+            response: z.string().min(1, "Please enter the value"),
             reply: z
               .string()
               .min(2, {
@@ -107,18 +138,18 @@ const FormCreateTemplate = () => {
       timeToRespond: z.number().optional(),
     })
     .superRefine((data, ctx) => {
-      const { message, keywords, responses } = data;
+      const { content, keywords, responses } = data;
 
       // Search for patterns in the message with brackets
       const findPattern = (pattern: string) =>
-        new RegExp(`\\[${pattern}\\]`).test(message);
+        new RegExp(`\\[${pattern}\\]`).test(content);
 
       // Validate that each keyword.name is in message between brackets
       keywords.forEach((keyword, index) => {
-        if (!findPattern(keyword.name)) {
+        if (!findPattern(keyword.keyword)) {
           ctx.addIssue({
-            path: ["keywords", index, "name"], // Here we use 'index' to specify the error in the name field of each keyword
-            message: `The keyword '[${keyword.name}]' does not exist in the message.`,
+            path: ["keywords", index, "keyword"], // Here we use 'index' to specify the error in the name field of each keyword
+            message: `The keyword '[${keyword.keyword}]' does not exist in the message.`,
             code: "custom",
           });
         }
@@ -127,10 +158,10 @@ const FormCreateTemplate = () => {
       // Validate that each response.value is in message between brackets
       if (responses) {
         responses.forEach((response, index) => {
-          if (!findPattern(response.value)) {
+          if (!findPattern(response.response)) {
             ctx.addIssue({
-              path: ["responses", index, "value"],
-              message: `The response value '[${response.value}]' does not exist in the message.`,
+              path: ["responses", index, "response"],
+              message: `The response value '[${response.response}]' does not exist in the message.`,
               code: "custom",
             });
           }
@@ -172,7 +203,7 @@ const FormCreateTemplate = () => {
       name: "",
       branches: ["all"],
       description: "",
-      message: "",
+      content: "",
       keywords: [],
       responses: [],
       messageExchangeType: undefined,
@@ -187,73 +218,75 @@ const FormCreateTemplate = () => {
   } = form;
 
   function onSubmit(data: z.infer<typeof FormSchema>) {
+    const { messageExchangeType, invalidReply, timeToRespond, ...restData } =
+      data;
+
     const formData = {
-      ...data,
-      message: cleanOnlyWhiteSpace(data.message),
+      ...restData,
+      content: cleanOnlyWhiteSpace(data.content),
+      type: "reminder",
     };
-    console.log(formData);
-    reset({
-      messageExchangeType: undefined,
-      responses: [],
-      keywords: [],
-      invalidReply: "",
-      message: "",
-      description: "",
-    });
-    setResponseOption({
-      responseName: "",
-      //value: "",
-      automaticReply: "",
-    });
-    setClearMessage(true);
 
-    showToast(
-      "success",
-      "Success!",
-      `Template ${elementId ? "updated" : "created"} successfully.`
-    );
     if (elementId) {
-      router.push("/messages/templates");
+      updateTemplate(formData);
+    } else {
+      createTemplate(formData, {
+        onSuccess(data) {
+          reset({
+            messageExchangeType: undefined,
+            responses: [],
+            keywords: [],
+            invalidReply: "",
+            content: "",
+            description: "",
+          });
+          setResponseOption({
+            responseName: "",
+            automaticReply: "",
+          });
+          setClearMessage(true);
+        },
+      });
     }
-
-    return false;
   }
 
   useEffect(() => {
-    if (elementId) {
-      const result =
-        dataTemplates &&
-        dataTemplates.filter((item) => (item.id as string) === elementId);
+    if (elementId && currentTemplate) {
+      const {
+        id,
+        name,
+        description,
+        branch_id,
+        content,
+        keywords,
+        responses,
+        isTwoWay,
+        invalidReply,
+      } = currentTemplate.data;
 
-      // Genera el slug
-      const slugType = generateSlug(result[0].type ?? "");
-
-      // Make sure the value is strictly "one-way" or "two-way"
+      const slugType = generateSlug(templateType(isTwoWay ?? false));
       const messageExchangeType: "one-way" | "two-way" | undefined =
         slugType === MESSAGE_EXCHANGE.ONE_WAY ||
         slugType === MESSAGE_EXCHANGE.TWO_WAY
           ? slugType
           : undefined;
 
-      if (result) {
-        const data = {
-          name: result[0].title,
-          branches: result[0].branches,
-          description: result[0].description,
-          message: result[0].message,
-          messageExchangeType: messageExchangeType,
-          keywords: result[0].keywords || [],
-          responses: result[0].responses || [],
-          invalidReply: result[0].invalidReply,
-          timeToRespond: result[0].timeToRespond,
-        };
-
-        reset(data);
-      }
+      const data = {
+        name,
+        description,
+        content,
+        keywords,
+        responses,
+        messageExchangeType,
+        invalidReply,
+      };
+      reset(data);
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [elementId, dataTemplates]);
 
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [elementId, currentTemplate]);
+
+  const hasErrors = Object.keys(errors).length > 0;
   return (
     <div>
       <div>
@@ -285,7 +318,15 @@ const FormCreateTemplate = () => {
                 errors={errors}
                 clearMessage={clearMessage}
                 setClearMessage={setClearMessage}
+                dataBranches={responseBranches?.data || []}
+                isLoadingBranches={isLoadingBranches}
               />
+
+              {hasErrors && (
+                <div className="mt-6">
+                  <CustomFormMessage>The form is invalid. </CustomFormMessage>
+                </div>
+              )}
             </div>
           </div>
           <div className="pb-5">
@@ -293,7 +334,11 @@ const FormCreateTemplate = () => {
             <div className="flex flex-grow gap-3 justify-end">
               <Link
                 href="/messages/new-message"
-                className="btn-white-normal semibold link px-6"
+                className={`btn-white-normal semibold link px-6 ${
+                  isUpdatingTemplate || isCreatingTemplate
+                    ? "cursor-not-allowed opacity-50"
+                    : ""
+                }`}
               >
                 Cancel
               </Link>
@@ -302,8 +347,16 @@ const FormCreateTemplate = () => {
                 type="submit"
                 className={`bg-customRed-v3 px-8`}
                 variant={"destructive"}
+                disabled={isUpdatingTemplate || isCreatingTemplate}
+                isLoading={isUpdatingTemplate || isCreatingTemplate}
               >
-                Submit
+                {isCreatingTemplate ? (
+                  "Submitting"
+                ) : isUpdatingTemplate ? (
+                  "Updating"
+                ) : (
+                  <>{elementId ? "Update" : "Create"}</>
+                )}
               </Button>
             </div>
           </div>

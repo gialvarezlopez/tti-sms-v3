@@ -9,7 +9,6 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { MoreVertical } from "lucide-react";
 import { Dispatch, SetStateAction, useState } from "react";
-//import { useRouter } from "next/navigation";
 import UpdateUser from "./UpdateUser";
 import ModalResetPassword from "./modal-reset-password/ModalResetPassword";
 import useUsersStore from "@/store/useUsers";
@@ -259,7 +258,6 @@ export const columns: ColumnDef<UserProps>[] = [
     },
     cell: ({ row }: { row: Row<UserProps> }) => {
       const branch = row.original.branch;
-      // Asegúrate de que 'branch' existe y tiene un 'name' válido.
       const branchName = branch?.name || "No branch assigned";
 
       return <span className="text-nowrap">{branchName}</span>;
