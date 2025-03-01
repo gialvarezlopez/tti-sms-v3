@@ -52,7 +52,10 @@ const SideBar = ({ setIsSidebarOpen }: Props) => {
   };
 
   const handleSignOut = async () => {
-    Cookies.remove("session-token");
+    //Cookies.remove("session-token");
+
+    //This ensures that the cookie is deleted throughout the application.
+    Cookies.remove("session-token", { path: "/" });
 
     // Get the base URL dynamically
     const baseUrl = typeof window !== "undefined" ? window.location.origin : "";
