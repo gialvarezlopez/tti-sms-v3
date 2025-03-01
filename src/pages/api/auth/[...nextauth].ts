@@ -44,7 +44,7 @@ export const authOptions: NextAuthOptions = {
       },
       async authorize(credentials) {
         try {
-          const baseUrl = process.env.NEXT_PUBLIC_API_TEST_URL;
+          const baseUrl = process.env.NEXT_PUBLIC_API_URL;
           //console.log("baseUrl", baseUrl);
           const { data } = await axiosInstance.post<UserProps>(
             `${baseUrl}${usersRoutes.login}`,
