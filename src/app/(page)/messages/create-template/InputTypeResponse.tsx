@@ -16,28 +16,33 @@ import { UseFieldArrayRemove, useFormContext } from "react-hook-form";
 type Props = {
   fields: AutomaticResponsesTemplates[];
   remove: UseFieldArrayRemove;
-  setMessage: React.Dispatch<React.SetStateAction<string>>;
-  message: string;
+  //setMessage: React.Dispatch<React.SetStateAction<string>>;
+  //message: string;
 };
 
-const InputTypeResponse = ({ fields, remove, message, setMessage }: Props) => {
-  const { control, setValue } = useFormContext();
+const InputTypeResponse = ({
+  fields,
+  remove /*message, setMessage*/,
+}: Props) => {
+  const { control, setValue, watch } = useFormContext();
 
   const handleRemoveResponse = (index: number, keywordName: string) => {
     remove(index);
-    const result = removeKeywordFromText(message, keywordName);
-    setMessage(result);
+    const content = watch("content");
+    const result = removeKeywordFromText(content, keywordName);
+    setValue("content", result, { shouldDirty: true });
+    //setMessage(result);
   };
 
   const removeKeywordFromText = (text: string, keyword: string) => {
-    // Creamos una expresión regular dinámica que busque la palabra clave dentro de corchetes
+    // We create a dynamic regular expression that searches for the keyword within brackets
     const regex = new RegExp(`\\[${keyword}\\]`, "g");
 
-    // Reemplazamos la palabra clave por una cadena vacía, eliminándola del texto
+    // We replace the keyword with an empty string, removing it from the text
     const processedText = text
       .replace(regex, "")
       .replace(/\s{2,}/g, " ")
-      .trim(); // También eliminamos los espacios extras
+      .trim(); // We also remove the extra spaces
 
     return processedText;
   };
@@ -45,13 +50,13 @@ const InputTypeResponse = ({ fields, remove, message, setMessage }: Props) => {
   useEffect(() => {
     console.log("item");
     fields.forEach((item, index) => {
-      setValue(`responses[${index}].value`, item.value);
+      setValue(`responses[${index}].response`, item.response);
       setValue(`responses[${index}].reply`, item.reply);
     });
   }, [fields, setValue]);
 
   return (
-    <div className="mb-4  grid grid-cols-2 gap-4 h-full items-end">
+    <div className="mb-4  grid grid-cols-1 md:grid-cols-2 gap-4 h-full items-end">
       {fields.map((item, index) => (
         <div
           key={item.id}
@@ -69,7 +74,7 @@ const InputTypeResponse = ({ fields, remove, message, setMessage }: Props) => {
                       variant="link"
                       type="button"
                       //onClick={() => remove(index)}
-                      onClick={() => handleRemoveResponse(index, item.value)}
+                      onClick={() => handleRemoveResponse(index, item.response)}
                       className="text-customRed-v1"
                     >
                       Remove
@@ -77,19 +82,7 @@ const InputTypeResponse = ({ fields, remove, message, setMessage }: Props) => {
                   </FormLabel>
 
                   <FormControl className="w-full">
-                    <div>
-                      {/*
-                      <Input
-                        placeholder={""}
-                        {...field}
-                        className=""
-                        defaultValue={item.value}
-                        type={"text"}
-                      />
-                      */}
-
-                      {item.value}
-                    </div>
+                    <div>{item.response}</div>
                   </FormControl>
 
                   <CustomFormMessage className="w-full" />

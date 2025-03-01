@@ -1,6 +1,7 @@
 import { TemplateProps } from "@/types/types";
 import React from "react";
 import Link from "next/link"; // Asegúrate de importar Link desde Next.js
+import { templateType } from "@/lib/utils";
 
 type Props = {
   dataTemplates: TemplateProps[];
@@ -26,10 +27,10 @@ const TypeTemplateSection = ({
             onClick={() => handleSelected(item?.id ?? "")}
           >
             <div className="flex gap-3 justify-between bg-[#F9F9F9] p-4 rounded-tl-lg rounded-tr-lg">
-              <span className="text-base font-semibold">{item.title}</span>
+              <span className="text-base font-semibold">{item.name}</span>
 
               <span className="bg-[#CCCCCC] text-white rounded-full px-2 py-1 font-normal text-xs tracking-[2%] text-center">
-                {item.type}
+                {templateType(item?.isTwoWay ?? false)}
               </span>
             </div>
 

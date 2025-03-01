@@ -25,10 +25,16 @@ const BranchesList = ({
   const router = useRouter();
   const searchParams = useSearchParams();
   const selectedPage = searchParams?.get("page");
+  const selectedSortOrder = searchParams ? searchParams.get("sortOrder") : null;
+  const selectedSortBy = searchParams ? searchParams.get("sortBy") : null;
 
   const [search, setSearch] = useState("");
-  const [sortBy, setSortBy] = useState<string>(""); // Status for the sort field
-  const [sortOrder, setSortOrder] = useState<"asc" | "desc">("asc"); // State for ascending or descending order
+  const [sortBy, setSortBy] = useState<string>(selectedSortBy ?? ""); // Status for the sort field
+  const [sortOrder, setSortOrder] = useState<"asc" | "desc" | null>( // Permite null
+    selectedSortOrder === "asc" || selectedSortOrder === "desc"
+      ? (selectedSortOrder.toLowerCase() as "asc" | "desc") // Asegura que el valor es "asc" o "desc"
+      : null // Permite null como valor predeterminado
+  );
   const [data, setData] = useState<BranchProps[]>(dataBranches);
   const [totalPages, setTotalPages] = useState(0);
   const [clearSelected, setClearSelected] = useState(false);
@@ -78,36 +84,6 @@ const BranchesList = ({
     }
   }, [pagination, search, refetch]);
 
-  /*
-  const handleSortChange = (field: string) => {
-    if (field === sortBy) {
-      // Si ya está ordenado por el mismo campo, invertir el orden
-      setSortOrder(sortOrder === "asc" ? "desc" : "asc");
-    } else {
-      // Si es un nuevo campo de ordenamiento, establecerlo y por defecto ordenar asc
-      setSortBy(field);
-      setSortOrder("asc");
-    }
-  };
-  */
-  const handleSortChange = (field: string) => {
-    if (field === sortBy) {
-      // Si ya está ordenado por el mismo campo, invertir el orden
-
-      setSortOrder(sortOrder === "asc" ? "desc" : "asc");
-    } else {
-      // Si es un nuevo campo de ordenamiento, establecerlo y por defecto ordenar asc
-      setSortBy(field);
-      setSortOrder("asc");
-    }
-    const params = new URLSearchParams(window.location.search);
-    params.set("sortBy", field);
-    params.set("sortOrder", sortOrder === "asc" ? "ASC" : "DESC");
-    params.set("page", (pagination.pageIndex + 1).toString());
-
-    router.push(`${window.location.pathname}?${params.toString()}`);
-  };
-
   const selected: IsColumnSelectedFn<BranchProps> = (
     column: ColumnDef<BranchProps>
   ) => {
@@ -131,18 +107,36 @@ const BranchesList = ({
     }
   }, [clearRowsSelected]);
 
-  useEffect(() => {
-    return () => {
-      setBranchesSelected([]);
-    };
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  //=====================================
+  //Start URL Parameters
+  //=====================================
+  //1. Update URL when sorting changes
+  const handleSortChange = (field: string) => {
+    let newSortOrder: "asc" | "desc" | null = "asc"; // By default, ascending order
 
+    if (field === sortBy) {
+      // If already sorted by the same field, reverse the order
+      newSortOrder = sortOrder === "asc" ? "desc" : "asc";
+    }
+
+    // Update local states
+    setSortBy(field);
+    setSortOrder(newSortOrder);
+
+    // Update URL
+    const params = new URLSearchParams(window.location.search);
+    params.set("sortBy", field);
+    params.set("sortOrder", newSortOrder === "asc" ? "ASC" : "DESC");
+    params.set("page", (pagination.pageIndex + 1).toString());
+
+    router.push(`${window.location.pathname}?${params.toString()}`);
+  };
+
+  //2. Synchronizing local states with the URL when loading the component
   useEffect(() => {
     const searchParams = new URLSearchParams(window.location.search);
     const sortByParam = searchParams.get("sortBy");
     const sortOrderParam = searchParams.get("sortOrder");
-    const pageParam = searchParams.get("page");
 
     if (sortByParam) {
       setSortBy(sortByParam);
@@ -152,12 +146,43 @@ const BranchesList = ({
     }
   }, []);
 
-  // Update URL when page changes (without passing `handlePageChange` to `DataTable`)
+  //3. Refetch data when URL parameters change
+  useEffect(() => {
+    if (pagination.pageIndex >= 0) {
+      const refetchOptions: RefetchOptions = {
+        pagination: {
+          page: pagination.pageIndex + 1,
+          limit: pagination.pageSize,
+        },
+        search,
+        sortBy,
+        sortOrder,
+      };
+
+      refetch(refetchOptions as object);
+    }
+  }, [pagination, search, sortBy, sortOrder, refetch]);
+
+  //4. Handling pagination
   useEffect(() => {
     const params = new URLSearchParams(window.location.search);
     params.set("page", (pagination.pageIndex + 1).toString());
+    if (sortBy) {
+      params.set("sortBy", sortBy);
+    }
+    if (sortOrder) {
+      params.set("sortOrder", sortOrder === "asc" ? "ASC" : "DESC");
+    }
     router.push(`${window.location.pathname}?${params.toString()}`);
-  }, [pagination.pageIndex, router]);
+  }, [pagination.pageIndex, router, sortBy, sortOrder]);
+
+  //5. Clearing states when unmounting the component
+  useEffect(() => {
+    return () => {
+      setBranchesSelected([]);
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   return (
     <div>

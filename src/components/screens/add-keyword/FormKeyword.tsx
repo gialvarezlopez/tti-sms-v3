@@ -18,7 +18,7 @@ const FormKeyword = ({ setIsOpen, setKeywordOption }: Props) => {
   const FormSchema = z.object({
     keywordName: z.string().min(1, "Please enter the name."),
     keywordType: z.string().min(1, {
-      message: "Please select a type.", // El mensaje de error debe ir en 'message' en vez de 'required_error'
+      message: "Please select a type.",
     }),
   });
 
@@ -32,7 +32,7 @@ const FormKeyword = ({ setIsOpen, setKeywordOption }: Props) => {
 
   function onSubmit(data: z.infer<typeof FormSchema>) {
     setIsOpen(false);
-    setKeywordOption({ name: data.keywordName, type: data.keywordType });
+    setKeywordOption({ keyword: data.keywordName, type: data.keywordType });
     console.log(data);
     return false;
   }

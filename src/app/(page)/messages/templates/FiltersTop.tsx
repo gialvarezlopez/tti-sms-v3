@@ -129,7 +129,9 @@ const Filter = () => {
               All
             </Button>
             <Button
-              className={`${panelWidth <= setMaxWidth ? "w-full" : "px-6"} ${
+              className={`${
+                panelWidth <= setMaxWidth ? "w-full px-2" : "px-3 md:px-6"
+              } ${
                 selectedType === "One Way"
                   ? "bg-customRed-v3 hover:bg-customRed-v2"
                   : "btn-white-normal link"
@@ -143,7 +145,9 @@ const Filter = () => {
               One Way
             </Button>
             <Button
-              className={`${panelWidth <= setMaxWidth ? "w-full" : "px-6"} ${
+              className={`${
+                panelWidth <= setMaxWidth ? "w-full px-2" : "px-6"
+              } ${
                 selectedType === "Two Way"
                   ? "bg-customRed-v3 hover:bg-customRed-v2"
                   : "btn-white-normal link"

@@ -230,3 +230,16 @@ export const generateSlug = (text: string): string => {
     .replace(/\s+/g, "-") // Reemplazar espacios por "-"
     .replace(/-+/g, "-"); // Evitar múltiples guiones seguidos
 };
+
+export const templateType = (isTwoWay: boolean) => {
+  return isTwoWay ? "Two Way" : "One Way";
+};
+
+export const formatDate = (isoDate: string) => {
+  if (isoDate === "") return;
+  const date = new Date(isoDate);
+
+  // Formatear la fecha en el formato "MM/dd/yyyy" en inglés (EE. UU.)
+  const formattedDate = date.toLocaleDateString("en-US");
+  return formattedDate;
+};

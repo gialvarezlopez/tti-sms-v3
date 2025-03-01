@@ -9,10 +9,15 @@ import {
 import CustomFormMessage from "@/components/ui/CustomFormMessage";
 import { Input } from "@/components/ui/input";
 import CustomMultiSelect from "@/components/ui/CustomMultiSelect";
-import { KeywordProps, ResponseProps, TypeComboBoxProps } from "@/types/types";
+import {
+  BranchProps,
+  KeywordProps,
+  ResponseProps,
+  TypeComboBoxProps,
+} from "@/types/types";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Textarea } from "@/components/ui/textarea";
-import { dataBranches } from "@/app/(page)/admin/settings/mock/dataBranch";
+//import { dataBranches } from "@/app/(page)/admin/settings/mock/dataBranch";
 import Keyword from "./Keyword";
 import Response from "./Response";
 import { MESSAGE_EXCHANGE } from "@/lib/constants";
@@ -26,7 +31,7 @@ type Props = {
   errors: FieldErrors<{
     keywords: {
       name: string;
-      value: string | number | Date;
+      type: string | number | Date;
     }[];
     responses: {
       value: string;
@@ -35,6 +40,8 @@ type Props = {
   }>;
   clearMessage: boolean;
   setClearMessage: React.Dispatch<React.SetStateAction<boolean>>;
+  dataBranches: BranchProps[];
+  isLoadingBranches: boolean;
 };
 
 const FieldsTemplate = ({
@@ -46,6 +53,8 @@ const FieldsTemplate = ({
   errors,
   clearMessage,
   setClearMessage,
+  dataBranches,
+  isLoadingBranches,
 }: Props) => {
   const { control, watch, setValue, clearErrors } = useFormContext();
 
@@ -93,7 +102,7 @@ const FieldsTemplate = ({
   };
 
   const addKeyword = (phrase: string) => {
-    const currentMessage = watch("message");
+    const currentMessage = watch("content");
     let newMessage = currentMessage;
 
     if (cursorPosition !== null) {
@@ -105,7 +114,7 @@ const FieldsTemplate = ({
       newMessage = currentMessage + ` [${phrase}] `; // Add it to the end if no position was detected
     }
 
-    setValue("message", newMessage);
+    setValue("content", newMessage);
     setCursorPosition(null);
   };
 
@@ -122,9 +131,10 @@ const FieldsTemplate = ({
   };
 
   useEffect(() => {
-    if (keywordOption.name) {
-      addKeyword(keywordOption.name);
+    if (keywordOption.keyword) {
+      addKeyword(keywordOption.keyword);
     }
+
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [keywordOption]);
 
@@ -137,7 +147,7 @@ const FieldsTemplate = ({
 
   useEffect(() => {
     if (clearMessage) {
-      setValue("message", "");
+      setValue("content", "");
       setMessage("");
       setValue("messageExchangeType", "");
       setClearMessage(false);
@@ -167,24 +177,31 @@ const FieldsTemplate = ({
         </div>
 
         <div className="col-span-2 md:col-span-1">
-          <div className="flex gap-3 justify-between">
-            <FormLabel className="text-base font-semibold">Branch</FormLabel>
-          </div>
+          {isLoadingBranches ? (
+            "Loading..."
+          ) : (
+            <>
+              <div className="flex gap-3 justify-between">
+                <FormLabel className="text-base font-semibold">
+                  Branch
+                </FormLabel>
+              </div>
 
-          <Controller
-            name="branches"
-            control={control}
-            render={({}) => (
-              <CustomMultiSelect
+              <Controller
                 name="branches"
-                label=""
                 control={control}
-                data={simplifiedBranches}
-                showLimit={3}
-                //onChange={handleBranchChange}
+                render={({}) => (
+                  <CustomMultiSelect
+                    name="branches"
+                    label=""
+                    control={control}
+                    data={simplifiedBranches}
+                    showLimit={3}
+                  />
+                )}
               />
-            )}
-          />
+            </>
+          )}
         </div>
 
         <div className="col-span-2">
@@ -248,7 +265,7 @@ const FieldsTemplate = ({
         <div className="col-span-2">
           <FormField
             control={control}
-            name="message"
+            name="content"
             render={({ field }) => (
               <FormItem>
                 <FormLabel className="text-base font-semibold">
@@ -268,7 +285,7 @@ const FieldsTemplate = ({
                             ),
                           }}
                         />
-                        <div className="text-sm h-[20px] font-bold  flex gap-1 items-center">
+                        <div className="text-sm min-h-[20px] font-bold block">
                           Double click on the message content to edit
                         </div>
                       </div>
@@ -295,7 +312,6 @@ const FieldsTemplate = ({
           />
         </div>
       </div>
-
       {messageExchangeType === MESSAGE_EXCHANGE.TWO_WAY && (
         <div className="mt-3 grid grid-cols-1 md:grid-cols-2">
           <FormField
@@ -325,18 +341,12 @@ const FieldsTemplate = ({
         </div>
       )}
 
-      <Keyword
-        setOpenKeyword={setOpenKeyword}
-        keywordOption={keywordOption}
-        setMessage={setMessage}
-        message={message}
-      />
+      <Keyword setOpenKeyword={setOpenKeyword} keywordOption={keywordOption} />
       {errors && errors.keywords?.message && (
         <div className="mt-3 font-medium bg-customRed-v4 text-[#1D2433] formMessageError rounded relative text-xs inline-block showIconError w-full">
           {errors.keywords?.message}
         </div>
       )}
-
       {messageExchangeType === MESSAGE_EXCHANGE.TWO_WAY && (
         <>
           <Response
@@ -344,25 +354,29 @@ const FieldsTemplate = ({
             responseOption={responseOption}
             errors={errors}
             setResponseOption={setResponseOption}
-            setMessage={setMessage}
-            message={message}
           />
 
-          <FormField
-            control={control}
-            name="invalidReply"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel className="text-base font-semibold flex gap-3 justify-between items-center">
-                  Invalid Reply
-                </FormLabel>
-                <FormControl>
-                  <Textarea placeholder="" className="resize-none" {...field} />
-                </FormControl>
-                <CustomFormMessage className="w-full" />
-              </FormItem>
-            )}
-          />
+          <div className="mt-6 md:mt-0">
+            <FormField
+              control={control}
+              name="invalidReply"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel className="text-base font-semibold flex gap-3 justify-between items-center">
+                    Invalid Reply
+                  </FormLabel>
+                  <FormControl>
+                    <Textarea
+                      placeholder=""
+                      className="resize-none"
+                      {...field}
+                    />
+                  </FormControl>
+                  <CustomFormMessage className="w-full" />
+                </FormItem>
+              )}
+            />
+          </div>
         </>
       )}
     </div>
