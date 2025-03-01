@@ -53,7 +53,10 @@ const SideBar = ({ setIsSidebarOpen }: Props) => {
 
   const handleSignOut = async () => {
     Cookies.remove("session-token");
-    const baseUrl = window.location.origin;
+
+    // Get the base URL dynamically
+    const baseUrl = typeof window !== "undefined" ? window.location.origin : "";
+
     await signOut({ redirect: true, callbackUrl: `${baseUrl}/login` });
   };
 
