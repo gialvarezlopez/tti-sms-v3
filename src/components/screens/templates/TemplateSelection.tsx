@@ -35,10 +35,10 @@ const TemplateSelection = ({
   });
 
   // Filtrar objetos por tipo
-  const oneWayItems = dataTemplates.filter(
+  const oneWayItems = dataTemplates?.data?.filter(
     (item: TemplateProps) => item.isTwoWay === false
   );
-  const twoWayItems = dataTemplates.filter(
+  const twoWayItems = dataTemplates?.data?.filter(
     (item: TemplateProps) => item.isTwoWay === true
   );
 

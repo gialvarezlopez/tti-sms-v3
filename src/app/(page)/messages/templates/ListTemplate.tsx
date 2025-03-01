@@ -132,7 +132,7 @@ const ListTemplate = ({ dataTemplates }: Props) => {
     .filter((item) =>
       selectedType && selectedType !== "all"
         ? item.isTwoWay ===
-          (selectedType.toLowerCase() === "one way" ? true : false)
+          (selectedType.toLowerCase() === "two way" ? true : false)
         : true
     )
     .filter((item) =>

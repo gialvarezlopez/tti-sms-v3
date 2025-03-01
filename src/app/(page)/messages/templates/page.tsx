@@ -7,6 +7,7 @@ import ListTemplate from "./ListTemplate";
 import { dataTemplates } from "@/components/screens/templates/dataMock";
 import { useGetTemplates } from "@/hooks/useTemplates";
 import { TemplateProps } from "@/types/types";
+import CustomFormMessage from "@/components/ui/CustomFormMessage";
 //import FilterTop from "./FiltersTop";
 
 // Dynamic loading of FilterTop to avoid SSR (static rendering)
@@ -30,7 +31,6 @@ const Page = () => {
     data: response,
     error,
     isLoading,
-    refetch,
   } = useGetTemplates({
     page: pagination.pageIndex + 1,
     limit: pagination.pageSize,
@@ -60,6 +60,12 @@ const Page = () => {
       <Suspense fallback={<div>Loading Filter...</div>}>
         <FilterTop />
       </Suspense>
+
+      {error && (
+        <CustomFormMessage>
+          There was an error to load the templates
+        </CustomFormMessage>
+      )}
 
       <Suspense fallback={<div>Loading Templates...</div>}>
         <ListTemplate dataTemplates={data ?? []} />

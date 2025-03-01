@@ -5,14 +5,7 @@ import { signOut } from "next-auth/react";
 import Cookies from "js-cookie";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { usePathname } from "next/navigation";
-import {
-  IconHome,
-  IconMessage,
-  IconHistory,
-  MilwaukeeLogo,
-  IconSettings,
-  IconPageName,
-} from "../../../assets/images";
+import { MilwaukeeLogo, IconPageName } from "../../../assets/images";
 import Image from "next/image";
 import {
   ArrowLeftToLine,
@@ -55,15 +48,13 @@ const SideBar = ({ setIsSidebarOpen }: Props) => {
     const newState = !isOpen;
     setIsOpen(newState);
     setIsSidebarOpen(newState);
-    localStorage.setItem("sidebarOpen", JSON.stringify(newState)); // Guardar en localStorage
+    localStorage.setItem("sidebarOpen", JSON.stringify(newState));
   };
 
   const handleSignOut = async () => {
-    // Eliminar la cookie session-token al hacer sign-out
     Cookies.remove("session-token");
-
-    // Realizar el sign-out utilizando next-auth/react con redirección a /login
-    await signOut({ redirect: true, callbackUrl: "/login" });
+    const baseUrl = window.location.origin;
+    await signOut({ redirect: true, callbackUrl: `${baseUrl}/login` });
   };
 
   return (

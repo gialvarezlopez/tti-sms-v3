@@ -18,7 +18,7 @@ const TypeTemplateSection = ({
 }: Props) => {
   return (
     <>
-      {dataTemplates.map((item, index) => {
+      {dataTemplates?.map((item, index) => {
         const content = (
           <div
             className={`border-2 rounded-lg hover:border-[#E02D3C] hover:border-2 cursor-pointer h-full ${
