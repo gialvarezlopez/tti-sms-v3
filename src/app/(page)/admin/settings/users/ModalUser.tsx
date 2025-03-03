@@ -11,11 +11,8 @@ import CreateEditUser from "./CreateEditUser";
 import { UserProps } from "@/types/types";
 
 type Props = {
-  //setIsNext: React.Dispatch<React.SetStateAction<boolean>>;
   setIsOpen: React.Dispatch<React.SetStateAction<boolean>>;
   user?: UserProps;
-  //setFormSelected: React.Dispatch<React.SetStateAction<string>>;
-  //selectedValue: string;
 };
 const ModalUser = ({ setIsOpen, user }: Props) => {
   return (

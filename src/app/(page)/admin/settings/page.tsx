@@ -29,10 +29,7 @@ const Setting = () => {
       <div className="rounded-lg bg-white my-6 p-4">
         <p className="py-2">
           <Filter
-            //setUserSelected={setUsersSelected}
-            //setBranchesSelected={setBranchesSelected}
             usersSelected={usersSelected}
-            //setDeleteUsers={setDeleteUsers}
             branchesSelected={branchesSelected}
           />
         </p>
@@ -50,11 +47,7 @@ const Setting = () => {
           />
         )}
       </div>
-      <AlertDelete
-        setClearRowsSelected={setClearRowsSelected}
-        //branchesSelected={branchesSelected}
-        //usersSelected={usersSelected}
-      />
+      <AlertDelete setClearRowsSelected={setClearRowsSelected} />
     </div>
   );
 };

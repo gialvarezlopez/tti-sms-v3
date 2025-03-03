@@ -1,5 +1,4 @@
 "use client";
-//import AnimateMotion from "@/wrappers/AnimateMotion";
 import MenuMessage from "@/components/screens/message/MenuMessage";
 
 export default function PageLayout({

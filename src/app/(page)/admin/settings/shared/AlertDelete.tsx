@@ -140,7 +140,7 @@ Props) => {
                   ? "Are you sure you want to delete this user? If you continue, this they will be permanently deleted."
                   : "Are you sure you want to delete this branch? If you continue, this they will be permanently deleted."}
               </p>
-              <div className="overflow-y-auto max-h-[calc(100vh-350px)]">
+              <div className="overflow-y-auto max-h-[calc(100vh-350px)] text-left">
                 <p className="font-bold mt-2">
                   {users?.map((user, index) => (
                     <p key={index}>{user.name}</p>
@@ -156,10 +156,10 @@ Props) => {
             </AlertDialogDescription>
             <Separator className="my-3" />
           </AlertDialogHeader>
-          <AlertDialogFooter className="px-6 pb-4 pt-2">
+          <AlertDialogFooter className="px-6 pb-4 pt-2 flex flex-row gap-3">
             <Button
               type="button"
-              className="btn-white-normal w-1/2 md:w-[33%]"
+              className="btn-white-normal w-full md:w-[33%]"
               variant={"outline"}
               onClick={closeDialog}
               disabled={isDeletingUser || isDeletingBranch}
@@ -168,7 +168,7 @@ Props) => {
             </Button>
             <Button
               type="button"
-              className="bg-customRed-v3 w-1/2 md:w-[33%]"
+              className="bg-customRed-v3 w-full md:w-[33%]"
               variant={"destructive"}
               onClick={handleFormSubmit}
               disabled={isDeletingUser || isDeletingBranch}

@@ -1,6 +1,7 @@
 "use client";
 import React, { useEffect, useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
+import useResizeObserver from "use-resize-observer";
 import { ColumnDef } from "@tanstack/react-table";
 import DataTable from "@/components/ui/DataTable";
 import { columns } from "./Columns";
@@ -27,6 +28,8 @@ const BranchesList = ({
   const selectedPage = searchParams?.get("page");
   const selectedSortOrder = searchParams ? searchParams.get("sortOrder") : null;
   const selectedSortBy = searchParams ? searchParams.get("sortBy") : null;
+
+  const { ref, width = 0 } = useResizeObserver<HTMLDivElement>();
 
   const [search, setSearch] = useState("");
   const [sortBy, setSortBy] = useState<string>(selectedSortBy ?? ""); // Status for the sort field
@@ -185,12 +188,12 @@ const BranchesList = ({
   }, []);
 
   return (
-    <div>
+    <div ref={ref}>
       <div className="mx-auto py-2">
         {isLoading ? (
           <TableSkeleton
             rows={5}
-            cols={4}
+            cols={width <= 768 ? 2 : 4}
             checkbox={true}
             dots={true}
             width="w-full md:w-1/2"

@@ -1,5 +1,6 @@
 import React, { useEffect, useMemo, useState } from "react";
 import { Controller, FieldErrors, useFormContext } from "react-hook-form";
+import useResizeObserver from "use-resize-observer";
 import {
   FormControl,
   FormField,
@@ -57,7 +58,7 @@ const FieldsTemplate = ({
   isLoadingBranches,
 }: Props) => {
   const { control, watch, setValue, clearErrors } = useFormContext();
-
+  const { ref, width = 0 } = useResizeObserver<HTMLDivElement>();
   const messageExchangeType = watch("messageExchangeType");
 
   const simplifiedBranches: TypeComboBoxProps[] = useMemo(
@@ -156,7 +157,7 @@ const FieldsTemplate = ({
   }, [clearMessage, setClearMessage]);
 
   return (
-    <div>
+    <div ref={ref}>
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
         <div className="col-span-2 md:col-span-1">
           <FormField
@@ -196,7 +197,7 @@ const FieldsTemplate = ({
                     label=""
                     control={control}
                     data={simplifiedBranches}
-                    showLimit={3}
+                    showLimit={width <= 768 ? 2 : 3}
                   />
                 )}
               />

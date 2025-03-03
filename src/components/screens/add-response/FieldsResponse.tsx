@@ -13,7 +13,7 @@ import { Textarea } from "@/components/ui/textarea";
 const FieldsResponse = () => {
   const { control } = useFormContext();
   return (
-    <div className="px-6 grid grid-cols-1 gap-3">
+    <div className="md:px-6 grid grid-cols-1 gap-3">
       <FormField
         control={control}
         name="responseName"

@@ -18,7 +18,7 @@ const InfoAddKeyword = () => {
           variant="link"
           className=" text-customRed-v1 text-sm md:text-base flex gap-1 items-center"
         >
-          <CircleHelp className="w-3" />
+          <CircleHelp className="w-2 md:w-3" />
           How can I add keyword?
         </Button>
       </DialogTrigger>

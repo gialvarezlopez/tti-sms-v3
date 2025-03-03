@@ -108,7 +108,7 @@ const CreateEditUser = ({ setIsOpen, user }: Props) => {
           (user.primaryRole && user.primaryRole.name?.toLocaleLowerCase()) ??
           "",
         email: user.email ?? "",
-        branch: String(user.branch?.id ?? ""),
+        branch_id: String(user.branch?.id ?? ""),
       };
       reset(data);
     }

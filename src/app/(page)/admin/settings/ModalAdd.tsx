@@ -23,7 +23,7 @@ const ModalAdd = ({ selectedValue }: Props) => {
     <div className="flex-1 md:flex-none">
       <Button
         type="submit"
-        className="bg-customRed-v3 px-8 w-full md:w-auto"
+        className="bg-customRed-v3 md:px-8 w-full md:w-auto"
         variant={"destructive"}
         onClick={() => setIsOpen(true)}
       >

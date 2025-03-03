@@ -71,7 +71,7 @@ Props) => {
       <Separator className="mt-6" />
       <div className="flex flex-col">
         <div className="flex justify-between gap-3 md:pt-6 w-full flex-col md:flex-row order-2">
-          <div className="flex gap-3 items-center flex-1 text-xl font-bold">
+          <div className="flex gap-3 items-center flex-1 text-lg md:text-xl font-bold">
             Automatic Responses{" "}
           </div>
           <Button

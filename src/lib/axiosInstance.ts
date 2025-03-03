@@ -33,7 +33,6 @@ axiosInstance.interceptors.response.use(
   },
   (error) => {
     if (error.response?.status === 401) {
-      // Token inválido o expirado
       console.error("Error 401: Unauthorized");
     }
     return Promise.reject(error);

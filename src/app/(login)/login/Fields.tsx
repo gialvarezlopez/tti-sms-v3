@@ -75,7 +75,7 @@ const Fields = () => {
       </div>
 
       <div className="flex gap-3 justify-between pt-3 items-center">
-        <div className="text-sm flex gap-2">
+        <div>
           <FormField
             control={control}
             name="remember"
@@ -88,13 +88,17 @@ const Fields = () => {
                   />
                 </FormControl>
                 <div className="space-y-1 leading-none">
-                  <FormLabel>Remember for 30 days</FormLabel>
+                  <FormLabel className="text-xs md:text-sm flex md:gap-2">
+                    Remember for 30 days
+                  </FormLabel>
                 </div>
               </FormItem>
             )}
           />
         </div>
-        <div className="text-customRed-v1 font-semibold">Forgot password</div>
+        <div className="text-customRed-v1 font-semibold text-xs md:text-sm">
+          Forgot password
+        </div>
       </div>
     </>
   );
