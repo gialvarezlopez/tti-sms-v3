@@ -56,11 +56,11 @@ const InputTypeResponse = ({
   }, [fields, setValue]);
 
   return (
-    <div className="mb-4  grid grid-cols-1 md:grid-cols-2 gap-4 h-full items-end">
+    <div className="mb-4  grid grid-cols-1 md:grid-cols-2 gap-2 md:gap-4 h-full items-end">
       {fields.map((item, index) => (
         <div
           key={item.id}
-          className="border border-[#CCD1DC] rounded-md  pb-6 px-6 h-full space-y-3"
+          className="border border-[#CCD1DC] rounded-md px-3  pb-3 md:pb-6 md:px-6 h-full space-y-3"
         >
           <div className="w-full bg-red">
             <FormField
@@ -73,7 +73,6 @@ const InputTypeResponse = ({
                     <Button
                       variant="link"
                       type="button"
-                      //onClick={() => remove(index)}
                       onClick={() => handleRemoveResponse(index, item.response)}
                       className="text-customRed-v1"
                     >

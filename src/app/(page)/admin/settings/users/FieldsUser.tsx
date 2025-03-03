@@ -16,7 +16,6 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { USER_ROLE } from "@/lib/constants";
-//import { dataBranches } from "../mock/dataBranch";
 import { Eye, EyeOff } from "lucide-react";
 import { BranchProps, UserProps } from "@/types/types";
 
@@ -68,13 +67,6 @@ const FieldsUser = ({ user, dataBranches }: Props) => {
               }
               onValueChange={field.onChange}
             >
-              {/*
-            <Select
-              onValueChange={field.onChange}
-              value={field.value}
-              defaultValue={field.value || ""}
-            >
-              */}
               <FormControl>
                 <SelectTrigger>
                   <SelectValue placeholder="Select a type" />

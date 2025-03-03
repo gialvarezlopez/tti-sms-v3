@@ -1,16 +1,15 @@
 "use client";
 import React, { useEffect, useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
+import useResizeObserver from "use-resize-observer";
 import { ColumnDef } from "@tanstack/react-table";
 import DataTable from "@/components/ui/DataTable";
 import { columns } from "./Columns";
 import TableSkeleton from "@/components/skeletons/TableSkeleton";
 import { RefetchOptions, UserProps } from "@/types/types";
 import { useGetUsers } from "@/hooks/useUsers";
-import { setTimeout } from "timers/promises";
 
 type IsColumnSelectedFn<T> = (column: ColumnDef<T>, action?: string) => void;
-
 type Props = {
   setUsersSelected: React.Dispatch<React.SetStateAction<UserProps[]>>;
   clearRowsSelected: boolean;
@@ -28,12 +27,14 @@ const UsersList = ({
   const selectedSortOrder = searchParams ? searchParams.get("sortOrder") : null;
   const selectedSortBy = searchParams ? searchParams.get("sortBy") : null;
 
+  const { ref, width = 0 } = useResizeObserver<HTMLDivElement>();
+
   const [search, setSearch] = useState("");
   const [sortBy, setSortBy] = useState<string>(selectedSortBy ?? ""); // Status for the sort field
-  const [sortOrder, setSortOrder] = useState<"asc" | "desc" | null>( // Permite null
+  const [sortOrder, setSortOrder] = useState<"asc" | "desc" | null>(
     selectedSortOrder === "asc" || selectedSortOrder === "desc"
-      ? (selectedSortOrder.toLowerCase() as "asc" | "desc") // Asegura que el valor es "asc" o "desc"
-      : null // Permite null como valor predeterminado
+      ? (selectedSortOrder.toLowerCase() as "asc" | "desc")
+      : null
   );
 
   const [data, setData] = useState<UserProps[]>([]);
@@ -170,12 +171,12 @@ const UsersList = ({
   }, []);
 
   return (
-    <div>
+    <div ref={ref}>
       <div className="mx-auto py-2">
         {isLoading ? (
           <TableSkeleton
             rows={5}
-            cols={5}
+            cols={width <= 768 ? 2 : 5}
             checkbox={true}
             dots={true}
             width="w-full md:w-1/2"

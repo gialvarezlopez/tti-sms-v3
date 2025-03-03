@@ -175,7 +175,7 @@ const Filter = ({
               <Button
                 type="submit"
                 variant={"outline"}
-                className="flex gap-3 items-center btn-white-normal px-8 w-full md:w-auto"
+                className="flex gap-3 items-center btn-white-normal md:px-8 w-full md:w-auto"
                 onClick={handleDeleteSelected}
                 disabled={
                   !(usersSelected.length > 0 || branchesSelected.length > 0)
