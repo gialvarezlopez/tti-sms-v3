@@ -7,6 +7,7 @@ import { BranchProps, UserProps } from "@/types/types";
 import AlertDelete from "./shared/AlertDelete";
 import { SETTINGS_PARAMETER_URL } from "@/lib/constants";
 import dynamic from "next/dynamic";
+import withAdminProtection from "@/components/hoc/withAdminProtection";
 const Filter = dynamic(() => import("./Filters"), {
   ssr: false,
 });
@@ -60,4 +61,4 @@ const Page = () => {
   );
 };
 
-export default Page;
+export default withAdminProtection(Page);

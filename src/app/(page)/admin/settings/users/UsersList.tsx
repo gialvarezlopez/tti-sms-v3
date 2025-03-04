@@ -4,10 +4,10 @@ import { useRouter, useSearchParams } from "next/navigation";
 import useResizeObserver from "use-resize-observer";
 import { ColumnDef } from "@tanstack/react-table";
 import DataTable from "@/components/ui/DataTable";
-import { columns } from "./Columns";
 import TableSkeleton from "@/components/skeletons/TableSkeleton";
 import { RefetchOptions, UserProps } from "@/types/types";
 import { useGetUsers } from "@/hooks/useUsers";
+import useColumns from "./Columns";
 
 type IsColumnSelectedFn<T> = (column: ColumnDef<T>, action?: string) => void;
 type Props = {
@@ -21,6 +21,7 @@ const UsersList = ({
   clearRowsSelected,
   setClearRowsSelected,
 }: Props) => {
+  const columns = useColumns();
   const router = useRouter();
   const searchParams = useSearchParams();
   const selectedPage = searchParams?.get("page");

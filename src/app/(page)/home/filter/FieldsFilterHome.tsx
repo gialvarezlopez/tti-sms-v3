@@ -1,13 +1,15 @@
 import React, { useMemo } from "react";
+import { useSession } from "next-auth/react";
 import { Controller, useFormContext } from "react-hook-form";
 import { FormField } from "@/components/ui/form";
 import { Separator } from "@/components/ui/separator";
 import CalendarField from "@/components/ui/CalendarField";
 import { USER_ROLE } from "@/lib/constants";
 import CustomMultiSelect from "@/components/ui/CustomMultiSelect";
-import { TypeComboBoxProps } from "@/types/types";
+import { BranchProps, TypeComboBoxProps } from "@/types/types";
+import { useGetBranches } from "@/hooks/useBranches";
 
-const role = "admin"; // o role = "user" según el contexto o estado
+//const role = "admin"; // o role = "user" según el contexto o estado
 
 const dataTypeOfMessage = [
   {
@@ -31,35 +33,21 @@ const dataStatus = [
   },
 ];
 
-const dataBranches = [
-  {
-    id: "1",
-    value: "Branch One",
-  },
-  {
-    id: "2",
-    value: "Branch Two",
-  },
-  {
-    id: "3",
-    value: "Branch Three",
-  },
-  {
-    id: "4",
-    value: "Branch Four",
-  },
-  {
-    id: "5",
-    value: "Branch Five",
-  },
-  {
-    id: "6",
-    value: "Branch Six",
-  },
-];
-
 const FieldsFilterHome = () => {
+  const { data: session } = useSession();
+  const role = session?.user?.primaryRole;
   const { control, reset, getValues, watch } = useFormContext();
+
+  const {
+    data: dataBranches,
+    error,
+    isLoading,
+    refetch,
+  } = useGetBranches({
+    page: 1,
+    limit: 50,
+    search: "",
+  });
 
   const inputLastSentFrom = watch("lastSentFrom");
   const inputLastReceivedFrom = watch("lastReceivedFrom");
@@ -89,13 +77,16 @@ const FieldsFilterHome = () => {
   const simplifiedBranches: TypeComboBoxProps[] = useMemo(
     () =>
       dataBranches &&
-      dataBranches.map((item) => ({
-        id: `${item.id}`!, // El operador ! indica que sabemos que no es undefined
-        value: `${item?.value}`,
+      dataBranches.data &&
+      (dataBranches.data as BranchProps[]).map((item) => ({
+        id: `${item.id}`,
+        value: `${item.name}`,
       })),
-    // eslint-disable-next-line react-hooks/exhaustive-deps
     [dataBranches]
   );
+
+  //const simplifiedBranches = [];
+  //console.log("dataBranches", dataBranches);
 
   const resetSection = (fields: string[]) => {
     if (fields.length > 0) {
@@ -132,7 +123,7 @@ const FieldsFilterHome = () => {
               Reset
             </span>
           </div>
-          <div className="flex gap-3 justify-between">
+          <div className="flex gap-3 justify-between text-left">
             <div className="w-full">
               <FormField
                 control={control}
@@ -296,18 +287,22 @@ const FieldsFilterHome = () => {
             </div>
 
             <div className="mt-2">
-              <Controller
-                name="branch"
-                control={control}
-                render={({}) => (
-                  <CustomMultiSelect
-                    name="branch"
-                    label=""
-                    control={control}
-                    data={simplifiedBranches}
-                  />
-                )}
-              />
+              {isLoading ? (
+                "Loading branches"
+              ) : (
+                <Controller
+                  name="branch"
+                  control={control}
+                  render={({}) => (
+                    <CustomMultiSelect
+                      name="branch"
+                      label=""
+                      control={control}
+                      data={simplifiedBranches}
+                    />
+                  )}
+                />
+              )}
             </div>
           </div>
         </div>

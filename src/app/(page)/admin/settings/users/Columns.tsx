@@ -1,3 +1,4 @@
+import { useSession } from "next-auth/react";
 import { ColumnDef, Row } from "@tanstack/react-table";
 import { Checkbox } from "@/components/ui/checkbox";
 import { UserProps } from "@/types/types";
@@ -12,6 +13,7 @@ import { Dispatch, SetStateAction, useState } from "react";
 import UpdateUser from "./UpdateUser";
 import ModalResetPassword from "./modal-reset-password/ModalResetPassword";
 import useUsersStore from "@/store/useUsers";
+import { USER_ROLE } from "@/lib/constants";
 
 const UpdateCell = ({
   user,
@@ -156,6 +158,7 @@ const Cell = ({ row }: { row: UserProps }) => {
   );
 };
 
+/*
 export const columns: ColumnDef<UserProps>[] = [
   {
     accessorKey: "id",
@@ -269,3 +272,108 @@ export const columns: ColumnDef<UserProps>[] = [
     cell: ({ row }) => <Cell row={row.original} />,
   },
 ];
+*/
+
+const useColumns = () => {
+  const { data: session } = useSession();
+
+  // Comprobar si el usuario tiene rol 'admin'
+  const isAdmin = session?.user?.primaryRole === USER_ROLE.ADMIN;
+
+  // Definir las columnas
+  const columnDefs: ColumnDef<UserProps>[] = [
+    {
+      accessorKey: "id",
+      header: ({ table }) => (
+        <Checkbox
+          checked={table.getIsAllPageRowsSelected()}
+          onCheckedChange={(value: never) =>
+            table.toggleAllPageRowsSelected(value)
+          }
+        />
+      ),
+      cell: ({ row }) => (
+        <Checkbox
+          checked={row.getIsSelected()}
+          onCheckedChange={(value: never) => row.toggleSelected(value)}
+          className="!hover:bg-gray-600"
+        />
+      ),
+      enableSorting: false,
+    },
+    {
+      accessorKey: "name",
+      header: () => (
+        <Button variant="ghost" className="px-0">
+          Name
+        </Button>
+      ),
+      cell: ({ row }) => (
+        <span className="text-nowrap md:text-wrap">
+          {row.original.name} {row.original.last_name}
+        </span>
+      ),
+    },
+    {
+      accessorKey: "email",
+      header: () => (
+        <Button variant="ghost" className="px-0">
+          Email
+        </Button>
+      ),
+      cell: ({ row }) => <span>{row.original.email}</span>,
+    },
+    {
+      accessorKey: "primaryRole.name",
+      id: "primaryRole.name",
+      header: () => (
+        <Button variant="ghost" className="px-0">
+          User Type
+        </Button>
+      ),
+      cell: ({ row }) => (
+        <span className="text-nowrap">{row.original.primaryRole?.name}</span>
+      ),
+    },
+    {
+      accessorKey: "createdAt",
+      id: "createdAt",
+      header: () => (
+        <Button variant="ghost" className="px-0">
+          Date Added
+        </Button>
+      ),
+      cell: ({ row }) => (
+        <span className="text-nowrap">{row.original.createdAt}</span>
+      ),
+    },
+  ];
+
+  // Agregar columna 'Branch' solo si el usuario es 'admin'
+  if (isAdmin) {
+    columnDefs.push({
+      accessorKey: "branch.name",
+      id: "branch.name",
+      header: () => (
+        <Button variant="ghost" className="px-0">
+          Branch
+        </Button>
+      ),
+      cell: ({ row }: { row: Row<UserProps> }) => {
+        const branch = row.original.branch;
+        const branchName = branch?.name || "No branch assigned";
+        return <span className="text-nowrap">{branchName}</span>;
+      },
+    });
+  }
+
+  // Columna para las acciones
+  columnDefs.push({
+    id: "actions",
+    cell: ({ row }) => <Cell row={row.original} />,
+  });
+
+  return columnDefs; // Retornar las columnas dinámicas
+};
+
+export default useColumns;

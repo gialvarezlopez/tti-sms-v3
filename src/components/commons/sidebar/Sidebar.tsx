@@ -1,6 +1,7 @@
 "use client";
 import React, { Dispatch, SetStateAction, useEffect, useState } from "react";
 import Link from "next/link";
+import { useSession } from "next-auth/react";
 import { signOut } from "next-auth/react";
 import Cookies from "js-cookie";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
@@ -15,12 +16,14 @@ import {
   MessageSquare,
   Settings,
 } from "lucide-react";
+import { USER_ROLE } from "@/lib/constants";
 
 type Props = {
   setIsSidebarOpen: Dispatch<SetStateAction<boolean>>;
 };
 
 const SideBar = ({ setIsSidebarOpen }: Props) => {
+  const { data: session, status } = useSession();
   const pathname = usePathname();
 
   //const [isOpen, setIsOpen] = useState(true);
@@ -180,36 +183,38 @@ const SideBar = ({ setIsSidebarOpen }: Props) => {
       </div>
       <div>
         <ul className="space-y-1">
-          <li className="relative group">
-            <Link
-              href="/admin/settings"
-              className={`inline-flex w-full gap-5 items-center text-white font-normal text-sm ${
-                isOpen ? "p-4 py-3 " : "p-2 py-2 justify-center"
-              } rounded-lg menu-item ${
-                isActive("/admin/settings")
-                  ? "menu-item-active"
-                  : "menu-item-transition"
-              }`}
-            >
-              <Settings
-                className={`w-4 ${
-                  isActive("/admin/settings") && !isOpen
-                    ? "text-white"
-                    : "text-[#B8B8B8]"
-                } `}
-              />
-
-              <span
-                className={`${
-                  !isOpen
-                    ? "hidden group-hover:block absolute left-[50px] bg-gray-800 text-white px-2 py-1 rounded-md whitespace-nowrap"
-                    : ""
+          {session && session?.user?.primaryRole === USER_ROLE.ADMIN && (
+            <li className="relative group">
+              <Link
+                href="/admin/settings"
+                className={`inline-flex w-full gap-5 items-center text-white font-normal text-sm ${
+                  isOpen ? "p-4 py-3 " : "p-2 py-2 justify-center"
+                } rounded-lg menu-item ${
+                  isActive("/admin/settings")
+                    ? "menu-item-active"
+                    : "menu-item-transition"
                 }`}
               >
-                Settings
-              </span>
-            </Link>
-          </li>
+                <Settings
+                  className={`w-4 ${
+                    isActive("/admin/settings") && !isOpen
+                      ? "text-white"
+                      : "text-[#B8B8B8]"
+                  } `}
+                />
+
+                <span
+                  className={`${
+                    !isOpen
+                      ? "hidden group-hover:block absolute left-[50px] bg-gray-800 text-white px-2 py-1 rounded-md whitespace-nowrap"
+                      : ""
+                  }`}
+                >
+                  Settings
+                </span>
+              </Link>
+            </li>
+          )}
           <li className="relative group">
             <span
               //href="/login"
@@ -245,7 +250,7 @@ const SideBar = ({ setIsSidebarOpen }: Props) => {
             </div>
             {isOpen && (
               <div className="space-y-2">
-                <p className="font-bold text-xs">Doron Smith</p>
+                <p className="font-bold text-xs">{session?.user.name}</p>
                 <p className="text-xs font-normal">Branch Name</p>
               </div>
             )}

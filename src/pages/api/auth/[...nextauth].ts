@@ -7,8 +7,8 @@ import NextAuth, {
 import CredentialsProvider from "next-auth/providers/credentials";
 import axios from "axios";
 import { UserProps } from "@/types/types";
-
 import { JWT } from "next-auth/jwt";
+import { jwtDecode } from "jwt-decode";
 import axiosInstance from "@/lib/axiosInstance";
 import { usersRoutes } from "@/config/apiRoutes";
 
@@ -45,7 +45,6 @@ export const authOptions: NextAuthOptions = {
       async authorize(credentials) {
         try {
           const baseUrl = process.env.NEXT_PUBLIC_API_URL;
-          //console.log("baseUrl", baseUrl);
           const { data } = await axiosInstance.post<UserProps>(
             `${baseUrl}${usersRoutes.login}`,
             {
@@ -81,8 +80,6 @@ export const authOptions: NextAuthOptions = {
             return null;
           }
         } catch (error) {
-          //console.log(error);
-          //throw new Error(`${error}`);
           if (axios.isAxiosError(error)) {
             const errorMessage =
               error.response?.data?.message || "Authentication error";
@@ -100,8 +97,19 @@ export const authOptions: NextAuthOptions = {
 
   callbacks: {
     async jwt({ token, user, trigger, session }): Promise<CustomJWT> {
+      /*
       if (user) {
         (token as CustomJWT).user = user as CustomUser;
+      }
+      */
+      //The user info comes coded en jwt
+      if (user) {
+        // Decode the JWT token using jwt-decode
+        const decoded = jwtDecode<{ user: CustomUser }>(user.jwt);
+        (token as CustomJWT).user = {
+          ...user,
+          ...decoded.user, // Add the decoded user information
+        };
       }
 
       if (trigger === "update" && session?.user) {
