@@ -52,7 +52,7 @@ const CalendarField: React.FC<CalendarFieldProps> = ({
               disabled={disabled}
               variant={"outline"}
               className={cn(
-                "w-full pl-3 text-left font-normal",
+                "w-full pl-3 text-left font-normal block",
                 !field.value && "text-muted-foreground"
               )}
             >
@@ -62,6 +62,7 @@ const CalendarField: React.FC<CalendarFieldProps> = ({
               ) : (
                 <span>{labelButton ? labelButton : "Select... "}</span>
               )}
+
               <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
             </Button>
           </FormControl>
