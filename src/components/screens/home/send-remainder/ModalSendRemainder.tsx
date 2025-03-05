@@ -11,7 +11,7 @@ import { TicketsProps } from "@/types/types";
 import TemplatesSend from "./templates-send/TemplatesSend";
 
 type Props = {
-  ticket: TicketsProps;
+  ticket: any;
   modalOpen: boolean;
   onClose: () => void;
 };

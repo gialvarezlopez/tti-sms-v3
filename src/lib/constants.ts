@@ -35,7 +35,8 @@ export const USER_ROLE = {
 };
 
 export const KEYWORD_SYMBOL = {
-  BRACKETS: "{{}}",
+  BRACKETS: "[]",
+  //BRACKETS: "{{}}",
 };
 
 export const SETTING_OPTIONS = {

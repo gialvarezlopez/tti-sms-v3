@@ -136,7 +136,7 @@ const ListTemplate = ({ dataTemplates }: Props) => {
         : true
     )
     .filter((item) =>
-      selectedSearch ? item.name.toLowerCase().includes(selectedSearch) : true
+      selectedSearch ? item?.name?.toLowerCase().includes(selectedSearch) : true
     );
 
   useEffect(() => {

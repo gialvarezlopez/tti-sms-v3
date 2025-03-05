@@ -76,7 +76,12 @@ const FieldsBuildRemainder = ({ ticket }: Props) => {
           {/* Aquí usamos highlightKeyword para reemplazar {{}} por modelNumber */}
           <div
             dangerouslySetInnerHTML={{
-              __html: highlightKeyword(renderMessage(), modelNumber),
+              __html: highlightKeyword(renderMessage(), [
+                {
+                  keyword: modelNumber, // Usar el keyword del chat
+                  value: modelNumber, // Aquí debes proporcionar el valor asociado al keyword
+                },
+              ]),
             }}
           />
         </div>

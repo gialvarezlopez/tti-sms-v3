@@ -2,15 +2,27 @@
 import React from "react";
 import Link from "next/link";
 import { ArrowLeft } from "lucide-react";
-//import { useParams } from "next/navigation";
-
+import { useParams } from "next/navigation";
 import FormBuildMessage from "@/components/screens/templates/BuildTemplate/FormBuildMessage";
 import { dataTickets } from "@/app/(page)/home/mock/dataTickets";
+import { useSingleTemplate } from "@/hooks/useTemplates";
 
 const Page = () => {
-  //const params = useParams();
-  const elementId = 1; //params?.id ?? "";
-  const ticket = dataTickets.filter((item) => item.id === +elementId)[0] ?? 1;
+  const params = useParams();
+  const elementId = params?.id ?? "";
+
+  const {
+    data: currentTemplate,
+    isLoading,
+    error,
+  } = useSingleTemplate(elementId as string);
+
+  if (isLoading) {
+    return <>Loading</>;
+  }
+
+  //const ticket = dataTickets.filter((item) => item.id === +elementId)[0] ?? 1;
+  const template = currentTemplate.data || [];
   return (
     <div>
       <div className="flex justify-between gap-3 mb-6 flex-col md:flex-row">
@@ -25,7 +37,7 @@ const Page = () => {
         </div>
       </div>
 
-      {ticket && <FormBuildMessage isFromModal={false} ticket={ticket} />}
+      {template && <FormBuildMessage isFromModal={false} template={template} />}
     </div>
   );
 };

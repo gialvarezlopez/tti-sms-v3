@@ -6,19 +6,89 @@ import { showToast } from "@/lib/toastUtil";
 import { Form } from "@/components/ui/form";
 import { Separator } from "@/components/ui/separator";
 import { Button } from "@/components/ui/button";
-import { TicketsProps } from "@/types/types";
+import {
+  FormReviewMessageProps,
+  TemplateProps,
+  TicketsProps,
+} from "@/types/types";
 import FieldsResendMessage from "./FieldsBuildMessage";
 
 import Link from "next/link";
 import MessageReviewConfirm from "@/app/(page)/messages/new-message/confirm-message/MessageReviewConfirm";
+import { templateType } from "@/lib/utils";
 
 type Props = {
-  ticket: TicketsProps;
+  template: TemplateProps;
   onClose?: () => void;
   isFromModal: boolean;
 };
-const FormBuildMessage = ({ onClose, ticket, isFromModal = true }: Props) => {
+
+const KeywordSchema = z
+  .object({
+    keyword: z.string().min(1, "Keyword is required"),
+    value: z.string().min(1, "Value is required"),
+    type: z.string().min(1, "Type is required"),
+  })
+  .superRefine((keyword, ctx) => {
+    switch (keyword.type) {
+      case "string":
+      case "text":
+        break;
+
+      case "currency":
+        if (!/^\d+(\.\d{1,2})?$/.test(keyword.value)) {
+          ctx.addIssue({
+            code: z.ZodIssueCode.custom,
+            message: "Currency must be a number (integer or float)",
+            path: ["value"],
+          });
+        }
+        break;
+
+      case "number":
+        if (!/^\d+$/.test(keyword.value)) {
+          ctx.addIssue({
+            code: z.ZodIssueCode.custom,
+            message: "Number must be an integer",
+            path: ["value"],
+          });
+        }
+        break;
+
+      case "date":
+        if (
+          !/^(0[1-9]|1[0-2])\/(0[1-9]|[12][0-9]|3[01])\/\d{4}$/.test(
+            keyword.value
+          )
+        ) {
+          ctx.addIssue({
+            code: z.ZodIssueCode.custom,
+            message: "Date must be in the format MM/DD/YYYY",
+            path: ["value"],
+          });
+        }
+        break;
+
+      default:
+        // Unrecognized type
+        ctx.addIssue({
+          code: z.ZodIssueCode.custom,
+          message: "Invalid type",
+          path: ["type"],
+        });
+        break;
+    }
+  });
+
+const FormBuildMessage = ({ onClose, template, isFromModal = true }: Props) => {
   const [openConfirm, setOpenConfirm] = useState(false);
+
+  const [formState, setFormState] = useState<FormReviewMessageProps>({
+    clientName: "",
+    phoneNumber: "",
+    keywords: [],
+    content: "",
+  });
 
   const FormSchema = z.object({
     clientName: z.string().min(2, "Enter the client name"),
@@ -28,7 +98,21 @@ const FormBuildMessage = ({ onClose, ticket, isFromModal = true }: Props) => {
         message: "Phone number must be in the format (999) 999-9999",
       })
       .min(1, { message: "Phone number is required" }),
-    modelNumber: z.string().min(1, "SV or Model Number is required"),
+    content: z.string().optional(),
+    keywords: z.array(KeywordSchema).superRefine((keywords, ctx) => {
+      // If there is at least one keyword, all must be valid
+      if (keywords.length > 0) {
+        keywords.forEach((keyword, index) => {
+          if (!keyword.keyword || !keyword.value) {
+            ctx.addIssue({
+              code: z.ZodIssueCode.custom,
+              message: "All keyword fields are required",
+              path: ["keywords", index],
+            });
+          }
+        });
+      }
+    }),
   });
 
   const form = useForm<z.infer<typeof FormSchema>>({
@@ -36,7 +120,8 @@ const FormBuildMessage = ({ onClose, ticket, isFromModal = true }: Props) => {
     defaultValues: {
       clientName: "",
       phoneNumber: "",
-      modelNumber: "",
+      content: "",
+      keywords: [],
     },
   });
 
@@ -52,19 +137,20 @@ const FormBuildMessage = ({ onClose, ticket, isFromModal = true }: Props) => {
       setOpenConfirm(true);
     }
     console.log(data);
+    setFormState(data);
     return false;
   }
 
   useEffect(() => {
-    if (ticket && isFromModal) {
+    if (template && isFromModal) {
       reset({
-        phoneNumber: ticket?.phoneNumber,
-        clientName: ticket?.client,
-        modelNumber: ticket?.chat[0]?.keyword,
+        phoneNumber: template?.phoneNumber,
+        clientName: template?.name,
+        keywords: template?.keywords ?? [],
       });
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [ticket, isFromModal]);
+  }, [template, isFromModal]);
 
   return (
     <div className="w-full">
@@ -74,7 +160,7 @@ const FormBuildMessage = ({ onClose, ticket, isFromModal = true }: Props) => {
 
           <div>
             <span className="bg-[#CCCCCC] text-white rounded-full px-2 py-1 font-normal text-xs tracking-[2%]">
-              {ticket?.typeOfMessage}
+              {templateType(template?.isTwoWay ?? false)}
             </span>
           </div>
         </div>
@@ -91,7 +177,10 @@ const FormBuildMessage = ({ onClose, ticket, isFromModal = true }: Props) => {
                   : ""
               }`}
             >
-              <FieldsResendMessage ticket={ticket} isFromModal={isFromModal} />
+              <FieldsResendMessage
+                template={template}
+                isFromModal={isFromModal}
+              />
             </div>
           </div>
           <div className="pb-5">
@@ -133,9 +222,10 @@ const FormBuildMessage = ({ onClose, ticket, isFromModal = true }: Props) => {
 
       {!isFromModal && openConfirm && (
         <MessageReviewConfirm
-          ticket={ticket}
+          template={template}
           modalOpen={true}
           setOpenConfirm={setOpenConfirm}
+          formState={formState}
         />
       )}
     </div>

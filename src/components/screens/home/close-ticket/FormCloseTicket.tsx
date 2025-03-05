@@ -46,7 +46,7 @@ const FormCloseTicket = ({
             {tickets &&
               tickets?.map((ticket, index) => (
                 <p key={index}>
-                  {ticket.client} - {ticket.phoneNumber} - {ticket.branch}
+                  {ticket.clientName} - {ticket.phoneNumber} - {ticket.branch}
                 </p>
               ))}
           </div>

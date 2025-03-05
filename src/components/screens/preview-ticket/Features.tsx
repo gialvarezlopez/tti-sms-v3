@@ -18,7 +18,7 @@ const Features = ({ ticket }: Props) => {
         <div className="flex gap-1">
           <span className="font-normal text-[#1D2433]/60">Client: </span>
           <span className="font-bold text-base text-customBlack-v1">
-            {ticket.client}
+            {ticket.clientName}
           </span>
         </div>
         <div className="flex gap-1">

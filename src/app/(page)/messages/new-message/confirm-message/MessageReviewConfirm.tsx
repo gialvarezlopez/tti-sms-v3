@@ -1,6 +1,5 @@
 import React, { useState } from "react";
 import { Button } from "@/components/ui/button";
-import { showToast } from "@/lib/toastUtil";
 import {
   Dialog,
   DialogContent,
@@ -9,43 +8,55 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog";
 import { Separator } from "@/components/ui/separator";
-import { TicketsProps } from "@/types/types";
+import { FormReviewMessageProps, TemplateProps } from "@/types/types";
 import DetailConfirm from "./DetailConfirm";
 import { Checkbox } from "@/components/ui/checkbox";
+import { useCreateMessage } from "@/hooks/useMessages";
 
 type Props = {
-  ticket: TicketsProps;
+  template: TemplateProps;
   modalOpen: boolean;
   setOpenConfirm: React.Dispatch<React.SetStateAction<boolean>>;
+  formState: FormReviewMessageProps;
 };
 
-const MessageReviewConfirm = ({ ticket, modalOpen, setOpenConfirm }: Props) => {
+const MessageReviewConfirm = ({
+  template,
+  modalOpen,
+  setOpenConfirm,
+  formState,
+}: Props) => {
   const [isOpen, setIsOpen] = useState(modalOpen);
   const [isChecked, setIsChecked] = useState(false);
+
+  const { mutate: createMessage, isPending: isCreating } = useCreateMessage();
 
   const handleCloseModal = () => {
     setOpenConfirm(false);
     setIsOpen(false);
   };
 
-  /*
-  const handleCheckboxChange = (
-    e: React.ChangeEvent<HTMLInputElement> | undefined
-  ) => {
-    setIsChecked(e.target.checked);
-  };
-  */
   const handleCheckboxChange = (checked: boolean) => {
-    setIsChecked(checked); // El valor recibido es un booleano
+    setIsChecked(checked);
   };
 
   const handleSetConfirm = () => {
-    handleCloseModal();
-    showToast(
-      "success",
-      "Success Message!",
-      "Your message has been successfully sent to our queue."
-    );
+    const stringWithoutHtml =
+      formState &&
+      formState?.content &&
+      formState?.content.replace(/<[^>]*>/g, "");
+
+    const cleanData = {
+      ...formState,
+      content: stringWithoutHtml,
+      recipient: formState.phoneNumber,
+    };
+
+    createMessage(cleanData, {
+      onSuccess() {
+        handleCloseModal();
+      },
+    });
   };
   return (
     <div>
@@ -59,7 +70,7 @@ const MessageReviewConfirm = ({ ticket, modalOpen, setOpenConfirm }: Props) => {
           </DialogHeader>
           <div className="h-full flex flex-col">
             <div className="flex-1 overflow-y-auto max-h-[calc(100vh-300px)]">
-              <DetailConfirm ticket={ticket} />
+              <DetailConfirm formState={formState} template={template} />
             </div>
             <div className="flex items-center space-x-2  px-6 py-3 pb-2">
               <Checkbox
@@ -92,9 +103,10 @@ const MessageReviewConfirm = ({ ticket, modalOpen, setOpenConfirm }: Props) => {
                 className="bg-customRed-v3 w-full md:w-[33%]"
                 variant={"destructive"}
                 onClick={handleSetConfirm}
-                disabled={!isChecked}
+                disabled={!isChecked || isCreating}
+                isLoading={isCreating}
               >
-                Send
+                {isCreating ? "Sending " : "Send"}
               </Button>
             </div>
           </DialogFooter>

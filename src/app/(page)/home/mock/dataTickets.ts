@@ -3,7 +3,7 @@ export const dataTickets = [
   {
     id: 1,
     branch: "Tech",
-    client: "Carvajal Noth",
+    clientName: "Carvajal Noth",
     phoneNumber: "(226) 755-3917",
     lastSent: "01/07/2025",
     lastReceived: "01/07/2025",
@@ -27,7 +27,7 @@ export const dataTickets = [
   {
     id: 2,
     branch: "Office",
-    client: "Joe Doe",
+    clientName: "Joe Doe",
     phoneNumber: "(226) 755-3917",
     lastSent: "01/07/2025",
     lastReceived: "01/07/2025",
@@ -49,7 +49,7 @@ export const dataTickets = [
   {
     id: 3,
     branch: "Office",
-    client: "Doron smith",
+    clientName: "Doron smith",
     phoneNumber: "(226) 755-3917",
     lastSent: "01/07/2025",
     lastReceived: "01/07/2025",
@@ -71,7 +71,7 @@ export const dataTickets = [
   {
     id: 4,
     branch: "Tech",
-    client: "Bruce Willis",
+    clientName: "Bruce Willis",
     phoneNumber: "(226) 755-3917",
     lastSent: "01/07/2025",
     lastReceived: "01/07/2025",
@@ -96,7 +96,7 @@ export const dataTickets = [
   {
     id: 4,
     branch: "Tech",
-    client: "Bruce Banner",
+    clientName: "Bruce Banner",
     phoneNumber: "(358) 755-3920",
     lastSent: "01/07/2025",
     lastReceived: "01/07/2025",
