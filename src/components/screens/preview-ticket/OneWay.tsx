@@ -28,7 +28,13 @@ const OneWay = ({ ticket }: Props) => {
             dangerouslySetInnerHTML={{
               __html: highlightKeyword(
                 renderMessage(),
-                ticket?.chat[0]?.keyword || "",
+                [
+                  {
+                    keyword: ticket?.chat[0]?.keyword || "", // Usar el keyword del chat
+                    value: "valor_asociado", // Aquí debes proporcionar el valor asociado al keyword
+                  },
+                ],
+
                 "black"
               ),
             }}

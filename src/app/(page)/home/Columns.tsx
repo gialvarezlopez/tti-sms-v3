@@ -1,6 +1,10 @@
 import { ColumnDef, Row } from "@tanstack/react-table";
 import { Checkbox } from "@/components/ui/checkbox";
-import { TicketsProps } from "@/types/types";
+import {
+  FormReviewMessageProps,
+  TemplateProps,
+  TicketsProps,
+} from "@/types/types";
 import { Button } from "@/components/ui/button";
 import {
   DropdownMenu,
@@ -16,70 +20,6 @@ import useTicketsStore from "@/store/useTickets";
 import { TICKETS_STATUS, USER_ROLE } from "@/lib/constants";
 import ModalResendTicket from "@/components/screens/home/resend-ticket/ModalResendTicket";
 import ModalSendRemainder from "@/components/screens/home/send-remainder/ModalSendRemainder";
-
-/*
-const DeleteCell = ({
-  clientId,
-  setIsOpenDropdown,
-}: {
-  clientId: string;
-  setIsOpenDropdown: Dispatch<SetStateAction<boolean>>;
-}) => {
-  const [isOpen, setIsOpen] = useState(false);
-  const { mutate } = useClientDelete();
-
-  const handleDeleteField = (companyId: string) => {
-    mutate(companyId);
-    setIsOpenDropdown(false); // close dropdown
-  };
-
-  const handleStateDialog = (newState: boolean) => {
-    if (newState) {
-      setIsOpen(true);
-      return;
-    }
-    setIsOpen(true); // close modal
-    setIsOpenDropdown(false); // close dropdown
-  };
-
-  return (
-    <div>
-      <Button
-        className="w-full justify-start"
-        variant="ghost"
-        onClick={() => {
-          setIsOpen(true);
-        }}
-      >
-        Eliminar
-      </Button>
-
-      <Dialog open={isOpen} onOpenChange={handleStateDialog}>
-        <DialogContent className="max-w-lg">
-          <DialogHeader>
-            <DialogTitle>Eliminar Cliente</DialogTitle>
-            <DialogDescription>
-              Esta seguro que desea eliminar este cliente?
-            </DialogDescription>
-          </DialogHeader>
-          <DialogFooter>
-            <DialogClose asChild>
-              <Button variant="outline">Cancelar</Button>
-            </DialogClose>
-            <Button
-              onClick={() => {
-                handleDeleteField(clientId);
-              }}
-            >
-              Eliminar
-            </Button>
-          </DialogFooter>
-        </DialogContent>
-      </Dialog>
-    </div>
-  );
-};
-*/
 
 const PreviewCell = ({
   ticket,
@@ -119,10 +59,10 @@ const PreviewCell = ({
 };
 
 const ResendMessageCell = ({
-  ticket,
+  template,
   setIsOpenDropdown,
 }: {
-  ticket: TicketsProps;
+  template: TicketsProps;
   setIsOpenDropdown: Dispatch<SetStateAction<boolean>>;
 }) => {
   const [isOpen, setIsOpen] = useState(false);
@@ -133,6 +73,11 @@ const ResendMessageCell = ({
   const handleClose = () => {
     setIsOpen(false);
     setIsOpenDropdown(false);
+  };
+
+  const templateProps: TemplateProps = {
+    ...template,
+    id: template.id?.toString(), // Convertir id de number a string
   };
 
   return (
@@ -146,9 +91,9 @@ const ResendMessageCell = ({
 
       {isOpen && (
         <ModalResendTicket
-          ticket={ticket}
           modalOpen={isOpen}
           onClose={handleClose}
+          ticket={templateProps}
         />
       )}
     </div>
@@ -223,7 +168,7 @@ const CloseTicketCell = ({
 };
 
 const Cell = ({ row }: { row: TicketsProps }) => {
-  const ticket = row;
+  const template = row;
   const [isOpenDropdown, setIsOpenDropdown] = useState(false);
   return (
     <DropdownMenu open={isOpenDropdown} onOpenChange={setIsOpenDropdown}>
@@ -238,27 +183,25 @@ const Cell = ({ row }: { row: TicketsProps }) => {
         </Button>
       </DropdownMenuTrigger>
       <DropdownMenuContent align="end">
-        {/* <DropdownMenuLabel>Acciones</DropdownMenuLabel>*/}
+        <PreviewCell ticket={template} setIsOpenDropdown={setIsOpenDropdown} />
 
-        <PreviewCell ticket={ticket} setIsOpenDropdown={setIsOpenDropdown} />
-
-        {convertToSnakeCase(ticket.status) ===
+        {convertToSnakeCase(template.status) ===
           TICKETS_STATUS.ERROR_IN_MESSAGE && (
           <ResendMessageCell
-            ticket={ticket}
+            template={template}
             setIsOpenDropdown={setIsOpenDropdown}
           />
         )}
 
-        {convertToSnakeCase(ticket.status) === TICKETS_STATUS.IN_PROGRESS && (
+        {convertToSnakeCase(template.status) === TICKETS_STATUS.IN_PROGRESS && (
           <SendRemainderCell
-            ticket={ticket}
+            ticket={template}
             setIsOpenDropdown={setIsOpenDropdown}
           />
         )}
 
         <CloseTicketCell
-          ticket={ticket}
+          ticket={template}
           setIsOpenDropdown={setIsOpenDropdown}
         />
       </DropdownMenuContent>
@@ -300,7 +243,9 @@ export const columns: ColumnDef<TicketsProps>[] = [
     },
     cell: ({ row }) => {
       return (
-        <span className="text-nowrap md:text-wrap">{row.original.client}</span>
+        <span className="text-nowrap md:text-wrap">
+          {row.original.clientName}
+        </span>
       );
     },
   },

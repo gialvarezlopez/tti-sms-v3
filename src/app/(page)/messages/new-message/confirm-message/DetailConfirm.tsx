@@ -1,14 +1,19 @@
 import React from "react";
 import { TYPE_OF_MESSAGE } from "@/lib/constants";
-import { convertToSnakeCase } from "@/lib/utils";
-import { TicketsProps } from "@/types/types";
+import { convertToSnakeCase, templateType } from "@/lib/utils";
+import {
+  FormReviewMessageProps,
+  TemplateProps,
+  TicketsProps,
+} from "@/types/types";
 import OneWay from "./OneWay";
 
 type Props = {
-  ticket: TicketsProps;
+  template: TemplateProps;
+  formState: FormReviewMessageProps;
 };
 
-const DetailConfirm = ({ ticket }: Props) => {
+const DetailConfirm = ({ template, formState }: Props) => {
   // Function to render the dynamic message
 
   return (
@@ -19,7 +24,7 @@ const DetailConfirm = ({ ticket }: Props) => {
             Telephone number:{" "}
           </span>
           <span className="font-bold text-base text-customBlack-v1 ">
-            {ticket.phoneNumber}
+            {formState.phoneNumber}
           </span>
         </div>
 
@@ -28,14 +33,15 @@ const DetailConfirm = ({ ticket }: Props) => {
             Type of message:{" "}
           </span>
           <span className="font-bold text-base text-customBlack-v1">
-            {ticket.typeOfMessage}
+            {templateType(template.isTwoWay ?? false)}
           </span>
         </div>
       </div>
 
-      {convertToSnakeCase(ticket.typeOfMessage) === TYPE_OF_MESSAGE.ONE_WAY && (
-        <OneWay ticket={ticket} />
-      )}
+      <OneWay formState={formState} />
+
+      {/*convertToSnakeCase(templateType(template.isTwoWay ?? false)) ===
+        TYPE_OF_MESSAGE.ONE_WAY && <OneWay formState={formState} />*/}
     </>
   );
 };

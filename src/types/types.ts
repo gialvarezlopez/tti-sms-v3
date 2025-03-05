@@ -1,4 +1,3 @@
-import { boolean } from "zod";
 export type RoleProps = {
   id?: string;
   name?: string;
@@ -53,11 +52,20 @@ export type BranchProps = {
   updatedAt?: string;
 };
 
-export type TicketsProps = {
+export type FormReviewMessageProps = {
+  clientName: string;
+  phoneNumber: string;
+  keywords?: {
+    type: string;
+    value: string;
+    keyword: string;
+  }[];
+  content?: string;
+};
+
+export type TicketsProps = FormReviewMessageProps & {
   id?: number;
   branch?: string;
-  client: string;
-  phoneNumber: string;
   lastSent: string;
   lastReceived: string;
   createdAt?: string;
@@ -66,7 +74,6 @@ export type TicketsProps = {
   templateName?: string;
   templateDescription?: string;
   date?: string;
-  message?: string;
   errorMessage?: string;
   chat: ChatMessage[];
   reason?: string;
@@ -84,7 +91,7 @@ export type ChatMessage = {
 
 export type KeywordTemplates = {
   id?: string;
-  name: string;
+  keyword: string;
   type: string;
 };
 
@@ -96,11 +103,10 @@ export type AutomaticResponsesTemplates = {
 
 export type TemplateProps = {
   id?: string;
-  name: string;
+  name?: string;
   slug?: string;
-  //type: string;
+  phoneNumber?: string;
   isTwoWay?: boolean;
-  //messageExchangeType?: string;
   branches?: string[];
   description?: string;
   content?: string;

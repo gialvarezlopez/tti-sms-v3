@@ -127,14 +127,14 @@ const InputTypeKeyword = ({
                           ? keywordValues[index]?.type
                           : item.type
                       )}
+
                       <Select
                         onValueChange={field.onChange}
                         defaultValue={
-                          field.value ||
-                          (typeof item.type === "string" &&
-                            item.type === "string")
+                          field.value === "string"
                             ? "text"
-                            : item.type
+                            : field.value ||
+                              (item.type !== "string" ? item.type : "currency")
                         }
                       >
                         <FormControl>

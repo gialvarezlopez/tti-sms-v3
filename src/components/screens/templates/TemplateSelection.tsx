@@ -7,6 +7,7 @@ import { Separator } from "@/components/ui/separator";
 import { IconKeyboardTab, IconTwoWay } from "@/assets/images";
 import { useGetTemplates } from "@/hooks/useTemplates";
 import { TemplateProps } from "@/types/types";
+import TemplatesSkeleton from "@/components/skeletons/TemplatesSkeleton";
 
 type Props = {
   setTemplateSelected?: React.Dispatch<
@@ -34,7 +35,7 @@ const TemplateSelection = ({
     search: "",
   });
 
-  // Filtrar objetos por tipo
+  // Filter objects by type
   const oneWayItems = dataTemplates?.data?.filter(
     (item: TemplateProps) => item.isTwoWay === false
   );
@@ -58,12 +59,16 @@ const TemplateSelection = ({
             <Image src={IconKeyboardTab} alt="" /> One way Messages
           </div>
           <div className={className}>
-            <TypeTemplateSection
-              dataTemplates={oneWayItems}
-              handleSelected={handleSelected}
-              selected={selected}
-              isLink={isLink}
-            />
+            {isLoading ? (
+              <TemplatesSkeleton number={3} />
+            ) : (
+              <TypeTemplateSection
+                dataTemplates={oneWayItems}
+                handleSelected={handleSelected}
+                selected={selected}
+                isLink={isLink}
+              />
+            )}
           </div>
         </div>
         <Separator className="" />
@@ -72,12 +77,16 @@ const TemplateSelection = ({
             <Image src={IconTwoWay} alt="" /> Two way Messages
           </div>
           <div className={className}>
-            <TypeTemplateSection
-              dataTemplates={twoWayItems}
-              handleSelected={handleSelected}
-              selected={selected ?? ""}
-              isLink={isLink}
-            />
+            {isLoading ? (
+              <TemplatesSkeleton number={3} />
+            ) : (
+              <TypeTemplateSection
+                dataTemplates={twoWayItems}
+                handleSelected={handleSelected}
+                selected={selected ?? ""}
+                isLink={isLink}
+              />
+            )}
           </div>
         </div>
       </div>

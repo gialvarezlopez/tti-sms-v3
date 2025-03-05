@@ -1,10 +1,14 @@
 import React from "react";
 import { Skeleton } from "@/components/ui/skeleton";
 
-const TemplatesSkeleton = () => {
+type Props = {
+  number?: number;
+};
+
+const TemplatesSkeleton = ({ number = 6 }: Props) => {
   return (
     <>
-      {Array.from({ length: 6 }).map((_, index) => (
+      {Array.from({ length: number }).map((_, index) => (
         <div key={index} className="w-full">
           <div className="border-2 rounded-lg h-full p-4">
             <div className="flex gap-3 justify-between">

@@ -160,7 +160,9 @@ export const columns: ColumnDef<TicketsProps>[] = [
     },
     cell: ({ row }) => {
       return (
-        <span className="text-nowrap md:text-wrap">{row.original.client}</span>
+        <span className="text-nowrap md:text-wrap">
+          {row.original.clientName}
+        </span>
       );
     },
   },

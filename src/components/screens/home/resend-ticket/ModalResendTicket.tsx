@@ -6,11 +6,11 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog";
 import { Separator } from "@/components/ui/separator";
-import { TicketsProps } from "@/types/types";
+import { TemplateProps, TicketsProps } from "@/types/types";
 import FormBuildMessage from "../../templates/BuildTemplate/FormBuildMessage";
 
 type Props = {
-  ticket: TicketsProps;
+  ticket: TemplateProps;
   modalOpen: boolean;
   onClose: () => void;
 };
@@ -29,7 +29,7 @@ const ModalResendTicket = ({ ticket, modalOpen, onClose }: Props) => {
           </DialogHeader>
 
           <FormBuildMessage
-            ticket={ticket}
+            template={ticket}
             onClose={onClose}
             isFromModal={true}
           />

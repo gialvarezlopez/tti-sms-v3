@@ -1,12 +1,12 @@
 import React, { useState } from "react";
 import TemplateSelection from "../../../templates/TemplateSelection";
-import { TicketsProps } from "@/types/types";
+import { TemplateProps, TicketsProps } from "@/types/types";
 import { Separator } from "@/components/ui/separator";
 import { Button } from "@/components/ui/button";
 import FormBuildMessage from "../../../templates/BuildTemplate/FormBuildMessage";
 
 type Props = {
-  ticket: TicketsProps;
+  ticket: TemplateProps;
   onClose: () => void;
 };
 
@@ -36,10 +36,8 @@ const TemplatesSend = ({ ticket, onClose }: Props) => {
       {isNextStep && (
         <FormBuildMessage
           onClose={onClose}
-          ticket={ticket}
+          template={ticket}
           isFromModal={true}
-          //dataTemplates={dataTemplates}
-          //setTemplateSelected={setTemplateSelected}
         />
       )}
 

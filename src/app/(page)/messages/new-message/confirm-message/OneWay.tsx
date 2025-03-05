@@ -1,13 +1,11 @@
-import { highlightKeyword } from "@/lib/utils";
-import { TicketsProps } from "@/types/types";
+import { FormReviewMessageProps } from "@/types/types";
 import React from "react";
 type Props = {
-  ticket: TicketsProps;
+  formState: FormReviewMessageProps;
 };
-const OneWay = ({ ticket }: Props) => {
+const OneWay = ({ formState }: Props) => {
   const renderMessage = () => {
-    const message =
-      ticket?.chat && ticket?.chat[0]?.message ? ticket?.chat[0]?.message : "";
+    const message = formState && formState.content ? formState?.content : "";
 
     return message;
   };
@@ -17,17 +15,12 @@ const OneWay = ({ ticket }: Props) => {
         <div className="flex gap-3">
           <span className="font-normal text-[#1D2433]/60">Message: </span>
         </div>
-        <div>
-          <span className="font-normal text-[#1D2433]/60"> </span>
-          {/*<span className="">{ticket?.chat[0]?.message}</span>*/}
 
+        <div>
+          <span className="font-normal text-[#1D2433]/60"></span>
           <div
             dangerouslySetInnerHTML={{
-              __html: highlightKeyword(
-                renderMessage(),
-                ticket?.chat[0]?.keyword || "",
-                "black"
-              ),
+              __html: renderMessage(),
             }}
           />
         </div>

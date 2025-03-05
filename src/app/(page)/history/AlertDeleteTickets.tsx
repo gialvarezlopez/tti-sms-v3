@@ -97,7 +97,8 @@ const AlertDeleteTickets = ({ rowSelected, handleClearSelected }: Props) => {
                 <p className="font-bold mt-2">
                   {ticketList?.map((ticket, index) => (
                     <p key={index}>
-                      {ticket.client} - {ticket.phoneNumber} - {ticket.branch}
+                      {ticket.clientName} - {ticket.phoneNumber} -{" "}
+                      {ticket.branch}
                     </p>
                   ))}
                 </p>

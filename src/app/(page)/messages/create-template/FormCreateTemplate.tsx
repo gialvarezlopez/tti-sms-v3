@@ -231,7 +231,7 @@ const FormCreateTemplate = () => {
       updateTemplate(formData);
     } else {
       createTemplate(formData, {
-        onSuccess(data) {
+        onSuccess() {
           reset({
             messageExchangeType: undefined,
             responses: [],

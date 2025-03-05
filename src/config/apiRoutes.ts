@@ -1,4 +1,3 @@
-// config/apiRoutes.ts
 const usersRoutes = {
   login: `/api/v1/auth/login`,
   list: `/api/v1/users`,
@@ -18,4 +17,10 @@ const templatesRoutes = {
   single: (id: string) => `/api/v1/templates/${id}`, //View, Delete, Update
 };
 
-export { usersRoutes, branchesRoutes, templatesRoutes };
+const messagesRoutes = {
+  list: `/api/v1/messages`,
+  new: `/api/v1/messages`,
+  single: (id: string) => `/api/v1/messages/${id}`, //View, Delete, Update
+};
+
+export { usersRoutes, branchesRoutes, templatesRoutes, messagesRoutes };

@@ -125,56 +125,21 @@ export const capitalizarPrimeraLetra = (str: string) => {
   return str.charAt(0).toUpperCase() + str.slice(1);
 };
 
-/*
 export const highlightKeyword = (
   str: string,
-  keyword: string,
-  id: string = "my_keyword", // Se agrega un id único
+  keywords: { keyword: string; value: string }[], // Pasamos un arreglo con el keyword y su valor
   color: string = "red"
 ) => {
-  //const id = "my_keyword";
-  // Create a regular expression that searches for the keyword in the string
-  const regex = new RegExp(`(${keyword})`, "gi"); // "gi" para hacer la búsqueda insensible a mayúsculas y minúsculas
-  return str.replace(regex, (match) => {
-    return `<span id="${id}" style="color: ${color}; font-weight: bold;">${match}</span>`;
+  let updatedStr = str;
+
+  // Reemplazamos cada marcador [keyword] con su valor correspondiente
+  keywords?.forEach(({ keyword, value }) => {
+    const regex = new RegExp(`\\[${keyword}\\]`, "g"); // Crea una regex para encontrar [keyword]
+    updatedStr = updatedStr.replace(
+      regex,
+      `<span style="color: ${color}; font-weight: bold;">${value}</span>`
+    );
   });
-};
-*/
-
-/*
-export const highlightKeyword = (
-  str: string,
-  modelNumber: string,
-  color: string = "red"
-) => {
-  const marker = "{{}}"; // Marcador para reemplazar
-
-  // Reemplazar solo el marcador {{}} por el valor de modelNumber
-  let updatedStr = str.replace(marker, modelNumber);
-  //console.log("updatedStr", updatedStr);
-  // Reemplazar el texto modelNumber por el valor con el formato de resaltado
-  // Solo se resalta el valor reemplazado, no el texto original que estaba antes
-  updatedStr = updatedStr.replace(
-    modelNumber,
-    `<span style="color: ${color}; font-weight: bold;">${modelNumber}</span>`
-  );
-
-  return updatedStr;
-};
-*/
-export const highlightKeyword = (
-  str: string,
-  modelNumber: string,
-  color: string = "red"
-) => {
-  // We just replace the {{}} marker with the value of model Number
-  const marker = KEYWORD_SYMBOL.BRACKETS;
-
-  // We just replace {{}} with the value of model Number
-  const updatedStr = str.replace(
-    marker,
-    `<span style="color: ${color}; font-weight: bold;">${modelNumber}</span>`
-  );
 
   return updatedStr;
 };
