@@ -23,6 +23,7 @@ import { templateType } from "@/lib/utils";
 
 type Props = {
   dataTemplates: TemplateProps[];
+  isLoading: boolean;
 };
 
 const PreviewCell = ({
@@ -115,8 +116,8 @@ const Cell = ({ row }: { row: TemplateProps }) => {
 
 const setMaxWidth = 720;
 
-const ListTemplate = ({ dataTemplates }: Props) => {
-  const [loading, setLoading] = useState(true);
+const ListTemplate = ({ dataTemplates, isLoading }: Props) => {
+  //const [loading, setLoading] = useState(true);
   const searchParams = useSearchParams();
 
   const panelRef = useRef<HTMLDivElement | null>(null);
@@ -139,9 +140,11 @@ const ListTemplate = ({ dataTemplates }: Props) => {
       selectedSearch ? item?.name?.toLowerCase().includes(selectedSearch) : true
     );
 
+  /*
   useEffect(() => {
     setTimeout(() => setLoading(false), 500);
   }, []);
+  */
 
   useEffect(() => {
     const checkPanelWidth = (entries: ResizeObserverEntry[]) => {
@@ -172,7 +175,7 @@ const ListTemplate = ({ dataTemplates }: Props) => {
         } gap-6 mt-8`}
         ref={panelRef}
       >
-        {loading ? (
+        {isLoading ? (
           <TemplatesSkeleton />
         ) : (
           <>

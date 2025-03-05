@@ -8,6 +8,7 @@ import TableSkeleton from "@/components/skeletons/TableSkeleton";
 import { RefetchOptions, UserProps } from "@/types/types";
 import { useGetUsers } from "@/hooks/useUsers";
 import useColumns from "./Columns";
+import ErrorFetching from "@/components/ui/errorFetching";
 
 type IsColumnSelectedFn<T> = (column: ColumnDef<T>, action?: string) => void;
 type Props = {
@@ -174,30 +175,38 @@ const UsersList = ({
   return (
     <div ref={ref}>
       <div className="mx-auto py-2">
-        {isLoading ? (
-          <TableSkeleton
-            rows={5}
-            cols={width <= 768 ? 2 : 5}
-            checkbox={true}
-            dots={true}
-            width="w-full md:w-1/2"
-          />
+        {error ? (
+          <div className="mt-4">
+            <ErrorFetching message={error.message} />
+          </div>
         ) : (
-          <DataTable
-            columns={columns}
-            data={data}
-            pagination={pagination}
-            setPagination={setPagination}
-            totalPages={totalPages}
-            search={search}
-            fetchData={fetchData}
-            sortBy={sortBy}
-            sortOrder={sortOrder}
-            onSortChange={handleSortChange} // Pass the sort change function
-            isColumnSelected={selected}
-            clearSelected={clearSelected} //clear the checkboxes
-            onClearSelected={() => setClearSelected(false)} //change the status
-          />
+          <>
+            {isLoading ? (
+              <TableSkeleton
+                rows={5}
+                cols={width <= 768 ? 2 : 5}
+                checkbox={true}
+                dots={true}
+                width="w-full md:w-1/2"
+              />
+            ) : (
+              <DataTable
+                columns={columns}
+                data={data}
+                pagination={pagination}
+                setPagination={setPagination}
+                totalPages={totalPages}
+                search={search}
+                fetchData={fetchData}
+                sortBy={sortBy}
+                sortOrder={sortOrder}
+                onSortChange={handleSortChange} // Pass the sort change function
+                isColumnSelected={selected}
+                clearSelected={clearSelected} //clear the checkboxes
+                onClearSelected={() => setClearSelected(false)} //change the status
+              />
+            )}
+          </>
         )}
       </div>
     </div>

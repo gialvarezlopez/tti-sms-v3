@@ -9,6 +9,7 @@ import TableSkeleton from "@/components/skeletons/TableSkeleton";
 import { BranchProps, RefetchOptions } from "@/types/types";
 import { dataBranches } from "../mock/dataBranch";
 import { useGetBranches } from "@/hooks/useBranches";
+import ErrorFetching from "@/components/ui/errorFetching";
 
 type IsColumnSelectedFn<T> = (column: ColumnDef<T>, action?: string) => void;
 
@@ -35,8 +36,8 @@ const BranchesList = ({
   const [sortBy, setSortBy] = useState<string>(selectedSortBy ?? ""); // Status for the sort field
   const [sortOrder, setSortOrder] = useState<"asc" | "desc" | null>( // Permite null
     selectedSortOrder === "asc" || selectedSortOrder === "desc"
-      ? (selectedSortOrder.toLowerCase() as "asc" | "desc") // Asegura que el valor es "asc" o "desc"
-      : null // Permite null como valor predeterminado
+      ? (selectedSortOrder.toLowerCase() as "asc" | "desc")
+      : null
   );
   const [data, setData] = useState<BranchProps[]>(dataBranches);
   const [totalPages, setTotalPages] = useState(0);
@@ -190,30 +191,38 @@ const BranchesList = ({
   return (
     <div ref={ref}>
       <div className="mx-auto py-2">
-        {isLoading ? (
-          <TableSkeleton
-            rows={5}
-            cols={width <= 768 ? 2 : 4}
-            checkbox={true}
-            dots={true}
-            width="w-full md:w-1/2"
-          />
+        {error ? (
+          <div className="mt-4">
+            <ErrorFetching message={error.message} />
+          </div>
         ) : (
-          <DataTable
-            columns={columns}
-            data={data}
-            pagination={pagination}
-            setPagination={setPagination}
-            totalPages={totalPages}
-            search={search}
-            fetchData={fetchData}
-            sortBy={sortBy}
-            sortOrder={sortOrder}
-            onSortChange={handleSortChange} // Pass the sort change function
-            isColumnSelected={selected}
-            clearSelected={clearSelected} //clear the checkboxes
-            onClearSelected={() => setClearSelected(false)} //change the status
-          />
+          <>
+            {isLoading ? (
+              <TableSkeleton
+                rows={5}
+                cols={width <= 768 ? 2 : 4}
+                checkbox={true}
+                dots={true}
+                width="w-full md:w-1/2"
+              />
+            ) : (
+              <DataTable
+                columns={columns}
+                data={data}
+                pagination={pagination}
+                setPagination={setPagination}
+                totalPages={totalPages}
+                search={search}
+                fetchData={fetchData}
+                sortBy={sortBy}
+                sortOrder={sortOrder}
+                onSortChange={handleSortChange} // Pass the sort change function
+                isColumnSelected={selected}
+                clearSelected={clearSelected} //clear the checkboxes
+                onClearSelected={() => setClearSelected(false)} //change the status
+              />
+            )}
+          </>
         )}
       </div>
     </div>

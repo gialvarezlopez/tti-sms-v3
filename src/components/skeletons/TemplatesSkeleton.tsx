@@ -12,12 +12,12 @@ const TemplatesSkeleton = ({ number = 6 }: Props) => {
         <div key={index} className="w-full">
           <div className="border-2 rounded-lg h-full p-4">
             <div className="flex gap-3 justify-between">
-              <Skeleton className="h-6 w-2/4 mb-3" />
-              <Skeleton className="h-6 w-1/3 mb-3 rounded-full" />
+              <Skeleton className="h-6 w-2/4 mb-3 animate-pulse" />
+              <Skeleton className="h-6 w-1/3 mb-3 rounded-full animate-pulse" />
             </div>
 
             <div className="">
-              <Skeleton className="h-16 w-full mb-3" />
+              <Skeleton className="h-16 w-full mb-3 animate-pulse" />
             </div>
           </div>
         </div>
