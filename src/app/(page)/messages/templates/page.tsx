@@ -8,6 +8,7 @@ import { dataTemplates } from "@/components/screens/templates/dataMock";
 import { useGetTemplates } from "@/hooks/useTemplates";
 import { TemplateProps } from "@/types/types";
 import CustomFormMessage from "@/components/ui/CustomFormMessage";
+import ErrorFetching from "@/components/ui/errorFetching";
 //import FilterTop from "./FiltersTop";
 
 // Dynamic loading of FilterTop to avoid SSR (static rendering)
@@ -62,13 +63,13 @@ const Page = () => {
       </Suspense>
 
       {error && (
-        <CustomFormMessage>
-          There was an error to load the templates
-        </CustomFormMessage>
+        <div className="mt-4">
+          <ErrorFetching message="There was an error to load the templates" />
+        </div>
       )}
 
       <Suspense fallback={<div>Loading Templates...</div>}>
-        <ListTemplate dataTemplates={data ?? []} />
+        <ListTemplate dataTemplates={data ?? []} isLoading={isLoading} />
       </Suspense>
     </div>
   );

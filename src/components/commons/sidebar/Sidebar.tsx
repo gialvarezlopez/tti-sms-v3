@@ -17,6 +17,7 @@ import {
   Settings,
 } from "lucide-react";
 import { USER_ROLE } from "@/lib/constants";
+import { isMobile } from "@/lib/utils";
 
 type Props = {
   setIsSidebarOpen: Dispatch<SetStateAction<boolean>>;
@@ -41,9 +42,21 @@ const SideBar = ({ setIsSidebarOpen }: Props) => {
 
   useEffect(() => {
     if (typeof window !== "undefined") {
-      const storedSidebarState = localStorage.getItem("sidebarOpen") === "true";
-      setIsOpen(storedSidebarState);
-      setIsSidebarOpen(storedSidebarState);
+      // Check if there is a value in localStorage
+      const storedSidebarState = localStorage.getItem("sidebarOpen");
+
+      if (storedSidebarState !== null) {
+        // If there is a value in localStorage, use it
+        const isOpenState = storedSidebarState === "true";
+        setIsOpen(isOpenState);
+        setIsSidebarOpen(isOpenState);
+      } else {
+        // If there is no value in localStorage, set the state to whether it is mobile or not
+        const defaultState = !isMobile(); // Visible on desktop, collapsed on mobile
+        setIsOpen(defaultState);
+        setIsSidebarOpen(defaultState);
+        localStorage.setItem("sidebarOpen", JSON.stringify(defaultState));
+      }
     }
   }, [setIsSidebarOpen]);
 

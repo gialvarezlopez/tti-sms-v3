@@ -8,6 +8,8 @@ import { IconKeyboardTab, IconTwoWay } from "@/assets/images";
 import { useGetTemplates } from "@/hooks/useTemplates";
 import { TemplateProps } from "@/types/types";
 import TemplatesSkeleton from "@/components/skeletons/TemplatesSkeleton";
+import CustomFormMessage from "@/components/ui/CustomFormMessage";
+import ErrorFetching from "@/components/ui/errorFetching";
 
 type Props = {
   setTemplateSelected?: React.Dispatch<
@@ -58,6 +60,7 @@ const TemplateSelection = ({
           <div className="flex gap-3 items-center text-base text-[#1D2433]/60 font-semibold ">
             <Image src={IconKeyboardTab} alt="" /> One way Messages
           </div>
+          {error && <ErrorFetching message={error.message} />}
           <div className={className}>
             {isLoading ? (
               <TemplatesSkeleton number={3} />
@@ -76,6 +79,7 @@ const TemplateSelection = ({
           <div className="flex gap-3 items-center text-base text-[#1D2433]/60 font-semibold ">
             <Image src={IconTwoWay} alt="" /> Two way Messages
           </div>
+          {error && <ErrorFetching message={error.message} />}
           <div className={className}>
             {isLoading ? (
               <TemplatesSkeleton number={3} />

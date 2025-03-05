@@ -1,7 +1,6 @@
-import axios from "axios";
+import { isAxiosError } from "axios";
 import axiosInstance from "@/lib/axiosInstance";
 import { messagesRoutes } from "@/config/apiRoutes";
-import { useToast } from "./use-toast";
 import { useRouter } from "next/navigation";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { FormReviewMessageProps, PaginateParams } from "@/types/types";
@@ -11,7 +10,7 @@ const returnAfterSubmit = "/messages/new-message";
 
 const useGetMessages = ({ page, limit, search }: PaginateParams) => {
   return useQuery({
-    queryKey: ["message-list"],
+    queryKey: ["message-list", page, limit, search],
     queryFn: async () => {
       try {
         const url = messagesRoutes.list;
@@ -20,21 +19,33 @@ const useGetMessages = ({ page, limit, search }: PaginateParams) => {
         });
         return data;
       } catch (e) {
-        if (axios.isAxiosError(e) && e.response) {
-          const errorMessage =
-            e.response.data.message || e.response.data.error || "Unknown error";
-          throw new Error(errorMessage);
+        if (isAxiosError(e)) {
+          if (e.response) {
+            // Server response error (4xx, 5xx)
+            const errorMessage =
+              e.response.data.message ||
+              e.response.data.error ||
+              "Unknown error";
+            throw new Error(errorMessage);
+          } else if (e.request) {
+            // The request was made but no response was received (network problems)
+            throw new Error("Network error: Could not connect to the server");
+          } else {
+            // Other errors (configuration, etc.)
+            throw new Error("Error in request configuration");
+          }
         } else {
+          // Errores no relacionados con Axios
           throw new Error("Unknown error");
         }
       }
     },
+    //retry: false,
   });
 };
 
 const useCreateMessage = () => {
   const { push } = useRouter();
-  const { toast } = useToast();
   const queryClient = useQueryClient();
   return useMutation({
     mutationFn: async (payload: FormReviewMessageProps) => {
@@ -43,7 +54,7 @@ const useCreateMessage = () => {
         const { data } = await axiosInstance.post(url, payload);
         return data;
       } catch (e) {
-        if (axios.isAxiosError(e) && e.response) {
+        if (isAxiosError(e) && e.response) {
           const errorMessage =
             e.response.data.message || e.response.data.error || "Unknown error";
           throw new Error(errorMessage);
@@ -82,7 +93,7 @@ const useSingleMessage = (id: string) => {
         const { data } = await axiosInstance.get(url);
         return data;
       } catch (e) {
-        if (axios.isAxiosError(e) && e.response) {
+        if (isAxiosError(e) && e.response) {
           const errorMessage =
             e.response.data.message || e.response.data.error || "Unknown error";
           throw new Error(errorMessage);
