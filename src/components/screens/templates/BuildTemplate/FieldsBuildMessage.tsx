@@ -130,7 +130,7 @@ const FieldsResendMessage = ({ template, isFromModal }: Props) => {
 
   return (
     <div className="pb-2">
-      <div className="w-full grid grid-cols-2 gap-3">
+      <div className="w-full grid grid-cols-1 md:grid-cols-2 gap-3">
         <FormField
           control={control}
           name="clientName"
@@ -210,7 +210,7 @@ const FieldsResendMessage = ({ template, isFromModal }: Props) => {
               <FormControl>
                 <Input
                   placeholder={"Content"}
-                  type="text"
+                  type="hidden"
                   {...field}
                   readOnly={isFromModal}
                 />
