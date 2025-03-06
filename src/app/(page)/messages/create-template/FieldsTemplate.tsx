@@ -368,14 +368,6 @@ const FieldsTemplate = ({
                           onMouseLeave={handleStopEditing}
                         />
                         <div className="text-sm h-[26px]"></div>
-                        <div
-                          className="whitespace-pre-wrap"
-                          dangerouslySetInnerHTML={{
-                            __html: lineReplaceWithBreaks(
-                              renderMessageWithHTML(field.value)
-                            ),
-                          }}
-                        />
                       </div>
                     )}
                   </div>
