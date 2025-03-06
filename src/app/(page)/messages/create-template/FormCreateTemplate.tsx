@@ -299,15 +299,15 @@ const FormCreateTemplate = () => {
   return (
     <div>
       <div>
-        <div className="flex justify-between gap-3">
-          <h2 className="font-bold text-xl md:text-2xl mb-6">
+        <div className="flex justify-between gap-3 flex-col md:flex-row">
+          <h2 className="font-bold text-xl md:text-2xl mb-6 md:order-first ">
             {" "}
             {elementId ? "Edit Template" : "Create Template"}
           </h2>
           {elementId && (
             <Link
               href="/messages/templates"
-              className="flex gap-3 items-center text-customRed-v3 font-semibold"
+              className="flex gap-3 items-center text-customRed-v3 font-semibold order-first md:order-last"
             >
               <ArrowLeft /> Go back to templates
             </Link>
