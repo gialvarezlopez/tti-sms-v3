@@ -12,14 +12,13 @@ import { Separator } from "@/components/ui/separator";
 import CustomInputMask from "@/components/ui/customInputMask";
 import CustomFormMessage from "../../../ui/CustomFormMessage";
 import { KeywordTemplates, TemplateProps } from "@/types/types";
-import { cn, highlightKeyword } from "@/lib/utils";
+import { cn, highlightKeyword, renderIcon } from "@/lib/utils";
 import {
   Popover,
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover";
 import { Button } from "@/components/ui/button";
-import { CalendarIcon } from "lucide-react";
 import { Calendar } from "@/components/ui/calendar";
 
 type Props = {
@@ -48,20 +47,66 @@ const FieldsResendMessage = ({ template, isFromModal }: Props) => {
     return date && !isNaN(new Date(date).getTime());
   };
 
+  /*
   const handleKeywordChange = (index: number, value: string) => {
-    // Update the value of the keyword
     setValue(`keywords[${index}].value`, value);
 
-    // Get the latest keyword values
+    // Get the updated values ​​of the keywords
     const keywordValues = getValues("keywords") as Keyword[];
 
+    // Update the `content` with the keyword values
     const message = template?.content ?? "";
     const updatedMessage = highlightKeyword(
       message,
-      keywordValues?.map(({ keyword, value }) => ({ keyword, value })) ?? []
+      keywordValues.map(({ keyword, value, type }) => ({
+        keyword,
+        value:
+          type === "currency"
+            ? value.startsWith("$")
+              ? value
+              : `$${value}`
+            : value, // Add "$" only if it is `currency`
+      }))
     );
-    const stringWithoutHtml = updatedMessage; // updatedMessage.replace(/<[^>]*>/g, "");
-    setValue("content", stringWithoutHtml, { shouldDirty: true });
+
+    setValue("content", updatedMessage, { shouldDirty: true });
+  };
+  */
+
+  const handleKeywordChange = (index: number, value: string) => {
+    setValue(`keywords[${index}].value`, value);
+
+    // Obtén los valores actualizados de los keywords
+    const keywordValues = getValues("keywords") as Keyword[];
+
+    // Actualiza el `content` con los valores de los keywords
+    const message = template?.content ?? "";
+    const updatedMessage = highlightKeyword(
+      message,
+      keywordValues.map(({ keyword, value, type }) => {
+        let formattedValue = value;
+
+        // Verifica si el tipo es "currency" y el valor es numérico
+        if (type === "currency") {
+          const numericValue = value.replace("$", ""); // Elimina el símbolo "$" si ya existe
+          if (
+            /^\d+(\.\d{1,2})?$/.test(numericValue) ||
+            numericValue === "" ||
+            Number(numericValue) >= 0
+          ) {
+            // Verifica si es un número válido
+            formattedValue = `$${numericValue}`; // Agrega el símbolo "$"
+          }
+        }
+
+        return {
+          keyword,
+          value: formattedValue,
+        };
+      })
+    );
+
+    setValue("content", updatedMessage, { shouldDirty: true });
   };
 
   useEffect(() => {
@@ -131,23 +176,32 @@ const FieldsResendMessage = ({ template, isFromModal }: Props) => {
         <div>
           <Separator className="my-6" />
           <h6 className="font-semibold text-base">Message</h6>
+
           <div className="pl-2">
             <div
               dangerouslySetInnerHTML={{
                 __html: highlightKeyword(
-                  watch("content") || template.content,
+                  watch("content") || template?.content,
                   (getValues("keywords") as Keyword[])?.map(
                     ({ keyword, value }) => ({
                       keyword,
                       value,
                     })
                   ) ?? [],
-                  "red"
+                  "red",
+                  template?.responses
+                    ?.filter((item) => item.response && item.reply) // Filter objects that have 'response'
+                    .map((item) => ({
+                      value: item.response, // Map only the 'response' property
+                      color: "black",
+                    })) ?? [],
+                  true
                 ),
               }}
             />
           </div>
         </div>
+
         <FormField
           control={control}
           name="content"
@@ -156,7 +210,7 @@ const FieldsResendMessage = ({ template, isFromModal }: Props) => {
               <FormControl>
                 <Input
                   placeholder={"Content"}
-                  type="hidden"
+                  type="text"
                   {...field}
                   readOnly={isFromModal}
                 />
@@ -166,7 +220,6 @@ const FieldsResendMessage = ({ template, isFromModal }: Props) => {
           )}
         />
       </div>
-
       <div className="space-y-2">
         <Separator className="my-6" />
         <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
@@ -179,49 +232,55 @@ const FieldsResendMessage = ({ template, isFromModal }: Props) => {
                   render={({ field }) => (
                     <FormItem className="flex flex-col mt-[10px] w-full">
                       <FormLabel>{(item as Keyword).keyword}</FormLabel>
-                      <Popover
-                        open={isPopoverOpen} // Controlar si el Popover está abierto
-                        onOpenChange={setIsPopoverOpen}
-                      >
-                        <PopoverTrigger asChild className="w-full">
-                          <FormControl className="w-full">
-                            <Button
-                              variant={"outline"}
-                              className={cn(
-                                "w-full pl-3 text-left font-normal justify-between",
-                                !field.value && "text-muted-foreground"
-                              )}
-                              disabled={isFromModal}
-                            >
-                              {isValidDate(field.value) ? (
-                                format(new Date(field.value), "MM/dd/yyyy")
-                              ) : (
-                                <span>Pick a date</span>
-                              )}
-                              <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
-                            </Button>
-                          </FormControl>
-                        </PopoverTrigger>
-                        <PopoverContent className="w-auto p-0" align="start">
-                          <Calendar
-                            mode="single"
-                            selected={
-                              field.value ? new Date(field.value) : undefined
-                            }
-                            onSelect={(date) => {
-                              if (date) {
-                                const usDate = format(date, "MM/dd/yyyy");
-                                field.onChange(usDate);
-                                handleKeywordChange(index, usDate);
-                                setIsPopoverOpen(false);
+                      <div className="flex gap-1 items-center">
+                        {renderIcon((item as Keyword).type)}
+                        <Popover
+                          open={isPopoverOpen} // Controlar si el Popover está abierto
+                          onOpenChange={setIsPopoverOpen}
+                        >
+                          <PopoverTrigger asChild className="w-full">
+                            <FormControl className="w-full">
+                              <Button
+                                variant={"outline"}
+                                className={cn(
+                                  "w-full pl-3 text-left font-normal justify-between",
+                                  !field.value && "text-muted-foreground"
+                                )}
+                                disabled={isFromModal}
+                              >
+                                {isValidDate(field.value) ? (
+                                  format(new Date(field.value), "MM/dd/yyyy")
+                                ) : (
+                                  <span>Pick a date</span>
+                                )}
+                              </Button>
+                            </FormControl>
+                          </PopoverTrigger>
+                          <PopoverContent className="w-auto p-0" align="start">
+                            <Calendar
+                              mode="single"
+                              selected={
+                                field.value ? new Date(field.value) : undefined
                               }
-                            }}
-                            initialFocus
-                            disabled={isFromModal}
-                            className="w-full"
-                          />
-                        </PopoverContent>
-                      </Popover>
+                              onSelect={(date) => {
+                                if (date) {
+                                  const usDate = format(date, "MM/dd/yyyy");
+                                  field.onChange(usDate);
+                                  handleKeywordChange(
+                                    index,
+                                    usDate
+                                    //(item as Keyword).type
+                                  );
+                                  setIsPopoverOpen(false);
+                                }
+                              }}
+                              initialFocus
+                              disabled={isFromModal}
+                              className="w-full"
+                            />
+                          </PopoverContent>
+                        </Popover>
+                      </div>
                       <CustomFormMessage className="w-full" />
                     </FormItem>
                   )}
@@ -234,16 +293,23 @@ const FieldsResendMessage = ({ template, isFromModal }: Props) => {
                     <FormItem>
                       <FormLabel>{(item as Keyword).keyword}</FormLabel>
                       <FormControl>
-                        <Input
-                          placeholder={(item as Keyword).keyword}
-                          {...field}
-                          autoComplete="off"
-                          readOnly={isFromModal}
-                          onChange={(e) => {
-                            field.onChange(e);
-                            handleKeywordChange(index, e.target.value);
-                          }}
-                        />
+                        <div className="flex gap-1 items-center">
+                          {renderIcon((item as Keyword).type)}
+                          <Input
+                            placeholder={(item as Keyword).keyword}
+                            {...field}
+                            autoComplete="off"
+                            readOnly={isFromModal}
+                            onChange={(e) => {
+                              field.onChange(e);
+                              handleKeywordChange(
+                                index,
+                                e.target.value
+                                //(item as Keyword).type
+                              );
+                            }}
+                          />
+                        </div>
                       </FormControl>
                       <CustomFormMessage className="w-full" />
                     </FormItem>

@@ -332,7 +332,9 @@ const useColumns = () => {
         </Button>
       ),
       cell: ({ row }) => (
-        <span className="text-nowrap">{row.original.primaryRole?.name}</span>
+        <span className="text-nowrap">
+          {row.original.primaryRole?.name ?? "No user type assigned"}
+        </span>
       ),
     },
     {
@@ -344,7 +346,9 @@ const useColumns = () => {
         </Button>
       ),
       cell: ({ row }) => (
-        <span className="text-nowrap">{row.original.createdAt}</span>
+        <span className="text-nowrap">
+          {row.original.createdAt ?? "Unknown"}
+        </span>
       ),
     },
   ];

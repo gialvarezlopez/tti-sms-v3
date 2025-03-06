@@ -140,7 +140,7 @@ const FieldsFilterBranch = () => {
             <Separator />
             <div className="px-4 py-2">
               <div className="flex gap-3 justify-between  mb-2">
-                <div className="text-sm font-semibold">Template</div>
+                <div className="text-sm font-semibold">Status</div>
                 <span
                   className="text-customRed-v1 cursor-pointer text-sm"
                   onClick={() => resetSection(["status"])}

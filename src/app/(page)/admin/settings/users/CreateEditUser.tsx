@@ -75,20 +75,24 @@ const CreateEditUser = ({ setIsOpen, user }: Props) => {
 
   function onSubmit(data: z.infer<typeof FormSchema>) {
     //console.log("data", data);
-    const formattedData = {
+    const formattedData: Partial<typeof data> = {
       ...data,
       branch_id: data.branch_id,
     };
 
     if (user) {
-      updateUser(data, {
-        onSuccess(data) {
+      delete formattedData.email;
+    }
+
+    if (user) {
+      updateUser(formattedData, {
+        onSuccess() {
           setIsOpen(false);
         },
       });
     } else {
-      createUser(data, {
-        onSuccess(data) {
+      createUser(formattedData, {
+        onSuccess() {
           setIsOpen(false);
         },
       });

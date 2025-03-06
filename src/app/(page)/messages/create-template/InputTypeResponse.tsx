@@ -29,20 +29,22 @@ const InputTypeResponse = ({
   const handleRemoveResponse = (index: number, keywordName: string) => {
     remove(index);
     const content = watch("content");
-    const result = removeKeywordFromText(content, keywordName);
+    // Remove the response from the text
+    const result = removeResponseFromText(content, keywordName);
     setValue("content", result, { shouldDirty: true });
-    //setMessage(result);
   };
 
-  const removeKeywordFromText = (text: string, keyword: string) => {
+  const removeResponseFromText = (text: string, keyword: string) => {
     // We create a dynamic regular expression that searches for the keyword within brackets
     const regex = new RegExp(`\\[${keyword}\\]`, "g");
 
     // We replace the keyword with an empty string, removing it from the text
     const processedText = text
-      .replace(regex, "")
-      .replace(/\s{2,}/g, " ")
-      .trim(); // We also remove the extra spaces
+      .replace(regex, "") // Delete the keyword
+      .replace(/\n/g, "\n") // Ensures that line breaks are preserved
+      // .replace(/\s{2,}/g, " "); // Normalize white spaces
+      .replace(/[ ]{2,}/g, " ") // Normalizes only consecutive spaces (does not affect line breaks)
+      .trim();
 
     return processedText;
   };
@@ -73,7 +75,9 @@ const InputTypeResponse = ({
                     <Button
                       variant="link"
                       type="button"
-                      onClick={() => handleRemoveResponse(index, item.response)}
+                      onClick={() =>
+                        handleRemoveResponse(index, item?.response ?? "")
+                      }
                       className="text-customRed-v1"
                     >
                       Remove

@@ -40,26 +40,26 @@ Props) => {
   });
 
   useEffect(() => {
-    console.log("responseOption.name", responseOption.responseName);
+    console.log("responseOption.name", responseOption.response);
     if (
       responseOption &&
-      responseOption.responseName &&
+      responseOption.response &&
       responseOption.automaticReply
     ) {
       const exists = fields.some(
-        (field) => field.response === responseOption.responseName
+        (field) => field.response === responseOption.response
       );
 
       if (!exists) {
         append({
           id: String(Date.now()),
-          response: responseOption.responseName,
+          response: responseOption.response,
           reply: responseOption.automaticReply,
         });
       }
 
       if (fields.length === 0) {
-        setResponseOption({ responseName: "", automaticReply: "" });
+        setResponseOption({ response: "", automaticReply: "" });
       }
 
       console.log("fields", fields);
