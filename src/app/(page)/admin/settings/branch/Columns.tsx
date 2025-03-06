@@ -9,7 +9,6 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { MoreVertical } from "lucide-react";
 import { Dispatch, SetStateAction, useState } from "react";
-//import { useRouter } from "next/navigation";
 import useBranchesStore from "@/store/useBranches";
 import { branchStatus } from "@/lib/utils";
 import UpdateBranch from "./UpdateBranch";
@@ -88,7 +87,6 @@ const DeleteCell = ({
     <div>
       <span
         className="w-full cursor-pointer hover:bg-[#FFF2F2] block p-3 text-sm font-normal"
-        //onClick={handleOpen}
         onClick={handleClose}
       >
         Delete
@@ -112,10 +110,7 @@ const Cell = ({ row }: { row: BranchProps }) => {
         </Button>
       </DropdownMenuTrigger>
       <DropdownMenuContent align="end">
-        {/* <DropdownMenuLabel>Acciones</DropdownMenuLabel>*/}
-
         <UpdateCell branch={row} setIsOpenDropdown={setIsOpenDropdown} />
-
         <DeleteCell branch={row} setIsOpenDropdown={setIsOpenDropdown} />
       </DropdownMenuContent>
     </DropdownMenu>
@@ -194,7 +189,11 @@ export const columns: ColumnDef<BranchProps>[] = [
       );
     },
     cell: ({ row }) => {
-      return <span className="text-nowrap">{row.original.number}</span>;
+      return (
+        <span className="text-nowrap">
+          {row.original.number ?? "No number assigned"}
+        </span>
+      );
     },
   },
 
@@ -211,7 +210,7 @@ export const columns: ColumnDef<BranchProps>[] = [
     cell: ({ row }: { row: Row<BranchProps> }) => {
       return (
         <span className="text-nowrap md:text-wrap">
-          {branchStatus(row.original.status ?? "", true)}
+          {branchStatus(row.original.status ?? "Unknown", true)}
         </span>
       );
     },

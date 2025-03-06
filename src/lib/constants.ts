@@ -10,6 +10,7 @@ export const TICKETS_STATUS = {
 export const USER_STATUS = {
   INACTIVE: "inactive",
   ACTIVE: "active",
+  UNKNOWN: "unknown",
 };
 
 export const TOAST_STATUS = {

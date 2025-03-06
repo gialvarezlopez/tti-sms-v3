@@ -18,7 +18,13 @@ const ModalBranch = ({ setIsOpen, branch }: Props) => {
     <>
       <DialogHeader>
         <DialogTitle className="flex gap-3 items-center px-6 pt-6 pb-3">
-          <Image src={IconPlus} alt="Add" /> Add Branch
+          {branch ? (
+            "Update Branch"
+          ) : (
+            <>
+              <Image src={IconPlus} alt="Add" /> Add Branch
+            </>
+          )}
         </DialogTitle>
         <Separator className="my-2" />
         {/*

@@ -16,7 +16,7 @@ const FieldsResponse = () => {
     <div className="md:px-6 grid grid-cols-1 gap-3">
       <FormField
         control={control}
-        name="responseName"
+        name="response"
         render={({ field }) => (
           <FormItem>
             <FormLabel>Response Name</FormLabel>

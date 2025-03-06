@@ -60,6 +60,10 @@ export type FormReviewMessageProps = {
     value: string;
     keyword: string;
   }[];
+  responses?: {
+    response?: string;
+    reply?: string;
+  }[];
   content?: string;
 };
 
@@ -92,6 +96,7 @@ export type ChatMessage = {
 export type KeywordTemplates = {
   id?: string;
   keyword: string;
+  value?: string;
   type: string;
 };
 
@@ -139,7 +144,7 @@ export type KeywordProps = {
 
 export type ResponseProps = {
   id?: string;
-  responseName: string;
+  response: string;
   value?: string;
   automaticReply: string;
 };

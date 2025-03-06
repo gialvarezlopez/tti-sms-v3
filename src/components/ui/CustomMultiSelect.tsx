@@ -23,6 +23,7 @@ const CustomMultiSelect = ({
   showLimit = 2,
   leftPositionLabel,
   withLabel,
+  isDisabled,
 }: Props) => {
   const [hydrated, setHydrated] = useState(false);
 
@@ -110,6 +111,7 @@ const CustomMultiSelect = ({
                   }
                 }}
                 onClick={() => setOpen((prev) => !prev)}
+                disabled={isDisabled}
               >
                 <div className="flex text-wrap">
                   {selectedItems.length > 0 ? (
@@ -267,6 +269,7 @@ type Props = {
   showLimit?: number;
   leftPositionLabel?: boolean;
   withLabel?: string;
+  isDisabled?: boolean;
 };
 
 export default CustomMultiSelect;

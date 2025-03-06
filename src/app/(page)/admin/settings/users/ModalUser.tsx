@@ -19,8 +19,13 @@ const ModalUser = ({ setIsOpen, user }: Props) => {
     <>
       <DialogHeader>
         <DialogTitle className="flex gap-3 items-center px-6 pt-6 pb-3 text-2xl">
-          <Image src={IconPlus} alt="Add" />
-          {user ? "Update User" : "Add User"}
+          {user ? (
+            "Update User"
+          ) : (
+            <>
+              <Image src={IconPlus} alt="Add" /> Add User
+            </>
+          )}
         </DialogTitle>
         <Separator className="my-2" />
         <DialogDescription className="px-6  pt-3 text-base text-[#1D2433]/80">

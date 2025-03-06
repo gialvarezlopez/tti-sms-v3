@@ -1,6 +1,7 @@
 import { clsx, type ClassValue } from "clsx";
 import { twMerge } from "tailwind-merge";
 import { KEYWORD_SYMBOL, TICKETS_STATUS, USER_STATUS } from "./constants";
+import { CalendarRange, DollarSign, Hash, LetterText } from "lucide-react";
 
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
@@ -89,8 +90,13 @@ export const branchStatus = (status: string, withCircle: boolean = true) => {
       circle: "bg-[#1D2433]/80",
     },
     [USER_STATUS.ACTIVE]: {
-      bg: "bg-success-v1  text-success-v2",
+      bg: "bg-green-500  text-success-v2",
       circle: "bg-success-v2",
+    },
+
+    [USER_STATUS.UNKNOWN]: {
+      bg: "bg-customGray-v1  text-[#1D2433]/80",
+      circle: "bg-[#1D2433]/80",
     },
   };
 
@@ -98,8 +104,8 @@ export const branchStatus = (status: string, withCircle: boolean = true) => {
   const { bg, circle } = statusColors[
     convertToSnakeCase(status.toLowerCase())
   ] || {
-    bg: "bg-gray text-gray-500", // Default value
-    circle: "bg-sky",
+    bg: "bg-customGray-v1 text-gray-500", // Default value
+    circle: "bg-[#1D2433]/80",
   };
 
   setBgColor = bg;
@@ -125,19 +131,49 @@ export const capitalizarPrimeraLetra = (str: string) => {
   return str.charAt(0).toUpperCase() + str.slice(1);
 };
 
+export const lineReplaceWithBreaks = (content: string) => {
+  return content.replace(/\n/g, "<br />");
+};
+
+/**
+ * Function to highlight keywords and responses within a string.
+ *
+ * @param {string} str - The string where keywords and responses will be highlighted.
+ * @param {Array} keywords - An array of objects containing keywords and their replacement values.
+ *   Each object must have the properties `keyword` (the keyword to find) and `value` (the value to replace it with).
+ * @param {string} [color='red'] - The default color to apply to the highlighted keywords.
+ * @param {Array} [responses] - An optional array of objects containing `value` and `color` properties to highlight responses.
+ * @param {boolean} [setWithBreaks=false] - A flag to indicate whether the string should be processed to replace line breaks.
+ * @returns {string} - The updated string with highlighted keywords and responses.
+ */
 export const highlightKeyword = (
   str: string,
   keywords: { keyword: string; value: string }[], // Pasamos un arreglo con el keyword y su valor
-  color: string = "red"
+  color: string = "red",
+  responses?: { value: string; color: string }[],
+  setWithBreaks?: boolean
 ) => {
   let updatedStr = str;
 
-  // Reemplazamos cada marcador [keyword] con su valor correspondiente
+  if (setWithBreaks) {
+    updatedStr = lineReplaceWithBreaks(updatedStr);
+  }
+
+  // We replace each [keyword] tag with its corresponding value
   keywords?.forEach(({ keyword, value }) => {
-    const regex = new RegExp(`\\[${keyword}\\]`, "g"); // Crea una regex para encontrar [keyword]
+    const regex = new RegExp(`\\[${keyword}\\]`, "g"); // Create a regex to find [keyword]
     updatedStr = updatedStr.replace(
       regex,
       `<span style="color: ${color}; font-weight: bold;">${value}</span>`
+    );
+  });
+
+  // If there are responses, we process them and highlight them
+  responses?.forEach(({ value, color: responseColor }) => {
+    const responseRegex = new RegExp(`\\[${value}\\]`, "g"); // We create a regex to find [value]
+    updatedStr = updatedStr.replace(
+      responseRegex,
+      `<span style="color: ${responseColor}; font-weight: bold;">${value}</span>`
     );
   });
 
@@ -213,4 +249,18 @@ export const isMobile = () => {
   return /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(
     navigator.userAgent
   );
+};
+
+export const renderIcon = (type: string) => {
+  // Función para devolver el ícono según el tipo seleccionado
+  switch (type) {
+    case "date":
+      return <CalendarRange className="ml-auto h-4 w-4 opacity-50" />;
+    case "number":
+      return <Hash className="ml-auto h-4 w-4 opacity-50" />;
+    case "currency":
+      return <DollarSign className="ml-auto h-4 w-4 opacity-50" />;
+    default:
+      return <LetterText className="ml-auto h-4 w-4 opacity-50" />;
+  }
 };

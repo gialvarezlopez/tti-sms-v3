@@ -20,60 +20,43 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { keywordOptions } from "@/components/screens/add-keyword/keywordOptions";
-import { CalendarRange, DollarSign, Hash, LetterText } from "lucide-react";
+import { lineReplaceWithBreaks, renderIcon } from "@/lib/utils";
 
 type Props = {
   fields: KeywordProps[];
   remove: UseFieldArrayRemove;
-  //setMessage: React.Dispatch<React.SetStateAction<string>>;
-  //message: string;
 };
 
-const InputTypeKeyword = ({
-  fields,
-  remove /*setMessage, message*/,
-}: Props) => {
+const InputTypeKeyword = ({ fields, remove }: Props) => {
   const { control, setValue, watch } = useFormContext();
 
-  // Usamos `watch` para escuchar los cambios en el campo select
   const keywordValues = useWatch({
     control,
-    name: "keywords", // Especificamos que queremos ver el valor de 'keywords'
+    name: "keywords", // We specify that we want to see the value of 'keywords'
   });
 
   const handleRemoveKeyword = (index: number, keywordName: string) => {
     remove(index);
     const content = watch("content");
+    // Remove the keyword from the text
     const result = removeKeywordFromText(content, keywordName);
+
     setValue("content", result, { shouldDirty: true });
-    //setMessage(result);
   };
 
   const removeKeywordFromText = (text: string, keyword: string) => {
-    // Creamos una expresión regular dinámica que busque la palabra clave dentro de corchetes
+    // We create a dynamic regular expression that searches for the keyword within brackets
     const regex = new RegExp(`\\[${keyword}\\]`, "g");
 
-    // Reemplazamos la palabra clave por una cadena vacía, eliminándola del texto
+    // We replace the keyword with an empty string, removing it from the text
     const processedText = text
-      .replace(regex, "")
-      .replace(/\s{2,}/g, " ")
-      .trim(); // También eliminamos los espacios extras
+      .replace(regex, "") // Delete the keyword
+      .replace(/\n/g, "\n") // Ensures that line breaks are preserved
+      // .replace(/\s{2,}/g, " "); // Normalize white spaces
+      .replace(/[ ]{2,}/g, " ") // Normalizes only consecutive spaces (does not affect line breaks)
+      .trim();
 
     return processedText;
-  };
-
-  const renderIcon = (type: string) => {
-    // Función para devolver el ícono según el tipo seleccionado
-    switch (type) {
-      case "date":
-        return <CalendarRange />;
-      case "number":
-        return <Hash />;
-      case "currency":
-        return <DollarSign />;
-      default:
-        return <LetterText />;
-    }
   };
 
   useEffect(() => {

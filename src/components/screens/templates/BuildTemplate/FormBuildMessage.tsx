@@ -80,6 +80,11 @@ const KeywordSchema = z
     }
   });
 
+const ResponseSchema = z.object({
+  response: z.string().optional(),
+  reply: z.string().optional(),
+});
+
 const FormBuildMessage = ({ onClose, template, isFromModal = true }: Props) => {
   const [openConfirm, setOpenConfirm] = useState(false);
 
@@ -87,6 +92,7 @@ const FormBuildMessage = ({ onClose, template, isFromModal = true }: Props) => {
     clientName: "",
     phoneNumber: "",
     keywords: [],
+    responses: [],
     content: "",
   });
 
@@ -113,6 +119,7 @@ const FormBuildMessage = ({ onClose, template, isFromModal = true }: Props) => {
         });
       }
     }),
+    responses: z.array(ResponseSchema).optional(),
   });
 
   const form = useForm<z.infer<typeof FormSchema>>({
@@ -122,6 +129,7 @@ const FormBuildMessage = ({ onClose, template, isFromModal = true }: Props) => {
       phoneNumber: "",
       content: "",
       keywords: [],
+      responses: [],
     },
   });
 
@@ -136,8 +144,17 @@ const FormBuildMessage = ({ onClose, template, isFromModal = true }: Props) => {
     } else {
       setOpenConfirm(true);
     }
-    console.log(data);
-    setFormState(data);
+
+    const dateValue = {
+      ...data,
+      responses:
+        template?.responses?.map(({ response, reply }) => ({
+          response,
+          reply,
+        })) ?? [],
+    };
+    console.log(dateValue);
+    setFormState(dateValue);
     return false;
   }
 
@@ -147,6 +164,7 @@ const FormBuildMessage = ({ onClose, template, isFromModal = true }: Props) => {
         phoneNumber: template?.phoneNumber,
         clientName: template?.name,
         keywords: template?.keywords ?? [],
+        responses: template?.responses ?? [],
       });
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -156,7 +174,7 @@ const FormBuildMessage = ({ onClose, template, isFromModal = true }: Props) => {
     <div className="w-full">
       <div className={`${isFromModal ? "px-6" : ""}`}>
         <div className=" flex gap-3 justify-between">
-          <div>Estimate Template</div>
+          <div>{template.name}</div>
 
           <div>
             <span className="bg-[#CCCCCC] text-white rounded-full px-2 py-1 font-normal text-xs tracking-[2%]">

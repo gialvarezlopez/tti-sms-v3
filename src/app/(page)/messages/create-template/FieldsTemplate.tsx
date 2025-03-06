@@ -22,6 +22,8 @@ import { Textarea } from "@/components/ui/textarea";
 import Keyword from "./Keyword";
 import Response from "./Response";
 import { MESSAGE_EXCHANGE } from "@/lib/constants";
+import { Checkbox } from "@/components/ui/checkbox";
+import { highlightKeyword, lineReplaceWithBreaks } from "@/lib/utils";
 
 type Props = {
   setOpenKeyword: React.Dispatch<React.SetStateAction<boolean>>;
@@ -43,6 +45,7 @@ type Props = {
   setClearMessage: React.Dispatch<React.SetStateAction<boolean>>;
   dataBranches: BranchProps[];
   isLoadingBranches: boolean;
+  elementId?: string;
 };
 
 const FieldsTemplate = ({
@@ -56,10 +59,14 @@ const FieldsTemplate = ({
   setClearMessage,
   dataBranches,
   isLoadingBranches,
+  elementId,
 }: Props) => {
   const { control, watch, setValue, clearErrors } = useFormContext();
   const { ref, width = 0 } = useResizeObserver<HTMLDivElement>();
   const messageExchangeType = watch("messageExchangeType");
+
+  const itemKeywords = watch("keywords");
+  const itemResponses = watch("responses");
 
   const simplifiedBranches: TypeComboBoxProps[] = useMemo(
     () =>
@@ -127,7 +134,6 @@ const FieldsTemplate = ({
       regex,
       (match) => `<span style='color:red;'>${match}</span>`
     );
-
     return processedText;
   };
 
@@ -140,8 +146,8 @@ const FieldsTemplate = ({
   }, [keywordOption]);
 
   useEffect(() => {
-    if (responseOption.responseName) {
-      addKeyword(responseOption.responseName);
+    if (responseOption.response) {
+      addKeyword(responseOption.response);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [responseOption]);
@@ -198,6 +204,7 @@ const FieldsTemplate = ({
                     control={control}
                     data={simplifiedBranches}
                     showLimit={width <= 768 ? 2 : 3}
+                    isDisabled={!!elementId}
                   />
                 )}
               />
@@ -227,7 +234,7 @@ const FieldsTemplate = ({
           />
         </div>
 
-        <div className="col-span-2">
+        <div className="col-span-2 md:col-span-1">
           <FormField
             control={control}
             name="messageExchangeType"
@@ -239,7 +246,6 @@ const FieldsTemplate = ({
                 <FormControl>
                   <RadioGroup
                     onValueChange={field.onChange}
-                    //defaultValue={field.value}
                     value={field.value}
                     className="flex flex-row space-y-1 gap-4"
                   >
@@ -263,6 +269,41 @@ const FieldsTemplate = ({
           />
         </div>
 
+        <div className="col-span-2 md:col-span-1">
+          <FormField
+            control={control}
+            name="isReminder"
+            render={() => (
+              <FormItem>
+                <div className="mb-4">
+                  <FormLabel className="text-base font-semibold">
+                    Type
+                  </FormLabel>
+                </div>
+                <FormField
+                  control={control}
+                  name="isReminder"
+                  render={({ field }) => (
+                    <FormItem className="flex flex-row items-start space-x-3 space-y-0">
+                      <FormControl>
+                        <Checkbox
+                          checked={field.value}
+                          onCheckedChange={field.onChange}
+                        />
+                      </FormControl>
+                      <FormLabel className="text-sm font-normal">
+                        Is Reminder
+                      </FormLabel>
+                    </FormItem>
+                  )}
+                />
+
+                <CustomFormMessage />
+              </FormItem>
+            )}
+          />
+        </div>
+
         <div className="col-span-2">
           <FormField
             control={control}
@@ -276,6 +317,7 @@ const FieldsTemplate = ({
                   <div>
                     {!isEditing ? (
                       <div>
+                        {/*
                         <div
                           onClick={handleStartEditing}
                           className="min-h-[103px] rounded-md border border-[#ccc] whitespace-pre-wrap px-3 py-2 text-sm"
@@ -286,7 +328,30 @@ const FieldsTemplate = ({
                             ),
                           }}
                         />
-                        <div className="text-sm min-h-[20px] font-bold block">
+                        */}
+                        <div
+                          onClick={handleStartEditing}
+                          className="min-h-[103px] rounded-md border border-[#ccc] whitespace-pre-wrap px-3 py-2 text-sm"
+                          dangerouslySetInnerHTML={{
+                            __html: highlightKeyword(
+                              field.value ?? "",
+                              (itemKeywords as KeywordProps[])?.map(
+                                ({ keyword, value }) => ({
+                                  keyword,
+                                  value: keyword ?? "",
+                                })
+                              ) ?? [],
+                              "red",
+                              itemResponses // Filter objects that have `response` and `reply`
+                                .map((item: ResponseProps) => ({
+                                  value: item.response, // Maps only the `response` property
+                                  color: "black",
+                                })) ?? [],
+                              true
+                            ),
+                          }}
+                        />
+                        <div className="text-xs min-h-[26px] font-semibold block  pt-1">
                           Double click on the message content to edit
                         </div>
                       </div>
@@ -295,14 +360,22 @@ const FieldsTemplate = ({
                         <Textarea
                           spellCheck="false"
                           placeholder="Enter the message"
-                          className="resize-none min-h-[103px] "
+                          className="resize-none min-h-[103px] white"
                           {...field}
                           onClick={handleCursorPositionClick}
                           onInput={handleCursorPositionInput}
                           onBlur={handleStopEditing}
                           onMouseLeave={handleStopEditing}
                         />
-                        <div className="text-sm h-[20px]"></div>
+                        <div className="text-sm h-[26px]"></div>
+                        <div
+                          className="whitespace-pre-wrap"
+                          dangerouslySetInnerHTML={{
+                            __html: lineReplaceWithBreaks(
+                              renderMessageWithHTML(field.value)
+                            ),
+                          }}
+                        />
                       </div>
                     )}
                   </div>

@@ -1,10 +1,7 @@
+import { useSession } from "next-auth/react";
 import { ColumnDef, Row } from "@tanstack/react-table";
 import { Checkbox } from "@/components/ui/checkbox";
-import {
-  FormReviewMessageProps,
-  TemplateProps,
-  TicketsProps,
-} from "@/types/types";
+import { TemplateProps, TicketsProps } from "@/types/types";
 import { Button } from "@/components/ui/button";
 import {
   DropdownMenu,
@@ -13,7 +10,6 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { MoreVertical } from "lucide-react";
 import { Dispatch, SetStateAction, useState } from "react";
-//import { useRouter } from "next/navigation";
 import { convertToSnakeCase, statusType } from "@/lib/utils";
 import ModalPreviewTicket from "../../../components/screens/preview-ticket/ModalPreviewTicket";
 import useTicketsStore from "@/store/useTickets";
@@ -77,7 +73,11 @@ const ResendMessageCell = ({
 
   const templateProps: TemplateProps = {
     ...template,
-    id: template.id?.toString(), // Convertir id de number a string
+    id: template.id?.toString(),
+    responses: template.responses?.map((response) => ({
+      response: response.response || "", // Assign a default value if undefined
+      reply: response.reply || "", // Assign a default value if undefined
+    })),
   };
 
   return (
@@ -147,10 +147,8 @@ const CloseTicketCell = ({
   const { tickets, setTickets } = useTicketsStore();
 
   const handleAddTicketToClose = () => {
-    //const id = ticket?.id;
     if (ticket) {
-      //setTickets([...tickets, +id]); // Añadimos el nuevo número al arreglo
-      setTickets([...tickets, ticket]); // Añadimos el nuevo número al arreglo
+      setTickets([...tickets, ticket]);
       setIsOpenDropdown(false);
     }
   };
@@ -209,6 +207,7 @@ const Cell = ({ row }: { row: TicketsProps }) => {
   );
 };
 
+/*
 const role = "admin"; // o role = "user" según el contexto o estado
 export const columns: ColumnDef<TicketsProps>[] = [
   {
@@ -357,3 +356,164 @@ export const columns: ColumnDef<TicketsProps>[] = [
     cell: ({ row }) => <Cell row={row.original} />,
   },
 ];
+*/
+
+const useColumns = () => {
+  const { data: session } = useSession();
+
+  // Comprobar si el usuario tiene rol 'admin'
+  const isAdmin = session?.user?.primaryRole === USER_ROLE.ADMIN;
+
+  // Definir las columnas
+  const columnDefs: ColumnDef<TicketsProps>[] = [
+    {
+      accessorKey: "id",
+      header: ({ table }) => (
+        <Checkbox
+          checked={table.getIsAllPageRowsSelected()}
+          onCheckedChange={(value: never) =>
+            table.toggleAllPageRowsSelected(value)
+          }
+        />
+      ),
+      cell: ({ row }) => (
+        <Checkbox
+          checked={row.getIsSelected()}
+          onCheckedChange={(value: never) => row.toggleSelected(value)}
+          className="!hover:bg-gray-600"
+        />
+      ),
+      enableSorting: false,
+    },
+    // Condicional para mostrar la columna 'Branch' solo si el rol es 'admin'
+
+    {
+      accessorKey: "client",
+      header: () => {
+        return (
+          <Button variant="ghost" className="px-0">
+            Client
+          </Button>
+        );
+      },
+      cell: ({ row }) => {
+        return (
+          <span className="text-nowrap md:text-wrap">
+            {row.original.clientName}
+          </span>
+        );
+      },
+    },
+    {
+      accessorKey: "TelephoneNumber",
+      header: () => {
+        return (
+          <Button variant="ghost" className="px-0">
+            Telephone Number
+          </Button>
+        );
+      },
+      cell: ({ row }) => {
+        return <span>{row.original.phoneNumber}</span>; //capitalizeFirstLetter(row.original.tipoCliente);
+      },
+    },
+    // Add 'Branch' column only if user is 'admin'
+    ...(isAdmin
+      ? [
+          {
+            accessorKey: "Branch",
+            id: "branch",
+            header: ({}: { column: ColumnDef<TicketsProps> }) => {
+              return (
+                <Button variant="ghost" className="px-0">
+                  Branch
+                </Button>
+              );
+            },
+            cell: ({ row }: { row: Row<TicketsProps> }) => {
+              return (
+                <span className="text-nowrap md:text-wrap">
+                  {row.original.branch}
+                </span>
+              );
+            },
+          },
+        ]
+      : []),
+    {
+      accessorKey: "lastSent",
+      header: () => {
+        return (
+          <Button variant="ghost" className="px-0">
+            Last Sent
+          </Button>
+        );
+      },
+      cell: ({ row }) => {
+        return <span className="text-nowrap">{row.original.lastSent}</span>;
+      },
+    },
+    {
+      accessorKey: "lastReceived",
+      header: () => {
+        return (
+          <Button variant="ghost" className="px-0">
+            Last received
+          </Button>
+        );
+      },
+      cell: ({ row }) => {
+        return <span className="text-nowrap">{row.original.lastReceived}</span>;
+      },
+    },
+    {
+      accessorKey: "typeOfMessage",
+      header: () => {
+        return (
+          <Button variant="ghost" className="px-0">
+            Type of message
+          </Button>
+        );
+      },
+      cell: ({ row }) => {
+        return <span>{row.original.typeOfMessage}</span>;
+      },
+    },
+    {
+      accessorKey: "status",
+      header: () => {
+        return (
+          <Button variant="ghost" className="px-0">
+            Status
+          </Button>
+        );
+      },
+      cell: ({ row }) => {
+        return <>{statusType(row.original.status, true)}</>;
+      },
+    },
+    {
+      accessorKey: "createdAt",
+      header: () => {
+        return (
+          <Button variant="ghost" className="px-0">
+            Created At
+          </Button>
+        );
+      },
+      cell: ({ row }) => {
+        return <span className="text-nowrap">{row.original.createdAt}</span>;
+      },
+    },
+  ];
+
+  // Columna para las acciones
+  columnDefs.push({
+    id: "actions",
+    cell: ({ row }) => <Cell row={row.original} />,
+  });
+
+  return columnDefs; // Retornar las columnas dinámicas
+};
+
+export default useColumns;

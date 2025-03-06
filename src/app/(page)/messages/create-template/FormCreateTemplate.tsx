@@ -42,7 +42,7 @@ const FormCreateTemplate = () => {
 
   const [openResponse, setOpenResponse] = useState(false);
   const [responseOption, setResponseOption] = useState<ResponseProps>({
-    responseName: "",
+    response: "",
     automaticReply: "",
   });
 
@@ -91,6 +91,7 @@ const FormCreateTemplate = () => {
           required_error: "Select the message exchange",
         }
       ),
+      isReminder: z.boolean().default(false).optional(),
       keywords: z
         .array(
           z.object({
@@ -206,6 +207,7 @@ const FormCreateTemplate = () => {
       content: "",
       keywords: [],
       responses: [],
+      isReminder: false,
       messageExchangeType: undefined,
       invalidReply: "",
       timeToRespond: 35,
@@ -228,6 +230,13 @@ const FormCreateTemplate = () => {
     };
 
     if (elementId) {
+      delete formData.branches;
+    }
+
+    console.log("formData", formData);
+    //return false;
+
+    if (elementId) {
       updateTemplate(formData);
     } else {
       createTemplate(formData, {
@@ -241,7 +250,7 @@ const FormCreateTemplate = () => {
             description: "",
           });
           setResponseOption({
-            responseName: "",
+            response: "",
             automaticReply: "",
           });
           setClearMessage(true);
@@ -320,6 +329,7 @@ const FormCreateTemplate = () => {
                 setClearMessage={setClearMessage}
                 dataBranches={responseBranches?.data || []}
                 isLoadingBranches={isLoadingBranches}
+                elementId={elementId as string}
               />
 
               {hasErrors && (

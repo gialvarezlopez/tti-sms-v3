@@ -3,7 +3,8 @@ import React, { useEffect, useState } from "react";
 //import { RefetchOptions } from "@tanstack/react-query";
 import { ColumnDef } from "@tanstack/react-table";
 import DataTable from "@/components/ui/DataTable";
-import { columns } from "./Columns";
+//import { columns } from "./Columns";
+import useColumns from "./Columns";
 import Actions from "./Actions";
 import { TicketsProps } from "@/types/types";
 import { dataTickets } from "./mock/dataTickets";
@@ -16,8 +17,8 @@ import TableSkeleton from "@/components/skeletons/TableSkeleton";
 type IsColumnSelectedFn<T> = (column: ColumnDef<T>, action?: string) => void;
 
 const Home = () => {
+  const columns = useColumns();
   const [loading, setLoading] = useState(true);
-
   const [search, setSearch] = useState("");
   const [sortBy, setSortBy] = useState<string>(""); // Status for the sort field
   const [sortOrder, setSortOrder] = useState<"asc" | "desc">("asc"); // State for ascending or descending order

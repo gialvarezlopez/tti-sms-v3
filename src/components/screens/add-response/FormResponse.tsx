@@ -16,7 +16,7 @@ type Props = {
 };
 const FormResponse = ({ setIsOpen, setResponseOption }: Props) => {
   const FormSchema = z.object({
-    responseName: z.string().min(1, "Please enter the response name"),
+    response: z.string().min(1, "Please enter the response name"),
     automaticReply: z.string().min(1, {
       message: "Please enter the automatic reply.", // El mensaje de error debe ir en 'message' en vez de 'required_error'
     }),
@@ -25,7 +25,7 @@ const FormResponse = ({ setIsOpen, setResponseOption }: Props) => {
   const form = useForm<z.infer<typeof FormSchema>>({
     resolver: zodResolver(FormSchema),
     defaultValues: {
-      responseName: "",
+      response: "",
       automaticReply: "",
     },
   });
@@ -33,7 +33,7 @@ const FormResponse = ({ setIsOpen, setResponseOption }: Props) => {
   function onSubmit(data: z.infer<typeof FormSchema>) {
     setIsOpen(false);
     setResponseOption({
-      responseName: data.responseName,
+      response: data.response,
       automaticReply: data.automaticReply,
     });
     console.log(data);
