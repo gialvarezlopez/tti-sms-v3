@@ -14,7 +14,7 @@ import { Separator } from "@/components/ui/separator";
 import { TicketsProps } from "@/types/types";
 import Features from "./Features";
 import { MESSAGE_EXCHANGE } from "@/lib/constants";
-import { generateSlug } from "@/lib/utils";
+import { generateSlug, templateType } from "@/lib/utils";
 
 type Props = {
   ticket: TicketsProps;
@@ -78,8 +78,9 @@ const ModalPreviewTicket = ({
                     variant={"destructive"}
                     onClick={handleResendMessage}
                   >
-                    {generateSlug(ticket.typeOfMessage) ===
-                    MESSAGE_EXCHANGE.ONE_WAY
+                    {generateSlug(
+                      templateType(ticket.template?.isTwoWay ?? false)
+                    ) === MESSAGE_EXCHANGE.ONE_WAY
                       ? "Resend Message"
                       : "Resend Reminder"}
                   </Button>

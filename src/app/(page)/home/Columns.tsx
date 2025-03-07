@@ -10,7 +10,7 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { MoreVertical } from "lucide-react";
 import { Dispatch, SetStateAction, useState } from "react";
-import { convertToSnakeCase, statusType } from "@/lib/utils";
+import { convertToSnakeCase, statusType, templateType } from "@/lib/utils";
 import ModalPreviewTicket from "../../../components/screens/preview-ticket/ModalPreviewTicket";
 import useTicketsStore from "@/store/useTickets";
 import { TICKETS_STATUS, USER_ROLE } from "@/lib/constants";
@@ -71,15 +71,16 @@ const ResendMessageCell = ({
     setIsOpenDropdown(false);
   };
 
+  /*
   const templateProps: TemplateProps = {
     ...template,
     id: template.id?.toString(),
-    responses: template.responses?.map((response) => ({
+    responses: template.template?.responses?.map((response) => ({
       response: response.response || "", // Assign a default value if undefined
       reply: response.reply || "", // Assign a default value if undefined
     })),
   };
-
+  */
   return (
     <div>
       <span
@@ -93,7 +94,7 @@ const ResendMessageCell = ({
         <ModalResendTicket
           modalOpen={isOpen}
           onClose={handleClose}
-          ticket={templateProps}
+          ticket={template}
         />
       )}
     </div>
@@ -476,7 +477,9 @@ const useColumns = () => {
         );
       },
       cell: ({ row }) => {
-        return <span>{row.original.typeOfMessage}</span>;
+        return (
+          <span>{templateType(row.original.template?.isTwoWay ?? false)}</span>
+        );
       },
     },
     {

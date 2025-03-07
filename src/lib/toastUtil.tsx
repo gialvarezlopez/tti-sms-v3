@@ -1,5 +1,5 @@
 import { toast } from "@/hooks/use-toast";
-import { CheckCircle, X } from "lucide-react";
+import { CheckCircle, TriangleAlert } from "lucide-react";
 import { TOAST_STATUS } from "./constants";
 import { cn } from "./utils";
 
@@ -25,11 +25,11 @@ export const showToast = (
       backgroundColor = "bg-success-v1 text-customBlack-v1";
       break;
     case TOAST_STATUS.DESTRUCTIVE:
-      icon = <X className="h-5 w-5 text-white" />;
+      icon = <TriangleAlert className="h-5 w-5 text-white" />;
       backgroundColor = "bg-red-500 text-white";
       break;
     case TOAST_STATUS.DEFAULT:
-      icon = <X className="h-5 w-5 text-white" />;
+      icon = <TriangleAlert className="h-5 w-5 text-white" />;
       backgroundColor = "bg-blue-500 text-white";
       break;
     default:
@@ -41,7 +41,7 @@ export const showToast = (
   toast({
     variant: variant,
     description: (
-      <div className="flex items-center">
+      <div className="flex items-start">
         <div className="mr-3">{icon}</div>
         <div>
           <div className="font-semibold">{title}</div>

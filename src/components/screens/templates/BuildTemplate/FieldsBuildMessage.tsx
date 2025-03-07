@@ -88,7 +88,7 @@ const FieldsResendMessage = ({ template, isFromModal }: Props) => {
 
         // Verifica si el tipo es "currency" y el valor es numérico
         if (type === "currency") {
-          const numericValue = value.replace("$", ""); // Elimina el símbolo "$" si ya existe
+          const numericValue = value?.replace("$", ""); // Elimina el símbolo "$" si ya existe
           if (
             /^\d+(\.\d{1,2})?$/.test(numericValue) ||
             numericValue === "" ||
@@ -127,6 +127,10 @@ const FieldsResendMessage = ({ template, isFromModal }: Props) => {
       replace(newKeywords);
     }
   }, [template, replace, watch]);
+
+  if (!template) {
+    return false;
+  }
 
   return (
     <div className="pb-2">
@@ -171,7 +175,6 @@ const FieldsResendMessage = ({ template, isFromModal }: Props) => {
           )}
         />
       </div>
-
       <div className="space-y-2">
         <div>
           <Separator className="my-6" />
@@ -182,12 +185,30 @@ const FieldsResendMessage = ({ template, isFromModal }: Props) => {
               dangerouslySetInnerHTML={{
                 __html: highlightKeyword(
                   watch("content") || template?.content,
+                  /*
+                  (isFromModal
+                    ? template?.keywords
+                        ?.filter((item) => item.keyword)
+                        .map(({ keyword, value }) => ({
+                          keyword,
+                          value: keyword ?? "",
+                        }))
+                    : (getValues("keywords") as Keyword[]).map(
+                        ({ keyword, value }) => ({
+                          keyword,
+                          value: value || "",
+                        })
+                      )) ?? [],
+                      */
+
                   (getValues("keywords") as Keyword[])?.map(
                     ({ keyword, value }) => ({
                       keyword,
+                      //value: isFromModal ? keyword : value,
                       value,
                     })
                   ) ?? [],
+
                   "red",
                   template?.responses
                     ?.filter((item) => item.response && item.reply) // Filter objects that have 'response'
@@ -201,7 +222,6 @@ const FieldsResendMessage = ({ template, isFromModal }: Props) => {
             />
           </div>
         </div>
-
         <FormField
           control={control}
           name="content"
@@ -246,7 +266,7 @@ const FieldsResendMessage = ({ template, isFromModal }: Props) => {
                                   "w-full pl-3 text-left font-normal justify-between",
                                   !field.value && "text-muted-foreground"
                                 )}
-                                disabled={isFromModal}
+                                //disabled={isFromModal}
                               >
                                 {isValidDate(field.value) ? (
                                   format(new Date(field.value), "MM/dd/yyyy")
@@ -275,7 +295,7 @@ const FieldsResendMessage = ({ template, isFromModal }: Props) => {
                                 }
                               }}
                               initialFocus
-                              disabled={isFromModal}
+                              //disabled={isFromModal}
                               className="w-full"
                             />
                           </PopoverContent>
@@ -299,7 +319,7 @@ const FieldsResendMessage = ({ template, isFromModal }: Props) => {
                             placeholder={(item as Keyword).keyword}
                             {...field}
                             autoComplete="off"
-                            readOnly={isFromModal}
+                            //readOnly={isFromModal}
                             onChange={(e) => {
                               field.onChange(e);
                               handleKeywordChange(

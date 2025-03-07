@@ -10,7 +10,7 @@ import {
 import { MoreVertical } from "lucide-react";
 import { Dispatch, SetStateAction, useState } from "react";
 import ModalPreviewTicket from "../../../components/screens/preview-ticket/ModalPreviewTicket";
-//import useTicketsStore from "@/store/useTickets";
+import { templateType } from "@/lib/utils";
 
 const PreviewCell = ({
   ticket,
@@ -50,58 +50,6 @@ const PreviewCell = ({
   );
 };
 
-//No option to delete for the moment
-/*
-const DeleteCell = ({
-  ticket,
-  setIsOpenDropdown,
-}: {
-  ticket: TicketsProps;
-  setIsOpenDropdown: Dispatch<SetStateAction<boolean>>;
-}) => {
-  const { setTickets } = useTicketsStore();
-  const [, setIsOpen] = useState(false);
-
-  const handleClose = () => {
-    setIsOpen(false);
-    setIsOpenDropdown(false);
-
-    const newTicket: TicketsProps[] = [
-      {
-        id: 5,
-        branch: ticket.branch,
-        client: ticket.client,
-        phoneNumber: ticket.phoneNumber,
-        lastSent: ticket.lastSent,
-        lastReceived: ticket.lastReceived,
-        typeOfMessage: ticket.typeOfMessage,
-        status: ticket.status,
-        date: ticket.date,
-        templateName: ticket.template,
-        templateDescription: ticket.templateDescription,
-        chat: ticket.chat,
-        reason: ticket.reason,
-        template: ticket.template,
-        closed: ticket.closed,
-        closedBy: ticket.closedBy,
-      },
-    ];
-    setTickets(newTicket);
-  };
-
-  return (
-    <div>
-      <span
-        className="w-full cursor-pointer hover:bg-[#FFF2F2] block p-3 text-sm font-normal"
-        onClick={handleClose}
-      >
-        Delete
-      </span>
-    </div>
-  );
-};
-*/
-
 const Cell = ({ row }: { row: TicketsProps }) => {
   const ticket = row;
   const [isOpenDropdown, setIsOpenDropdown] = useState(false);
@@ -119,8 +67,6 @@ const Cell = ({ row }: { row: TicketsProps }) => {
       </DropdownMenuTrigger>
       <DropdownMenuContent align="end">
         <PreviewCell ticket={ticket} setIsOpenDropdown={setIsOpenDropdown} />
-        {/* No option to delete for the moment */}
-        {/* <DeleteCell ticket={row} setIsOpenDropdown={setIsOpenDropdown} /> */}
       </DropdownMenuContent>
     </DropdownMenu>
   );
@@ -190,7 +136,9 @@ export const columns: ColumnDef<TicketsProps>[] = [
       );
     },
     cell: ({ row }) => {
-      return <span>{row.original.typeOfMessage}</span>;
+      return (
+        <span>{templateType(row.original.template?.isTwoWay ?? false)}</span>
+      );
     },
   },
 
@@ -204,7 +152,7 @@ export const columns: ColumnDef<TicketsProps>[] = [
       );
     },
     cell: ({ row }) => {
-      return <span>{row.original.template}</span>;
+      return <span>{row.original.template?.name}</span>;
     },
   },
 

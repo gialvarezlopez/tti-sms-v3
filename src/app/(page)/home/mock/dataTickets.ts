@@ -1,17 +1,105 @@
 // dataTickets.ts
+
+const templateOneWay = {
+  id: "cba5c6fd-b10a-4335-8c2a-20ab4d26eda6",
+  name: "Estimate",
+  description:
+    "Notice of non-warranty repair with contact for estimate approval.",
+  branch_id: null,
+  content:
+    "Your Milwaukee repair request [SV or MODEL Number] has been inspected and does not qualify for warranty coverage. For a repair estimate and approval to proceed, please contact Milwaukee at 1-877-948-2360. Thank you!",
+  keywords: [
+    {
+      id: 32,
+      template_id: "cba5c6fd-b10a-4335-8c2a-20ab4d26eda6",
+      keyword: "SV or MODEL Number",
+      type: "number",
+      created_at: "2025-03-07T15:51:43.000000Z",
+      updated_at: "2025-03-07T15:51:43.000000Z",
+    },
+  ],
+  responses: [],
+  isTwoWay: false,
+  createdBy: {
+    id: "ab35c12c-f9ce-11ef-ae33-12367ee732df",
+    name: "Juan",
+    email: "juan@expertel.ca",
+  },
+  createdAt: "2025-03-07T15:30:50.000000Z",
+  updatedAt: "2025-03-07T15:41:28.000000Z",
+};
+
+const templateTwoWay = {
+  id: "957a8029-dcc0-49b3-a123-b16b670cf53a",
+  name: "Cost Repair + is R + 2w",
+  description: "Tool replacement cost approval request.",
+  branch_id: null,
+  content:
+    "The replacement cost for your tool is [Total Cost] . Please respond by [Date] with one of the following:\n [Approve] \n [Deny] \nIf you have any questions, please contact Milwaukee at 1-877-948-2360. Thank you!",
+  keywords: [
+    {
+      id: 21,
+      template_id: "957a8029-dcc0-49b3-a123-b16b670cf53a",
+      keyword: "Total Cost",
+      type: "currency",
+      created_at: "2025-03-07T15:13:24.000000Z",
+      updated_at: "2025-03-07T15:13:24.000000Z",
+    },
+    {
+      id: 22,
+      template_id: "957a8029-dcc0-49b3-a123-b16b670cf53a",
+      keyword: "Date",
+      type: "date",
+      created_at: "2025-03-07T15:13:24.000000Z",
+      updated_at: "2025-03-07T15:13:24.000000Z",
+    },
+  ],
+  responses: [
+    {
+      id: 21,
+      template_id: "957a8029-dcc0-49b3-a123-b16b670cf53a",
+      response: "Approve",
+      reply:
+        "Thank you for approving the replacement cost. We will proceed with the next steps and provide you with updates shortly.",
+      is_default: 0,
+      created_at: "2025-03-07T15:13:24.000000Z",
+      updated_at: "2025-03-07T15:13:24.000000Z",
+    },
+    {
+      id: 22,
+      template_id: "957a8029-dcc0-49b3-a123-b16b670cf53a",
+      response: "Deny",
+      reply:
+        "We have received your decision to deny the replacement cost. If you have any questions or need further assistance, please contact Milwaukee at 1-877-948-2360.",
+      is_default: 0,
+      created_at: "2025-03-07T15:13:24.000000Z",
+      updated_at: "2025-03-07T15:13:24.000000Z",
+    },
+  ],
+  isTwoWay: true,
+  createdBy: {
+    id: "ab35c12c-f9ce-11ef-ae33-12367ee732df",
+    name: "Juan",
+    email: "juan@expertel.ca",
+  },
+  createdAt: "2025-03-07T15:13:24.000000Z",
+  updatedAt: "2025-03-07T15:13:24.000000Z",
+};
+
 export const dataTickets = [
   {
-    id: 1,
+    id: "1",
     branch: "Tech",
     clientName: "Carvajal Noth",
     phoneNumber: "(226) 755-3917",
     lastSent: "01/07/2025",
     lastReceived: "01/07/2025",
     createdAt: "01/01/2025",
-    typeOfMessage: "One way",
+    //typeOfMessage: "One way",
     status: "Error",
-    templateName: "Cost Repair Template",
-    templateDescription: "Tool replacement cost approval request.",
+    template: templateOneWay,
+    //templateName: "Cost Repair Template",
+    //templateDescription: "Tool replacement cost approval request.",
     chat: [
       {
         from: "admin",
@@ -25,17 +113,18 @@ export const dataTickets = [
       "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.  ",
   },
   {
-    id: 2,
+    id: "2",
     branch: "Office",
     clientName: "Joe Doe",
     phoneNumber: "(226) 755-3917",
     lastSent: "01/07/2025",
     lastReceived: "01/07/2025",
     createdAt: "01/02/2025",
-    typeOfMessage: "One way",
+    //typeOfMessage: "One way",
     status: "In Progress",
-    templateName: "Cost Repair Template",
-    templateDescription: "Tool replacement cost approval request.",
+    template: templateOneWay,
+    //templateName: "Cost Repair Template",
+    //templateDescription: "Tool replacement cost approval request.",
     chat: [
       {
         from: "admin",
@@ -47,17 +136,18 @@ export const dataTickets = [
     ],
   },
   {
-    id: 3,
+    id: "3",
     branch: "Office",
     clientName: "Doron smith",
     phoneNumber: "(226) 755-3917",
     lastSent: "01/07/2025",
     lastReceived: "01/07/2025",
     createdAt: "01/03/2025",
-    typeOfMessage: "One way",
+    //typeOfMessage: "One way",
     status: "In Progress",
-    templateName: "Cost Repair Template",
-    templateDescription: "Tool replacement cost approval request.",
+    template: templateOneWay,
+    //templateName: "Cost Repair Template",
+    //templateDescription: "Tool replacement cost approval request.",
     chat: [
       {
         from: "admin",
@@ -69,17 +159,18 @@ export const dataTickets = [
     ],
   },
   {
-    id: 4,
+    id: "4",
     branch: "Tech",
     clientName: "Bruce Willis",
     phoneNumber: "(226) 755-3917",
     lastSent: "01/07/2025",
     lastReceived: "01/07/2025",
     createdAt: "01/04/2025",
-    typeOfMessage: "One way",
+    //typeOfMessage: "One way",
     status: "Error",
-    templateName: "Cost Repair Template",
-    templateDescription: "Tool replacement cost approval request.",
+    template: templateOneWay,
+    //templateName: "Cost Repair Template",
+    //templateDescription: "Tool replacement cost approval request.",
     chat: [
       {
         from: "admin",
@@ -94,18 +185,19 @@ export const dataTickets = [
   },
 
   {
-    id: 4,
+    id: "4",
     branch: "Tech",
     clientName: "Bruce Banner",
     phoneNumber: "(358) 755-3920",
     lastSent: "01/07/2025",
     lastReceived: "01/07/2025",
     createdAt: "01/05/2025",
-    typeOfMessage: "Two way",
+    //typeOfMessage: "Two way",
     status: "Error",
     date: "12/12/2024 at 9:12 AM",
-    templateName: "Cost Repair Template",
-    templateDescription: "Tool replacement cost approval request.",
+    template: templateTwoWay,
+    //templateName: "Cost Repair Template",
+    //templateDescription: "Tool replacement cost approval request.",
     chat: [
       {
         from: "admin",

@@ -55,35 +55,43 @@ export type BranchProps = {
 export type FormReviewMessageProps = {
   clientName: string;
   phoneNumber: string;
-  keywords?: {
-    type: string;
-    value: string;
-    keyword: string;
-  }[];
-  responses?: {
-    response?: string;
-    reply?: string;
-  }[];
+  keywords?: KeywordTemplates[];
+  responses?: AutomaticResponsesTemplates[];
   content?: string;
 };
 
-export type TicketsProps = FormReviewMessageProps & {
-  id?: number;
+type FormReviewMessagePropsWithoutKeywordsAndResponses = Omit<
+  FormReviewMessageProps,
+  "keywords" | "responses"
+>;
+
+export type TicketsProps = FormReviewMessagePropsWithoutKeywordsAndResponses & {
+  id?: string | number;
   branch?: string;
   lastSent: string;
   lastReceived: string;
   createdAt?: string;
-  typeOfMessage: string;
   status: string;
-  templateName?: string;
-  templateDescription?: string;
   date?: string;
   errorMessage?: string;
   chat: ChatMessage[];
   reason?: string;
   closedBy?: string;
-  template?: string;
+  template?: TemplateProps;
   closed?: string;
+};
+
+export type KeywordTemplates = {
+  id?: string | number;
+  keyword: string;
+  value?: string;
+  type: string;
+};
+
+export type AutomaticResponsesTemplates = {
+  id?: string | number;
+  response: string;
+  reply: string;
 };
 
 export type ChatMessage = {
@@ -93,27 +101,14 @@ export type ChatMessage = {
   message: string;
 };
 
-export type KeywordTemplates = {
-  id?: string;
-  keyword: string;
-  value?: string;
-  type: string;
-};
-
-export type AutomaticResponsesTemplates = {
-  id?: string;
-  response: string;
-  reply: string;
-};
-
 export type TemplateProps = {
   id?: string;
   name?: string;
   slug?: string;
-  phoneNumber?: string;
   isTwoWay?: boolean;
   branches?: string[];
   description?: string;
+  isReminder?: boolean;
   content?: string;
   keywords?: KeywordTemplates[];
   responses?: AutomaticResponsesTemplates[];

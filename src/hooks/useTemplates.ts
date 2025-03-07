@@ -50,6 +50,29 @@ const useGetTemplates = ({ page, limit, search }: PaginateParams) => {
   });
 };
 
+const useSingleTemplate = (id: string) => {
+  return useQuery({
+    queryKey: ["template-single", id],
+    queryFn: async () => {
+      try {
+        const url = templatesRoutes.single(id);
+        const { data } = await axiosInstance.get(url);
+        return data;
+      } catch (e) {
+        if (isAxiosError(e) && e.response) {
+          const errorMessage =
+            e.response.data.message || e.response.data.error || "Unknown error";
+          throw new Error(errorMessage);
+        } else {
+          throw new Error("Unknown error");
+        }
+      }
+    },
+    staleTime: 10000,
+    enabled: !!id,
+  });
+};
+
 const useCreateTemplate = () => {
   const { push } = useRouter();
   const queryClient = useQueryClient();
@@ -109,7 +132,7 @@ const useUpdateTemplate = (id: string) => {
       }
     },
     onSettled: () =>
-      queryClient.invalidateQueries({ queryKey: ["template-list"] }),
+      queryClient.invalidateQueries({ queryKey: ["template-single", id] }),
     onSuccess: (value) => {
       push(`${returnAfterSubmit}`);
 
@@ -166,29 +189,6 @@ const useDeleteTemplate = () => {
 
       showToast("destructive", "Error!", `${errorMessage}`);
     },
-  });
-};
-
-const useSingleTemplate = (id: string) => {
-  return useQuery({
-    queryKey: ["template-single", id],
-    queryFn: async () => {
-      try {
-        const url = templatesRoutes.single(id);
-        const { data } = await axiosInstance.get(url);
-        return data;
-      } catch (e) {
-        if (isAxiosError(e) && e.response) {
-          const errorMessage =
-            e.response.data.message || e.response.data.error || "Unknown error";
-          throw new Error(errorMessage);
-        } else {
-          throw new Error("Unknown error");
-        }
-      }
-    },
-    staleTime: 10000,
-    enabled: !!id,
   });
 };
 

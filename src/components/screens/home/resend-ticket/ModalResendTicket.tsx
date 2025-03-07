@@ -10,7 +10,7 @@ import { TemplateProps, TicketsProps } from "@/types/types";
 import FormBuildMessage from "../../templates/BuildTemplate/FormBuildMessage";
 
 type Props = {
-  ticket: TemplateProps;
+  ticket: TicketsProps;
   modalOpen: boolean;
   onClose: () => void;
 };
@@ -28,11 +28,15 @@ const ModalResendTicket = ({ ticket, modalOpen, onClose }: Props) => {
             <Separator className="my-2" />
           </DialogHeader>
 
-          <FormBuildMessage
-            template={ticket}
-            onClose={onClose}
-            isFromModal={true}
-          />
+          {ticket.template && (
+            <FormBuildMessage
+              template={ticket.template ?? []}
+              recipient={ticket.phoneNumber}
+              clientName={ticket.clientName}
+              onClose={onClose}
+              isFromModal={true}
+            />
+          )}
         </DialogContent>
       </Dialog>
     </div>
