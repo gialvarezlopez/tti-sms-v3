@@ -10,6 +10,7 @@ import { Button } from "@/components/ui/button";
 
 import { TicketsProps } from "@/types/types";
 import FieldsResendMessage from "./FieldsSendRemainder";
+import { templateType } from "@/lib/utils";
 
 type Props = {
   //closeModal: () => void;
@@ -58,7 +59,7 @@ const FormBuildRemainder = ({ onClose, ticket }: Props) => {
 
           <div>
             <span className="bg-[#CCCCCC] text-white rounded-full px-2 py-1 font-normal text-xs tracking-[2%]">
-              {ticket?.typeOfMessage}
+              {templateType(ticket?.template?.isTwoWay ?? false)}
             </span>
           </div>
         </div>

@@ -19,6 +19,8 @@ import { templateType } from "@/lib/utils";
 
 type Props = {
   template: TemplateProps;
+  recipient?: string;
+  clientName?: string;
   onClose?: () => void;
   isFromModal: boolean;
 };
@@ -85,7 +87,13 @@ const ResponseSchema = z.object({
   reply: z.string().optional(),
 });
 
-const FormBuildMessage = ({ onClose, template, isFromModal = true }: Props) => {
+const FormBuildMessage = ({
+  onClose,
+  template,
+  recipient,
+  clientName,
+  isFromModal = true,
+}: Props) => {
   const [openConfirm, setOpenConfirm] = useState(false);
 
   const [formState, setFormState] = useState<FormReviewMessageProps>({
@@ -133,7 +141,7 @@ const FormBuildMessage = ({ onClose, template, isFromModal = true }: Props) => {
     },
   });
 
-  const { reset } = form;
+  const { reset, setValue } = form;
 
   function onSubmit(data: z.infer<typeof FormSchema>) {
     if (onClose && isFromModal) {
@@ -160,15 +168,11 @@ const FormBuildMessage = ({ onClose, template, isFromModal = true }: Props) => {
 
   useEffect(() => {
     if (template && isFromModal) {
-      reset({
-        phoneNumber: template?.phoneNumber,
-        clientName: template?.name,
-        keywords: template?.keywords ?? [],
-        responses: template?.responses ?? [],
-      });
+      setValue("phoneNumber", recipient ?? "");
+      setValue("clientName", clientName ?? "");
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [template, isFromModal]);
+    console.log("clientName", clientName);
+  }, [template, isFromModal, setValue, recipient, clientName]);
 
   return (
     <div className="w-full">
@@ -185,6 +189,7 @@ const FormBuildMessage = ({ onClose, template, isFromModal = true }: Props) => {
 
         <Separator className="my-3" />
       </div>
+
       <Form {...form}>
         <form onSubmit={form.handleSubmit(onSubmit)} className="w-full">
           <div className="h-full flex flex-col pb-5">

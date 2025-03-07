@@ -226,8 +226,11 @@ const FormCreateTemplate = () => {
     const formData = {
       ...restData,
       content: cleanOnlyWhiteSpace(data.content),
-      type: "reminder",
+      ...(data.isReminder ? { type: "reminder" } : {}), //we do this because the endpoints is receiving type inste of isReminder
     };
+
+    //Remove isReminder to only send type
+    delete formData.isReminder;
 
     if (elementId) {
       delete formData.branches;
@@ -271,6 +274,7 @@ const FormCreateTemplate = () => {
         responses,
         isTwoWay,
         invalidReply,
+        type,
       } = currentTemplate.data;
 
       const slugType = generateSlug(templateType(isTwoWay ?? false));
@@ -288,6 +292,7 @@ const FormCreateTemplate = () => {
         responses,
         messageExchangeType,
         invalidReply,
+        isReminder: type ? true : false,
       };
       reset(data);
     }

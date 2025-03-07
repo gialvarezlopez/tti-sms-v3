@@ -5,12 +5,6 @@ type Props = {
   ticket: TicketsProps;
 };
 const OneWay = ({ ticket }: Props) => {
-  const renderMessage = () => {
-    const message =
-      ticket?.chat && ticket?.chat[0]?.message ? ticket?.chat[0]?.message : "";
-
-    return message;
-  };
   return (
     <>
       <div className="grid grid-cols-1 gap-3 border-b border-[#CCD1DC]  px-6 py-2">
@@ -27,15 +21,22 @@ const OneWay = ({ ticket }: Props) => {
           <div
             dangerouslySetInnerHTML={{
               __html: highlightKeyword(
-                renderMessage(),
-                [
-                  {
-                    keyword: ticket?.chat[0]?.keyword || "", // Usar el keyword del chat
-                    value: "valor_asociado", // Aquí debes proporcionar el valor asociado al keyword
-                  },
-                ],
-
-                "black"
+                ticket.template?.content ?? "",
+                ticket.template?.keywords?.map(({ keyword, value }) => ({
+                  keyword,
+                  value: keyword ?? "",
+                })) ?? [],
+                "red",
+                [], //No keyword
+                /*
+                ticket.template?.responses
+                  ?.filter((item) => item.response && item.reply) // Filter objects that have `response` and `reply`
+                  .map((item) => ({
+                    value: item.response, // Maps only the `response` property
+                    color: "black",
+                  })) ?? [],
+                   */
+                true
               ),
             }}
           />

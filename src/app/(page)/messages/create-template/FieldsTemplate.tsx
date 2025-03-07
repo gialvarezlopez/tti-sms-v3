@@ -175,7 +175,11 @@ const FieldsTemplate = ({
                   Template name
                 </FormLabel>
                 <FormControl>
-                  <Input placeholder="Estimate" {...field} autoComplete="off" />
+                  <Input
+                    placeholder="Template name"
+                    {...field}
+                    autoComplete="off"
+                  />
                 </FormControl>
                 <CustomFormMessage className="w-full" />
               </FormItem>
@@ -223,7 +227,7 @@ const FieldsTemplate = ({
                 </FormLabel>
                 <FormControl>
                   <Input
-                    placeholder="Notice of non-warranty repair with contact for estimate approval."
+                    placeholder="Template description"
                     {...field}
                     autoComplete="off"
                   />
