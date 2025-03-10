@@ -1,5 +1,6 @@
 "use client";
 import React, { useEffect, useState } from "react";
+import { useSession } from "next-auth/react";
 import { useRouter, useSearchParams } from "next/navigation";
 import useResizeObserver from "use-resize-observer";
 import { ColumnDef } from "@tanstack/react-table";
@@ -24,6 +25,7 @@ const BranchesList = ({
   setClearRowsSelected,
   setBranchesSelected,
 }: Props) => {
+  const { data: session, status } = useSession();
   const router = useRouter();
   const searchParams = useSearchParams();
   const selectedPage = searchParams?.get("page");

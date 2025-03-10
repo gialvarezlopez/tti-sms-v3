@@ -1,32 +1,45 @@
 export type RoleProps = {
-  id?: string;
+  role_id?: string;
   name?: string;
   description?: string;
-  createdAt?: string;
-  updatedAt?: string;
+  created_at?: string;
+  updated_at?: string;
+  deleted_at?: string;
 };
+
+/*
+export type UserListProps={
+
+}
+*/
 export type UserProps = {
   id?: string;
-  status?: string;
-  email?: string;
   name?: string;
-  first_name?: string;
-  last_name?: string;
+  email?: string;
   username?: string;
-  primaryRole?: RoleProps;
-  lastLogin?: string;
-  active?: boolean;
-  last_update?: string | null;
-  image?: string;
+  primary_role?: RoleProps;
+  branch?: BranchProps;
+  created_at?: string;
+  updated_at?: string;
+};
+export type LoginProps = {
+  //id?: string;
+  //status?: string;
+  //name?: string;
+  //first_name?: string;
+  //last_name?: string;
+  //username?: string;
+  //lastLogin?: string;
+  //active?: boolean;
+  //last_update?: string | null;
+  //image?: string;
   createdAt?: string;
   updatedAt?: string;
-  branchId?: string;
-  branch?: BranchProps;
-  // };
   data?: {
     jwt: string;
     tokenType: string;
     expiresIn: string;
+    user: UserProps;
   };
 };
 
@@ -42,14 +55,14 @@ export type BranchProps = {
   address?: string;
   province?: ProvincesProps | string;
   number?: string;
-  sendingNumberId?: string;
+  sending_number_id?: string;
   status?: string;
   distributionList?: string;
   city?: string;
   country?: string;
   postalCode?: string;
-  createdAt?: string;
-  updatedAt?: string;
+  created_at?: string;
+  updated_at?: string;
 };
 
 export type FormReviewMessageProps = {
@@ -116,9 +129,9 @@ export type TemplateProps = {
   createdAt?: string;
   updatedAt?: string;
   createdBy?: {
-    id: UserProps["id"];
-    name: UserProps["name"];
-    email: UserProps["email"];
+    id: string;
+    name: string;
+    email: string;
   };
 };
 
@@ -156,7 +169,6 @@ export interface PaginateParams {
   search?: string;
 }
 
-// Opciones para refetch
 export interface PaginationOptions {
   page: number;
   limit: number;

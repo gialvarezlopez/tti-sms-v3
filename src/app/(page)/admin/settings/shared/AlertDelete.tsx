@@ -16,8 +16,11 @@ import { showToast } from "@/lib/toastUtil";
 //import { BranchProps, UserProps } from "@/types/types";
 import useUsersStore from "@/store/useUsers";
 import useBranchesStore from "@/store/useBranches";
-import { useDeleteUser } from "@/hooks/useUsers";
-import { useDeleteBranch } from "@/hooks/useBranches";
+import { useDeleteMultiplesUsers, useDeleteUser } from "@/hooks/useUsers";
+import {
+  useDeleteBranch,
+  useDeleteMultiplesBranches,
+} from "@/hooks/useBranches";
 
 type Props = {
   //branchesSelected: BranchProps[];
@@ -39,8 +42,15 @@ Props) => {
 
   //Axios
   const { mutate: deleteUser, isPending: isDeletingUser } = useDeleteUser();
+  const { mutate: deleteMultipleUsers, isPending: isDeletingMultipleUsers } =
+    useDeleteMultiplesUsers();
+
   const { mutate: deleteBranch, isPending: isDeletingBranch } =
     useDeleteBranch();
+  const {
+    mutate: deleteMultipleBranches,
+    isPending: isDeletingMultipleBranches,
+  } = useDeleteMultiplesBranches();
 
   const successSubmission = () => {
     closeDialog();
@@ -72,23 +82,28 @@ Props) => {
         ? "Branches removed successfully."
         : "";
 
-    const message = userMessage || branchMessage;
-    //showToast("success", "Success!", message);
-    /*
-    closeDialog();
-    setClearRowsSelected(true);
-    clearUsers();
-    clearBranches();
-    console.log("users", users);
-    */
+    //const message = userMessage || branchMessage;
 
-    //Delete single user
     if (users && users.length === 1 && users[0]?.id) {
       deleteUser(users[0].id, {
         onSuccess(data) {
           successSubmission();
         },
       });
+    } else if (users && users.length > 1) {
+      //Delete multiple users
+      const ids = users
+        .map((item) => item.id)
+        .filter((id): id is string => id !== undefined);
+
+      deleteMultipleUsers(
+        { ids, operation: "delete" },
+        {
+          onSuccess(data) {
+            successSubmission();
+          },
+        }
+      );
     }
 
     //Delete single branch
@@ -98,6 +113,20 @@ Props) => {
           successSubmission();
         },
       });
+    } else if (branches && branches.length > 1) {
+      //Delete multiple branches
+      const ids = branches
+        .map((item) => item.id)
+        .filter((id): id is string => id !== undefined);
+
+      deleteMultipleBranches(
+        { ids, operation: "delete" },
+        {
+          onSuccess(data) {
+            successSubmission();
+          },
+        }
+      );
     }
   };
 
@@ -137,8 +166,12 @@ Props) => {
             <AlertDialogDescription className="px-6 py-3">
               <p className="pb-2">
                 {users.length
-                  ? "Are you sure you want to delete this user? If you continue, this they will be permanently deleted."
-                  : "Are you sure you want to delete this branch? If you continue, this they will be permanently deleted."}
+                  ? `Are you sure you want to delete ${
+                      users.length > 1 ? "these users" : "this user"
+                    }? If you continue, this they will be permanently deleted.`
+                  : `Are you sure you want to delete ${
+                      branches.length > 1 ? "these branches" : "this branch"
+                    } ? If you continue, this they will be permanently deleted.`}
               </p>
               <div className="overflow-y-auto max-h-[calc(100vh-350px)] text-left">
                 <p className="font-bold mt-2">
@@ -162,7 +195,12 @@ Props) => {
               className="btn-white-normal w-full md:w-[33%]"
               variant={"outline"}
               onClick={closeDialog}
-              disabled={isDeletingUser || isDeletingBranch}
+              disabled={
+                isDeletingUser ||
+                isDeletingBranch ||
+                isDeletingMultipleUsers ||
+                isDeletingMultipleBranches
+              }
             >
               Cancel
             </Button>
@@ -171,10 +209,25 @@ Props) => {
               className="bg-customRed-v3 w-full md:w-[33%]"
               variant={"destructive"}
               onClick={handleFormSubmit}
-              disabled={isDeletingUser || isDeletingBranch}
-              isLoading={isDeletingUser || isDeletingBranch}
+              disabled={
+                isDeletingUser ||
+                isDeletingBranch ||
+                isDeletingMultipleUsers ||
+                isDeletingMultipleBranches
+              }
+              isLoading={
+                isDeletingUser ||
+                isDeletingBranch ||
+                isDeletingMultipleUsers ||
+                isDeletingMultipleBranches
+              }
             >
-              {isDeletingUser || isDeletingBranch ? "Deleting" : "Delete"}
+              {isDeletingUser ||
+              isDeletingBranch ||
+              isDeletingMultipleUsers ||
+              isDeletingMultipleBranches
+                ? "Deleting"
+                : "Delete"}
             </Button>
           </AlertDialogFooter>
         </AlertDialogContent>

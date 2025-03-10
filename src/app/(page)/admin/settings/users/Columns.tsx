@@ -14,7 +14,7 @@ import UpdateUser from "./UpdateUser";
 import ModalResetPassword from "./modal-reset-password/ModalResetPassword";
 import useUsersStore from "@/store/useUsers";
 import { USER_ROLE } from "@/lib/constants";
-import { capitalizeFirstLetterOfEveryWord } from "@/lib/utils";
+import { capitalizeFirstLetterOfEveryWord, formatDate } from "@/lib/utils";
 
 const UpdateCell = ({
   user,
@@ -109,7 +109,7 @@ const DeleteCell = ({
         id: user.id,
         name: user.name,
         username: user.email,
-        primaryRole: user.primaryRole,
+        primary_role: user.primary_role,
         branch: {
           id: user?.branch?.id,
           name: user?.branch?.name,
@@ -312,7 +312,6 @@ const useColumns = () => {
       cell: ({ row }) => (
         <span className="text-nowrap md:text-wrap">
           {capitalizeFirstLetterOfEveryWord(row.original.name ?? "")}
-          {capitalizeFirstLetterOfEveryWord(row.original.last_name ?? "")}
         </span>
       ),
     },
@@ -335,7 +334,7 @@ const useColumns = () => {
       ),
       cell: ({ row }) => (
         <span className="text-nowrap">
-          {row.original.primaryRole?.name ?? "No user type assigned"}
+          {row.original.primary_role?.name ?? "No user type assigned"}
         </span>
       ),
     },
@@ -349,7 +348,7 @@ const useColumns = () => {
       ),
       cell: ({ row }) => (
         <span className="text-nowrap">
-          {row.original.createdAt ?? "Unknown"}
+          {formatDate(row.original.created_at ?? "") ?? "Unknown"}
         </span>
       ),
     },

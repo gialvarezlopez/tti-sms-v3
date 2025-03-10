@@ -6,7 +6,7 @@ import NextAuth, {
 } from "next-auth";
 import CredentialsProvider from "next-auth/providers/credentials";
 import axios from "axios";
-import { UserProps } from "@/types/types";
+import { LoginProps, UserProps } from "@/types/types";
 import { JWT } from "next-auth/jwt";
 import { jwtDecode } from "jwt-decode";
 import axiosInstance from "@/lib/axiosInstance";
@@ -45,7 +45,7 @@ export const authOptions: NextAuthOptions = {
       async authorize(credentials) {
         try {
           const baseUrl = process.env.NEXT_PUBLIC_API_URL;
-          const { data } = await axiosInstance.post<UserProps>(
+          const { data } = await axiosInstance.post<LoginProps>(
             `${baseUrl}${usersRoutes.login}`,
             {
               username: credentials?.username,
@@ -55,24 +55,15 @@ export const authOptions: NextAuthOptions = {
 
           if (data) {
             const user: CustomUser = {
-              id: "", // data?.data?.id || "",
-              name: "", // `${data.first_name} ${data.last_name}`,
-              username: "", //data.username || "",
-              jwt: data?.data?.jwt || "", // data.token || "",
-              roles: [],
+              id: "",
+              name: data?.data?.user?.name,
+              username: data?.data?.user?.email ?? "",
+              jwt: data?.data?.jwt || "",
+              roles: [data?.data?.user?.primary_role?.name || ""],
               branch: {
-                name: "",
-                id: "",
+                id: data?.data?.user.branch?.id ?? "",
+                name: data?.data?.user.branch?.name ?? "",
               },
-              /*
-              roles: Array.isArray(data.roles)
-                ? data.roles
-                : [data.roles || ""],
-              branch: {
-                name: data.branch.name || "",
-                id: data.branch.id || "",
-              },
-              */
             };
 
             return user;

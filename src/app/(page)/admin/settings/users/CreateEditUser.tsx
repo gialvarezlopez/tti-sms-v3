@@ -82,6 +82,8 @@ const CreateEditUser = ({ setIsOpen, user }: Props) => {
 
     if (user) {
       delete formattedData.email;
+      delete formattedData.name;
+      delete formattedData.role;
     }
 
     if (user) {
@@ -109,11 +111,12 @@ const CreateEditUser = ({ setIsOpen, user }: Props) => {
       const data = {
         name: user.name ?? "",
         role:
-          (user.primaryRole && user.primaryRole.name?.toLocaleLowerCase()) ??
+          (user.primary_role && user.primary_role.name?.toLocaleLowerCase()) ??
           "",
         email: user.email ?? "",
         branch_id: String(user.branch?.id ?? ""),
       };
+      console.log("data", data);
       reset(data);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
