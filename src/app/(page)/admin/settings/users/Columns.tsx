@@ -14,6 +14,7 @@ import UpdateUser from "./UpdateUser";
 import ModalResetPassword from "./modal-reset-password/ModalResetPassword";
 import useUsersStore from "@/store/useUsers";
 import { USER_ROLE } from "@/lib/constants";
+import { capitalizeFirstLetterOfEveryWord } from "@/lib/utils";
 
 const UpdateCell = ({
   user,
@@ -310,7 +311,8 @@ const useColumns = () => {
       ),
       cell: ({ row }) => (
         <span className="text-nowrap md:text-wrap">
-          {row.original.name} {row.original.last_name}
+          {capitalizeFirstLetterOfEveryWord(row.original.name ?? "")}
+          {capitalizeFirstLetterOfEveryWord(row.original.last_name ?? "")}
         </span>
       ),
     },

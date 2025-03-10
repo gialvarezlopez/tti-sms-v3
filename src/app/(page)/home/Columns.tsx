@@ -10,7 +10,12 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { MoreVertical } from "lucide-react";
 import { Dispatch, SetStateAction, useState } from "react";
-import { convertToSnakeCase, statusType, templateType } from "@/lib/utils";
+import {
+  capitalizeFirstLetterOfEveryWord,
+  convertToSnakeCase,
+  statusType,
+  templateType,
+} from "@/lib/utils";
 import ModalPreviewTicket from "../../../components/screens/preview-ticket/ModalPreviewTicket";
 import useTicketsStore from "@/store/useTickets";
 import { TICKETS_STATUS, USER_ROLE } from "@/lib/constants";
@@ -400,7 +405,7 @@ const useColumns = () => {
       cell: ({ row }) => {
         return (
           <span className="text-nowrap md:text-wrap">
-            {row.original.clientName}
+            {capitalizeFirstLetterOfEveryWord(row.original.clientName)}
           </span>
         );
       },
@@ -459,7 +464,7 @@ const useColumns = () => {
       header: () => {
         return (
           <Button variant="ghost" className="px-0">
-            Last received
+            Last Received
           </Button>
         );
       },
@@ -472,7 +477,7 @@ const useColumns = () => {
       header: () => {
         return (
           <Button variant="ghost" className="px-0">
-            Type of message
+            Type of Message
           </Button>
         );
       },

@@ -10,7 +10,7 @@ import {
 import { MoreVertical } from "lucide-react";
 import { Dispatch, SetStateAction, useState } from "react";
 import ModalPreviewTicket from "../../../components/screens/preview-ticket/ModalPreviewTicket";
-import { templateType } from "@/lib/utils";
+import { capitalizeFirstLetterOfEveryWord, templateType } from "@/lib/utils";
 
 const PreviewCell = ({
   ticket,
@@ -107,7 +107,7 @@ export const columns: ColumnDef<TicketsProps>[] = [
     cell: ({ row }) => {
       return (
         <span className="text-nowrap md:text-wrap">
-          {row.original.clientName}
+          {capitalizeFirstLetterOfEveryWord(row.original.clientName)}
         </span>
       );
     },
@@ -131,7 +131,7 @@ export const columns: ColumnDef<TicketsProps>[] = [
     header: () => {
       return (
         <Button variant="ghost" className="px-0">
-          Type of message
+          Type of Message
         </Button>
       );
     },

@@ -131,6 +131,13 @@ export const capitalizarPrimeraLetra = (str: string) => {
   return str.charAt(0).toUpperCase() + str.slice(1);
 };
 
+export const capitalizeFirstLetterOfEveryWord = (str: string) => {
+  return str
+    .split(" ")
+    .map((palabra) => palabra.charAt(0).toUpperCase() + palabra.slice(1))
+    .join(" ");
+};
+
 export const lineReplaceWithBreaks = (content: string) => {
   return content?.replace(/\n/g, "<br />");
 };

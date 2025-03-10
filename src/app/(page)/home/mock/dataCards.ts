@@ -19,7 +19,7 @@ export const dataCard = [
     setClass: "",
   },
   {
-    title: "To be overdue",
+    title: "To Be Overdue",
     footer: "5 Tickets",
     icon: IconOverdue,
     setClass: "",
