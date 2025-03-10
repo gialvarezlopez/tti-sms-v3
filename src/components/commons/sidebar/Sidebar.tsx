@@ -230,7 +230,6 @@ const SideBar = ({ setIsSidebarOpen }: Props) => {
           )}
           <li className="relative group">
             <span
-              //href="/login"
               className={`inline-flex w-full gap-5 items-center text-white font-normal text-sm cursor-pointer ${
                 isOpen ? "p-4 py-3 " : "p-2 py-2 justify-center"
               } rounded-lg menu-item menu-item-transition`}
@@ -264,7 +263,9 @@ const SideBar = ({ setIsSidebarOpen }: Props) => {
             {isOpen && (
               <div className="space-y-2">
                 <p className="font-bold text-xs">{session?.user.name}</p>
-                <p className="text-xs font-normal">Branch Name</p>
+                <p className="text-xs font-normal">
+                  {session?.user.branch.name}
+                </p>
               </div>
             )}
           </li>

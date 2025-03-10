@@ -31,8 +31,8 @@ export const WHO_SEND_MESSAGE = {
 
 export const USER_ROLE = {
   ADMIN: "admin",
-  MEMBER: "member",
-  CUSTOMER_EXPERIENCE: "customer_experience",
+  MEMBER: "user",
+  CUSTOMER_EXPERIENCE: "CE",
 };
 
 export const KEYWORD_SYMBOL = {

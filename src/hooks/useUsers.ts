@@ -162,4 +162,55 @@ const useDeleteUser = () => {
   });
 };
 
-export { useGetUsers, useCreateUser, useUpdateUser, useDeleteUser };
+const useDeleteMultiplesUsers = () => {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: async (payload: { ids: string[]; operation: string }) => {
+      try {
+        const url = usersRoutes.multiOption;
+        //const { data } = await axiosInstance.delete(url, payload);
+        const { data } = await axiosInstance.patch(url, {
+          operation: payload.operation,
+          ids: payload.ids,
+        });
+        return data;
+      } catch (e) {
+        if (isAxiosError(e) && e.response) {
+          const errorMessage =
+            e.response.data.message || e.response.data.error || "Unknown error";
+          throw new Error(errorMessage);
+        } else {
+          throw new Error("Unknown error");
+        }
+      }
+    },
+    onSettled: () =>
+      queryClient.invalidateQueries({ queryKey: ["branch-list"] }),
+    onSuccess: (value, variables) => {
+      const { ids } = variables;
+      showToast(
+        "success",
+        "Success!",
+        `${
+          value?.message ??
+          `${ids?.length > 1 ? "Users" : "User"} deleted successfully`
+        }`
+      );
+    },
+    onError: (error) => {
+      const errorMessage =
+        error instanceof Error
+          ? error.message
+          : "An unexpected error has occurred.";
+      showToast("destructive", "Error!", `${errorMessage}`);
+    },
+  });
+};
+
+export {
+  useGetUsers,
+  useCreateUser,
+  useUpdateUser,
+  useDeleteUser,
+  useDeleteMultiplesUsers,
+};

@@ -44,7 +44,11 @@ const FieldsUser = ({ user, dataBranches }: Props) => {
           <FormItem>
             <FormLabel>User Name</FormLabel>
             <FormControl>
-              <Input placeholder="User Name" {...field} />
+              <Input
+                placeholder="User Name"
+                {...field}
+                disabled={user && user.id !== undefined}
+              />
             </FormControl>
 
             <CustomFormMessage className="w-full" />
@@ -61,11 +65,12 @@ const FieldsUser = ({ user, dataBranches }: Props) => {
             <Select
               value={
                 (field.value ||
-                  (user?.primaryRole &&
-                    user?.primaryRole.name?.toLocaleLowerCase())) ??
+                  (user?.primary_role &&
+                    user?.primary_role.name?.toLocaleLowerCase())) ??
                 ""
               }
               onValueChange={field.onChange}
+              disabled={user && user.id !== undefined}
             >
               <FormControl>
                 <SelectTrigger>
