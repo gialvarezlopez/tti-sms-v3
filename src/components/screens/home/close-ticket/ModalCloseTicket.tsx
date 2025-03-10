@@ -43,7 +43,7 @@ const CloseTicket = ({ rowSelected, handleClearSelected }: Props) => {
         className="btn-white-bold w-full md:w-auto"
         onClick={() => setIsOpen(true)}
       >
-        Close Ticket
+        {`Close Selected Ticket(s)`}
       </Button>
       <Dialog open={isOpen} onOpenChange={closeModal}>
         <DialogContent className="sm:max-w-md md:max-w-[559px] p-0">

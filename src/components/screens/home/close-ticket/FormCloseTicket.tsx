@@ -8,6 +8,7 @@ import { Separator } from "@/components/ui/separator";
 import { Button } from "@/components/ui/button";
 import FieldsCloseTickets from "./FieldsCloseTickets";
 import { TicketsProps } from "@/types/types";
+import { capitalizeFirstLetterOfEveryWord } from "@/lib/utils";
 
 type Props = {
   setIsOpen: React.Dispatch<React.SetStateAction<boolean>>;
@@ -46,7 +47,8 @@ const FormCloseTicket = ({
             {tickets &&
               tickets?.map((ticket, index) => (
                 <p key={index}>
-                  {ticket.clientName} - {ticket.phoneNumber} - {ticket.branch}
+                  {capitalizeFirstLetterOfEveryWord(ticket.clientName)} -{" "}
+                  {ticket.phoneNumber} - {ticket.branch}
                 </p>
               ))}
           </div>
