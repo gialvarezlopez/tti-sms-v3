@@ -23,7 +23,7 @@ import Keyword from "./Keyword";
 import Response from "./Response";
 import { MESSAGE_EXCHANGE } from "@/lib/constants";
 import { Checkbox } from "@/components/ui/checkbox";
-import { highlightKeyword, lineReplaceWithBreaks } from "@/lib/utils";
+import { highlightKeyword, lineReplaceWithBreaks } from "@/lib/utils/utils";
 
 type Props = {
   setOpenKeyword: React.Dispatch<React.SetStateAction<boolean>>;

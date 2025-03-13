@@ -12,7 +12,7 @@ type Props = {
 const CardProcess = ({ title, footer, icon, setClass }: Props) => {
   return (
     <div className="h-full group hover:transition-all hover:duration-300 ">
-      <Card className={`${setClass} h-full`}>
+      <Card className={`${setClass} h-full flex flex-col justify-between`}>
         <CardHeader>
           <CardTitle className="text-sm font-medium flex justify-between gap-3 items-center">
             <Image src={icon || ""} alt={title} className="w-[18px] h-[18px]" />{" "}

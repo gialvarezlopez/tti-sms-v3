@@ -3,7 +3,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { toast } from "@/hooks/use-toast";
-
+import { useRouter, useSearchParams } from "next/navigation";
 import {
   Form,
   FormControl,
@@ -14,9 +14,10 @@ import {
 import { Input } from "@/components/ui/input";
 import { IconSearch } from "../../../assets/images";
 import Image from "next/image";
-import FormFilterHome from "./filter/FormFilterHome";
+import FormFilterHome from "../shared/modal-filter/FormFilterModal";
 import ModalCloseTicket from "../../../components/screens/home/close-ticket/ModalCloseTicket";
 import { TicketsProps } from "@/types/types";
+import { useEffect } from "react";
 
 type Props = {
   rowSelected: TicketsProps[];
@@ -24,6 +25,10 @@ type Props = {
 };
 
 const Actions = ({ rowSelected, handleClearSelected }: Props) => {
+  const router = useRouter();
+  const searchParams = useSearchParams();
+  //const searchParam = searchParams?.get("search") ?? "";
+
   const FormSchema = z.object({
     search: z.string().optional(),
   });
@@ -35,18 +40,19 @@ const Actions = ({ rowSelected, handleClearSelected }: Props) => {
     },
   });
 
+  const { setValue } = form;
+
   function onSubmit(data: z.infer<typeof FormSchema>) {
-    /*
-    toast({
-      title: "You submitted the following values:",
-      description: (
-        <pre className="mt-2 w-[340px] rounded-md bg-slate-950 p-4">
-          <code className="text-white">{JSON.stringify(data, null, 2)}</code>
-        </pre>
-      ),
-    });
-    */
+    const params = new URLSearchParams(searchParams || "");
+    params.set("search", data.search ?? "");
+    router.push(`?${params.toString()}`);
   }
+
+  useEffect(() => {
+    setValue("search", searchParams?.get("search") ?? "", {
+      shouldDirty: true,
+    });
+  }, [searchParams, setValue]);
 
   return (
     <div className="w-full gap-3 md:gap-6 flex flex-col md:flex-row  items-center mt-4 relative">
@@ -76,7 +82,7 @@ const Actions = ({ rowSelected, handleClearSelected }: Props) => {
         </form>
       </Form>
       <div className="flex gap-3 w-full md:w-auto">
-        <FormFilterHome />
+        <FormFilterHome fromPage="home" />
         <ModalCloseTicket
           rowSelected={rowSelected}
           handleClearSelected={handleClearSelected}

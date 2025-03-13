@@ -15,12 +15,13 @@ import {
   convertToSnakeCase,
   statusType,
   templateType,
-} from "@/lib/utils";
+} from "@/lib/utils/utils";
 import ModalPreviewTicket from "../../../components/screens/preview-ticket/ModalPreviewTicket";
 import useTicketsStore from "@/store/useTickets";
 import { TICKETS_STATUS, USER_ROLE } from "@/lib/constants";
 import ModalResendTicket from "@/components/screens/home/resend-ticket/ModalResendTicket";
 import ModalSendRemainder from "@/components/screens/home/send-remainder/ModalSendRemainder";
+import { formatDate } from "@/lib/utils/dateUtils";
 
 const PreviewCell = ({
   ticket,
@@ -405,7 +406,7 @@ const useColumns = () => {
       cell: ({ row }) => {
         return (
           <span className="text-nowrap md:text-wrap">
-            {capitalizeFirstLetterOfEveryWord(row.original.clientName)}
+            {capitalizeFirstLetterOfEveryWord(row.original.client)}
           </span>
         );
       },
@@ -420,7 +421,7 @@ const useColumns = () => {
         );
       },
       cell: ({ row }) => {
-        return <span>{row.original.phoneNumber}</span>; //capitalizeFirstLetter(row.original.tipoCliente);
+        return <span>{row.original.recipient_number}</span>; //capitalizeFirstLetter(row.original.tipoCliente);
       },
     },
     // Add 'Branch' column only if user is 'admin'
@@ -439,7 +440,10 @@ const useColumns = () => {
             cell: ({ row }: { row: Row<TicketsProps> }) => {
               return (
                 <span className="text-nowrap md:text-wrap">
-                  {row.original.branch}
+                  {row.original.branch &&
+                  typeof row.original.branch !== "string"
+                    ? row.original.branch.name
+                    : null}
                 </span>
               );
             },
@@ -469,7 +473,11 @@ const useColumns = () => {
         );
       },
       cell: ({ row }) => {
-        return <span className="text-nowrap">{row.original.lastReceived}</span>;
+        return (
+          <span className="text-nowrap">
+            {formatDate(row.original.lastReceivedMessage.created_at)}
+          </span>
+        );
       },
     },
     {
@@ -483,7 +491,11 @@ const useColumns = () => {
       },
       cell: ({ row }) => {
         return (
-          <span>{templateType(row.original.template?.isTwoWay ?? false)}</span>
+          <span>
+            {row.original.template
+              ? templateType(row.original.template?.isTwoWay ?? false)
+              : "No template data"}
+          </span>
         );
       },
     },
@@ -510,7 +522,11 @@ const useColumns = () => {
         );
       },
       cell: ({ row }) => {
-        return <span className="text-nowrap">{row.original.createdAt}</span>;
+        return (
+          <span className="text-nowrap">
+            {formatDate(row.original.created_at ?? "")}
+          </span>
+        );
       },
     },
   ];

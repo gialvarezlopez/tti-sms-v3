@@ -11,7 +11,7 @@ import { FormControl, FormItem, FormLabel } from "@/components/ui/form";
 
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { cn } from "@/lib/utils";
+import { cn } from "@/lib/utils/utils";
 import CustomFormMessage from "./CustomFormMessage";
 
 const CustomMultiSelect = ({

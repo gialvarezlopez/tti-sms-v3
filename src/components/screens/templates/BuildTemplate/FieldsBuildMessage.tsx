@@ -12,7 +12,7 @@ import { Separator } from "@/components/ui/separator";
 import CustomInputMask from "@/components/ui/customInputMask";
 import CustomFormMessage from "../../../ui/CustomFormMessage";
 import { KeywordTemplates, TemplateProps } from "@/types/types";
-import { cn, highlightKeyword, renderIcon } from "@/lib/utils";
+import { cn, highlightKeyword, renderIcon } from "@/lib/utils/utils";
 import {
   Popover,
   PopoverContent,
@@ -137,7 +137,7 @@ const FieldsResendMessage = ({ template, isFromModal }: Props) => {
       <div className="w-full grid grid-cols-1 md:grid-cols-2 gap-3">
         <FormField
           control={control}
-          name="clientName"
+          name="client"
           render={({ field }) => (
             <FormItem>
               <FormLabel>Client Name</FormLabel>
@@ -156,7 +156,7 @@ const FieldsResendMessage = ({ template, isFromModal }: Props) => {
 
         <FormField
           control={control}
-          name="phoneNumber"
+          name="recipient_number"
           render={({ field }) => (
             <FormItem>
               <FormLabel>Telephone number</FormLabel>

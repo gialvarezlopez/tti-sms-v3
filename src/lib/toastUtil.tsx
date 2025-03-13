@@ -1,7 +1,7 @@
 import { toast } from "@/hooks/use-toast";
 import { CheckCircle, TriangleAlert } from "lucide-react";
 import { TOAST_STATUS } from "./constants";
-import { cn } from "./utils";
+import { cn } from "./utils/utils";
 
 /**
  * Muestra un mensaje de toast con la configuración proporcionada.

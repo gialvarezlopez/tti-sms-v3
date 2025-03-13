@@ -14,7 +14,11 @@ import ModalKeyword from "@/components/screens/add-keyword/ModalKeyword";
 import { KeywordProps, ResponseProps } from "@/types/types";
 import { showToast } from "@/lib/toastUtil";
 import ModalResponse from "@/components/screens/add-response/ModalResponse";
-import { cleanOnlyWhiteSpace, generateSlug, templateType } from "@/lib/utils";
+import {
+  cleanOnlyWhiteSpace,
+  generateSlug,
+  templateType,
+} from "@/lib/utils/utils";
 import { ArrowLeft } from "lucide-react";
 import { dataTemplates } from "@/components/screens/templates/dataMock";
 import { MESSAGE_EXCHANGE } from "@/lib/constants";
@@ -26,6 +30,7 @@ import {
 import { useGetBranches } from "@/hooks/useBranches";
 import { dataBranches } from "../../admin/settings/mock/dataBranch";
 import CustomFormMessage from "@/components/ui/CustomFormMessage";
+import { da } from "date-fns/locale";
 
 const FormCreateTemplate = () => {
   const router = useRouter();
@@ -220,13 +225,16 @@ const FormCreateTemplate = () => {
   } = form;
 
   function onSubmit(data: z.infer<typeof FormSchema>) {
+    /*
     const { messageExchangeType, invalidReply, timeToRespond, ...restData } =
       data;
+      */
 
     const formData = {
-      ...restData,
+      ...data,
       content: cleanOnlyWhiteSpace(data.content),
       ...(data.isReminder ? { type: "reminder" } : {}), //we do this because the endpoints is receiving type inste of isReminder
+      //...(data.invalidReply ? { invalidReply } : {}),
     };
 
     //Remove isReminder to only send type
@@ -236,7 +244,7 @@ const FormCreateTemplate = () => {
       delete formData.branches;
     }
 
-    console.log("formData", formData);
+    //console.log("formData", formData);
     //return false;
 
     if (elementId) {

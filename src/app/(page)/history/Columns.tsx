@@ -10,7 +10,10 @@ import {
 import { MoreVertical } from "lucide-react";
 import { Dispatch, SetStateAction, useState } from "react";
 import ModalPreviewTicket from "../../../components/screens/preview-ticket/ModalPreviewTicket";
-import { capitalizeFirstLetterOfEveryWord, templateType } from "@/lib/utils";
+import {
+  capitalizeFirstLetterOfEveryWord,
+  templateType,
+} from "@/lib/utils/utils";
 
 const PreviewCell = ({
   ticket,
@@ -107,7 +110,7 @@ export const columns: ColumnDef<TicketsProps>[] = [
     cell: ({ row }) => {
       return (
         <span className="text-nowrap md:text-wrap">
-          {capitalizeFirstLetterOfEveryWord(row.original.clientName)}
+          {capitalizeFirstLetterOfEveryWord(row.original.client)}
         </span>
       );
     },
@@ -122,7 +125,7 @@ export const columns: ColumnDef<TicketsProps>[] = [
       );
     },
     cell: ({ row }) => {
-      return <span>{row.original.phoneNumber}</span>;
+      return <span>{row.original.recipient_number}</span>;
     },
   },
 
@@ -152,7 +155,7 @@ export const columns: ColumnDef<TicketsProps>[] = [
       );
     },
     cell: ({ row }) => {
-      return <span>{row.original.template?.name}</span>;
+      return <span>{row.original.template?.name ?? "Undefined"}</span>;
     },
   },
 
@@ -166,7 +169,11 @@ export const columns: ColumnDef<TicketsProps>[] = [
       );
     },
     cell: ({ row }) => {
-      return <span className="text-nowrap">{row.original.closed}</span>;
+      return (
+        <span className="text-nowrap">
+          {row.original.closed ?? "Undefined"}
+        </span>
+      );
     },
   },
   {
@@ -179,7 +186,11 @@ export const columns: ColumnDef<TicketsProps>[] = [
       );
     },
     cell: ({ row }) => {
-      return <span className="text-nowrap">{row.original.closedBy}</span>;
+      return (
+        <span className="text-nowrap">
+          {row.original.closedBy?.name ?? "Undefined"}
+        </span>
+      );
     },
   },
   /*
@@ -232,7 +243,7 @@ export const columns: ColumnDef<TicketsProps>[] = [
     cell: ({ row }) => {
       return (
         <>
-          <div>{row.original.reason}</div>
+          <div>{row.original.reason ?? "Undefined"}</div>
         </>
       );
     },

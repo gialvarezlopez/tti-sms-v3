@@ -1,4 +1,4 @@
-import { highlightKeyword, lineReplaceWithBreaks } from "@/lib/utils";
+import { highlightKeyword, lineReplaceWithBreaks } from "@/lib/utils/utils";
 import { FormReviewMessageProps } from "@/types/types";
 import React from "react";
 type Props = {

@@ -15,12 +15,12 @@ import FieldsResendMessage from "./FieldsBuildMessage";
 
 import Link from "next/link";
 import MessageReviewConfirm from "@/app/(page)/messages/new-message/confirm-message/MessageReviewConfirm";
-import { templateType } from "@/lib/utils";
+import { templateType } from "@/lib/utils/utils";
 
 type Props = {
   template: TemplateProps;
-  recipient?: string;
-  clientName?: string;
+  recipient_number?: string;
+  client?: string;
   onClose?: () => void;
   isFromModal: boolean;
 };
@@ -90,23 +90,23 @@ const ResponseSchema = z.object({
 const FormBuildMessage = ({
   onClose,
   template,
-  recipient,
-  clientName,
+  recipient_number,
+  client,
   isFromModal = true,
 }: Props) => {
   const [openConfirm, setOpenConfirm] = useState(false);
 
   const [formState, setFormState] = useState<FormReviewMessageProps>({
-    clientName: "",
-    phoneNumber: "",
+    client: "",
+    recipient_number: "",
     keywords: [],
     responses: [],
     content: "",
   });
 
   const FormSchema = z.object({
-    clientName: z.string().min(2, "Enter the client name"),
-    phoneNumber: z
+    client: z.string().min(2, "Enter the client name"),
+    recipient_number: z
       .string()
       .regex(/^\(\d{3}\) \d{3}-\d{4}$/, {
         message: "Phone number must be in the format (999) 999-9999",
@@ -133,8 +133,8 @@ const FormBuildMessage = ({
   const form = useForm<z.infer<typeof FormSchema>>({
     resolver: zodResolver(FormSchema),
     defaultValues: {
-      clientName: "",
-      phoneNumber: "",
+      client: "",
+      recipient_number: "",
       content: "",
       keywords: [],
       responses: [],
@@ -168,11 +168,11 @@ const FormBuildMessage = ({
 
   useEffect(() => {
     if (template && isFromModal) {
-      setValue("phoneNumber", recipient ?? "");
-      setValue("clientName", clientName ?? "");
+      setValue("recipient_number", recipient_number ?? "");
+      setValue("client", client ?? "");
     }
-    console.log("clientName", clientName);
-  }, [template, isFromModal, setValue, recipient, clientName]);
+    console.log("clientName", client);
+  }, [template, isFromModal, setValue, recipient_number, client]);
 
   return (
     <div className="w-full">

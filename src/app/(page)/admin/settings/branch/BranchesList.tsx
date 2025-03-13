@@ -41,7 +41,7 @@ const BranchesList = ({
       ? (selectedSortOrder.toLowerCase() as "asc" | "desc")
       : null
   );
-  const [data, setData] = useState<BranchProps[]>(dataBranches);
+  const [data, setData] = useState<BranchProps[]>([]);
   const [totalPages, setTotalPages] = useState(0);
   const [clearSelected, setClearSelected] = useState(false);
   const [rowSelected, setRowSelected] = useState<number[]>([]);

@@ -1,6 +1,6 @@
 import React from "react";
 import { TYPE_OF_MESSAGE } from "@/lib/constants";
-import { convertToSnakeCase, templateType } from "@/lib/utils";
+import { convertToSnakeCase, templateType } from "@/lib/utils/utils";
 import {
   FormReviewMessageProps,
   TemplateProps,
@@ -24,7 +24,7 @@ const DetailConfirm = ({ template, formState }: Props) => {
             Telephone number:{" "}
           </span>
           <span className="font-bold text-base text-customBlack-v1 ">
-            {formState.phoneNumber}
+            {formState.recipient_number}
           </span>
         </div>
 

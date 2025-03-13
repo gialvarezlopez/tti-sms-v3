@@ -1,14 +1,23 @@
 "use client";
 import React, { useEffect, useState } from "react";
-//import { RefetchOptions } from "@tanstack/react-query";
+import { useSession } from "next-auth/react";
+import { useRouter, useSearchParams } from "next/navigation";
 import { ColumnDef } from "@tanstack/react-table";
 import DataTable from "@/components/ui/DataTable";
 import { columns } from "./Columns";
+//import useColumns from "./Columns";
 //import Actions from "./Actions";
-import { TicketsProps } from "@/types/types";
-import { dataHistory } from "./mock/dataHistory";
+import { RefetchOptions, TicketsProps } from "@/types/types";
+import CardProcessSkeleton from "../../../components/skeletons/CardProcessSkeleton";
 import TableSkeleton from "@/components/skeletons/TableSkeleton";
+import { useGetStats } from "@/hooks/useTrackProcess";
+import ErrorFetching from "@/components/ui/errorFetching";
+//import Items from "./card/Items";
+import { useGetTickets } from "@/hooks/useTickets";
+import { convertDateYYYYMMDD } from "@/lib/utils/dateUtils";
+import { TICKETS_STATUS, USER_ROLE } from "@/lib/constants";
 import dynamic from "next/dynamic";
+import { removeAllParamsFromUrl } from "../../../lib/utils/urlUtils";
 
 const Actions = dynamic(() => import("./Actions"), {
   ssr: false,
@@ -17,97 +26,199 @@ const Actions = dynamic(() => import("./Actions"), {
 type IsColumnSelectedFn<T> = (column: ColumnDef<T>, action?: string) => void;
 
 const Home = () => {
-  const [loading, setLoading] = useState(true);
+  const { data: session, status } = useSession();
+  const router = useRouter(); // Acceder al router
+  const searchParams = useSearchParams();
 
+  const hasParams = searchParams
+    ? Array.from(searchParams.entries()).length > 0
+    : false;
+
+  //const columns = useColumns();
+  const [loading, setLoading] = useState(true);
   const [search, setSearch] = useState("");
   const [sortBy, setSortBy] = useState<string>(""); // Status for the sort field
   const [sortOrder, setSortOrder] = useState<"asc" | "desc">("asc"); // State for ascending or descending order
-  const [data, setData] = useState<TicketsProps[]>(dataHistory);
+  const [data, setData] = useState<TicketsProps[]>([]);
   const [totalPages, setTotalPages] = useState(0);
   const [clearSelected, setClearSelected] = useState(false);
   const [rowSelected, setRowSelected] = useState<TicketsProps[]>([]);
 
-  //const { mutate } = useClientDeleteMultiple();
-  //const { mutate: mutateDeactivate } = useClientDeactivateMultiple();
   const [pagination, setPagination] = useState({
     pageIndex: 0,
     pageSize: 10,
   });
-  /*
+
+  const searchParam = searchParams?.get("search") ?? "";
+  const branchesParam = searchParams?.get("branches");
+  const templatesParam = searchParams?.get("templates");
+  const statusTicketParams = searchParams?.get("status");
+  const lastSentFromParams = searchParams?.get("lastSentFrom");
+  const lastSentToParams = searchParams?.get("lastSentTo");
+  const lastReceivedFromParams = searchParams?.get("lastReceivedFrom");
+  const lastReceivedToParams = searchParams?.get("lastReceivedTo");
+  const typeOfMessageParams = searchParams?.get("typeOfMessage");
+
+  const branches =
+    branchesParam &&
+    branchesParam !== "all" &&
+    session?.user?.primaryRole !== USER_ROLE.MEMBER // user
+      ? branchesParam.split(",")
+      : [];
+
+  const templates =
+    templatesParam && templatesParam !== "all" ? templatesParam.split(",") : [];
+
+  console.log("templates", templates);
+
+  const statusArray = Object.values(TICKETS_STATUS).filter(
+    (status) => status === TICKETS_STATUS.CLOSED
+  );
+  const statusTickets =
+    statusTicketParams && statusTicketParams !== "all"
+      ? statusTicketParams.split(",")
+      : statusArray;
+
+  const last_sent =
+    lastSentFromParams && lastSentToParams
+      ? [
+          convertDateYYYYMMDD(lastSentFromParams),
+          convertDateYYYYMMDD(lastSentToParams),
+        ]
+      : [];
+
+  const last_received =
+    lastReceivedFromParams && lastReceivedToParams
+      ? [
+          convertDateYYYYMMDD(lastReceivedFromParams),
+          convertDateYYYYMMDD(lastReceivedToParams),
+        ]
+      : [];
+
+  const typeTicket =
+    typeOfMessageParams && typeOfMessageParams !== "all"
+      ? typeOfMessageParams.split(",")
+      : [];
+
   const {
-    data: response,
-    error,
-    isLoading,
+    data: dataTickets,
+    error: errorTickets,
+    isLoading: isLoadingTickets,
     refetch,
-  } = useGetClients({
+  } = useGetTickets({
     page: pagination.pageIndex + 1,
     limit: pagination.pageSize,
-    search,
+    search: searchParam,
+    status: statusTickets,
+    branches,
+    templates,
+    last_sent,
+    last_received,
+    types: typeTicket,
   });
-  */
 
-  /*
   useEffect(() => {
-    if (response) {
-      setData(response.data.docs);
-      setTotalPages(response.data.totalPages);
+    if (dataTickets) {
+      setData(dataTickets.data);
+      setTotalPages(dataTickets.meta.pagination.totalPages);
     }
-  }, [response]);
-  */
+  }, [dataTickets]);
+
   const fetchData = (page: number, pageSize: number, search: string) => {
     setPagination({ pageIndex: page - 1, pageSize });
     setSearch(search);
-  };
-
-  // Trigger refetch when pagination or search changes
-  /*
-  useEffect(() => {
-    const refetchOptions: RefetchOptions = {
-      pagination: {
-        page: pagination.pageIndex + 1,
-        limit: pagination.pageSize,
-      },
-      search,
-    };
-
-    refetch(refetchOptions as {});
-  }, [pagination, search, refetch]);
-  */
-
-  const handleSortChange = (field: string) => {
-    if (field === sortBy) {
-      // Si ya está ordenado por el mismo campo, invertir el orden
-      setSortOrder(sortOrder === "asc" ? "desc" : "asc");
-    } else {
-      // Si es un nuevo campo de ordenamiento, establecerlo y por defecto ordenar asc
-      setSortBy(field);
-      setSortOrder("asc");
-    }
   };
 
   const selected: IsColumnSelectedFn<TicketsProps> = (
     column: ColumnDef<TicketsProps>
   ) => {
     const ids = [];
-    for (const [, valor] of Object.entries(column)) {
+    for (const [clave, valor] of Object.entries(column)) {
       ids.push(valor);
     }
     console.log("ids", ids);
     setRowSelected(ids);
+    //setBranchesSelected(ids);
+    setClearSelected(false);
   };
 
-  /*
   const handleClearSelected = (value: boolean) => {
     setClearSelected(value);
   };
-  */
 
-  // Simulamos un retraso en la carga de los datos
   useEffect(() => {
-    setTimeout(() => {
-      setLoading(false); // Después de 3 segundos, los datos estarán cargados
-    }, 500);
+    if (clearSelected) {
+      handleClearSelected(true);
+    }
+  }, [clearSelected]);
+
+  //=====================================
+  //Start URL Parameters
+  //=====================================
+  //1. Update URL when sorting changes
+  const handleSortChange = (field: string) => {
+    let newSortOrder: "asc" | "desc" | null = "asc"; // By default, ascending order
+
+    if (field === sortBy) {
+      // If already sorted by the same field, reverse the order
+      newSortOrder = sortOrder === "asc" ? "desc" : "asc";
+    }
+
+    // Update local states
+    setSortBy(field);
+    setSortOrder(newSortOrder);
+
+    // Update URL
+    const params = new URLSearchParams(window.location.search);
+    params.set("sortBy", field);
+    params.set("sortOrder", newSortOrder === "asc" ? "ASC" : "DESC");
+    params.set("page", (pagination.pageIndex + 1).toString());
+    router.push(`${window.location.pathname}?${params.toString()}`);
+  };
+
+  //2. Synchronizing local states with the URL when loading the component
+  useEffect(() => {
+    const searchParams = new URLSearchParams(window.location.search);
+    const sortByParam = searchParams.get("sortBy");
+    const sortOrderParam = searchParams.get("sortOrder");
+
+    if (sortByParam) {
+      setSortBy(sortByParam);
+    }
+    if (sortOrderParam) {
+      setSortOrder(sortOrderParam.toUpperCase() === "ASC" ? "asc" : "desc");
+    }
   }, []);
+
+  //3. Refetch data when URL parameters change
+  useEffect(() => {
+    if (pagination.pageIndex >= 0) {
+      const refetchOptions: RefetchOptions = {
+        pagination: {
+          page: pagination.pageIndex + 1,
+          limit: pagination.pageSize,
+        },
+        search,
+        sortBy,
+        sortOrder,
+      };
+
+      refetch(refetchOptions as object);
+    }
+  }, [pagination, search, sortBy, sortOrder, refetch]);
+
+  //4. Handling pagination
+  useEffect(() => {
+    const params = new URLSearchParams(window.location.search);
+    params.set("page", (pagination.pageIndex + 1).toString());
+    if (sortBy) {
+      params.set("sortBy", sortBy);
+    }
+    if (sortOrder) {
+      params.set("sortOrder", sortOrder === "asc" ? "ASC" : "DESC");
+    }
+    router.push(`${window.location.pathname}?${params.toString()}`);
+  }, [pagination.pageIndex, router, sortBy, sortOrder]);
 
   return (
     <div>
@@ -118,19 +229,22 @@ const Home = () => {
 
       <div className="rounded-lg bg-white my-6 p-4">
         <h3 className="text-xl font-semibold">Tickets</h3>
-        <Actions
-        //rowSelected={rowSelected}
-        //handleClearSelected={handleClearSelected}
-        />
+        <Actions />
 
         <div className="mx-auto py-5">
-          {loading ? (
+          {isLoadingTickets ? (
             <TableSkeleton
               rows={5}
               cols={7}
-              checkbox={false}
+              checkbox={true}
               dots={true}
               width="w-full md:w-1/2"
+            />
+          ) : errorTickets ? (
+            <ErrorFetching
+              message={
+                errorTickets.message ?? "There was an error to get the tickets"
+              }
             />
           ) : (
             <DataTable
@@ -147,6 +261,12 @@ const Home = () => {
               isColumnSelected={selected}
               clearSelected={clearSelected} //clear the checkboxes
               onClearSelected={() => setClearSelected(false)} //change the status
+              paramsUrl={{ hasParams, removeAllParamsFromUrl }}
+              messageNoRecord={
+                hasParams
+                  ? "We have not found any results for your search."
+                  : ""
+              }
             />
           )}
         </div>

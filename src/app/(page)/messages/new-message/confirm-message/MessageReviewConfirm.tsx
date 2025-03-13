@@ -49,7 +49,7 @@ const MessageReviewConfirm = ({
     const cleanData = {
       ...formState,
       content: stringWithoutHtml,
-      recipient: formState.phoneNumber,
+      recipient: formState.recipient_number,
     };
 
     createMessage(cleanData, {

@@ -1,6 +1,6 @@
 import { clsx, type ClassValue } from "clsx";
 import { twMerge } from "tailwind-merge";
-import { KEYWORD_SYMBOL, TICKETS_STATUS, USER_STATUS } from "./constants";
+import { KEYWORD_SYMBOL, TICKETS_STATUS, USER_STATUS } from "../constants";
 import { CalendarRange, DollarSign, Hash, LetterText } from "lucide-react";
 
 export function cn(...inputs: ClassValue[]) {
@@ -15,8 +15,8 @@ const getStatusName = (ticketStatus: string): string => {
     //return "Response to client Due";
     case TICKETS_STATUS.IN_PROGRESS:
       return "In Progress";
-    case TICKETS_STATUS.COMPLETED:
-      return "Completed";
+    case TICKETS_STATUS.CLOSED:
+      return "Closed";
     default:
       return "None";
   }
@@ -42,7 +42,7 @@ export const statusType = (status: string, withCircle: boolean = true) => {
       bg: "bg-[#FFF8EB] text-[#B25E09]",
       circle: "bg-[#B25E09]",
     },
-    [TICKETS_STATUS.COMPLETED]: {
+    [TICKETS_STATUS.CLOSED]: {
       bg: "bg-[#EDFDF8] text-[#16A37A]",
       circle: "bg-[#16A37A]",
     },
@@ -132,6 +132,14 @@ export const capitalizarPrimeraLetra = (str: string) => {
 };
 
 export const capitalizeFirstLetterOfEveryWord = (str: string) => {
+  if (typeof str !== "string") {
+    throw new Error("The provided value is not a text string.");
+  }
+
+  if (str === null || str === undefined) {
+    throw new Error("The text string cannot be null or undefined.");
+  }
+
   return str
     .split(" ")
     .map((palabra) => palabra.charAt(0).toUpperCase() + palabra.slice(1))
@@ -241,15 +249,6 @@ export const generateSlug = (text: string): string => {
 
 export const templateType = (isTwoWay: boolean) => {
   return isTwoWay ? "Two Way" : "One Way";
-};
-
-export const formatDate = (isoDate: string) => {
-  if (isoDate === "") return;
-  const date = new Date(isoDate);
-
-  // Formatear la fecha en el formato "MM/dd/yyyy" en inglés (EE. UU.)
-  const formattedDate = date.toLocaleDateString("en-US");
-  return formattedDate;
 };
 
 export const isMobile = () => {

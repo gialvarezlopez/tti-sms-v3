@@ -1,4 +1,5 @@
 import React, { useEffect } from "react";
+import { useRouter } from "next/navigation";
 import { useSession } from "next-auth/react";
 import {
   useReactTable,
@@ -25,8 +26,9 @@ import {
   PaginationPrevious,
 } from "@/components/ui/pagination";
 
-import { AlertCircle } from "lucide-react";
+import { AlertCircle, Search } from "lucide-react";
 import { SortDirection } from "@tanstack/react-table";
+import { Button } from "./button";
 
 // Defines a type for the isColumnSelected prop
 type IsColumnSelectedFn<T> = (column: ColumnDef<T>, action?: string) => void;
@@ -47,6 +49,10 @@ export type DataTableProps<T> = {
   clearSelected?: boolean;
   onClearSelected?: () => void;
   messageNoRecord?: string;
+  paramsUrl?: {
+    hasParams: boolean;
+    removeAllParamsFromUrl: (router: ReturnType<typeof useRouter>) => void;
+  }; // Definir el tipo del objeto
 };
 
 // Use the generic type in the component definition
@@ -66,7 +72,9 @@ const DataTable = <T extends Record<string, any>>({
   clearSelected,
   onClearSelected,
   messageNoRecord,
+  paramsUrl,
 }: DataTableProps<T>) => {
+  const router = useRouter();
   // Memorize sorted data
   const sortedData = React.useMemo(() => {
     if (!sortBy) return data; // If there is no column to sort, return the original data
@@ -230,21 +238,43 @@ const DataTable = <T extends Record<string, any>>({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [table.getSelectedRowModel()]);
 
+  const handleRemoveParams = () => {
+    if (paramsUrl?.removeAllParamsFromUrl) {
+      paramsUrl.removeAllParamsFromUrl(router); // Pasar el router aquí
+    }
+  };
+
   const message = messageNoRecord ? messageNoRecord : "No records found";
   return (
     <>
       {table.getRowModel().rows.length === 0 ? (
         <>
-          <div className="flex items-center justify-between p-4 mb-4 text-gray-700 bg-gradient-to-r from-gray-100 via-white to-gray-100 border border-gray-300 rounded-lg shadow-md">
+          <div className="flex flex-col gap-4 items-center justify-between px-4 py-8 mb-4 text-gray-700 bg-gradient-to-r from-gray-50 via-white to-gray-50 border border-gray-300 rounded-lg">
+            <span className="bg-gray-300 rounded-full p-2">
+              <Search />
+            </span>
             <div className="flex items-center gap-3">
-              <AlertCircle className="h-6 w-6 text-blue-600 animate-bounce" />
+              <AlertCircle className="h-6 w-6 text-red-600 animate-bounce" />
               <div>
                 <h3 className="text-base font-semibold text-gray-800">
                   Information
                 </h3>
-                <p className="text-sm">{message}</p>
               </div>
             </div>
+            <p className="text-sm">{message}</p>
+            {paramsUrl?.hasParams && (
+              <div className="text-center">
+                <Button
+                  variant={"destructive"}
+                  className="px-8 tracking-wide font-normal"
+                  onClick={handleRemoveParams}
+                >
+                  Clear Filter
+                </Button>{" "}
+                <p className="text-center">or</p>
+                <p className="">Change the parameters in the filter</p>
+              </div>
+            )}
           </div>
         </>
       ) : (

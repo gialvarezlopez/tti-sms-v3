@@ -19,7 +19,7 @@ import { Button } from "@/components/ui/button";
 import ModalViewTemplate from "@/components/screens/templates/view-template/ViewTemplate";
 import { TemplateProps } from "@/types/types";
 import ModalDeleteTicket from "./ModalDeleteTemplate";
-import { templateType } from "@/lib/utils";
+import { templateType } from "@/lib/utils/utils";
 
 type Props = {
   dataTemplates: TemplateProps[];

@@ -1,6 +1,10 @@
 import React from "react";
 import { TYPE_OF_MESSAGE } from "@/lib/constants";
-import { convertToSnakeCase, statusType, templateType } from "@/lib/utils";
+import {
+  convertToSnakeCase,
+  statusType,
+  templateType,
+} from "@/lib/utils/utils";
 import { TicketsProps } from "@/types/types";
 import OneWay from "./OneWay";
 import TwoWay from "./TwoWay";
@@ -18,7 +22,7 @@ const Features = ({ ticket }: Props) => {
         <div className="flex gap-1">
           <span className="font-normal text-[#1D2433]/60">Client: </span>
           <span className="font-bold text-base text-customBlack-v1">
-            {ticket.clientName}
+            {ticket.client}
           </span>
         </div>
         <div className="flex gap-1">
@@ -26,7 +30,7 @@ const Features = ({ ticket }: Props) => {
             Telephone number:{" "}
           </span>
           <span className="font-bold text-base text-customBlack-v1 ">
-            {ticket.phoneNumber}
+            {ticket.recipient_number}
           </span>
         </div>
       </div>
@@ -42,7 +46,7 @@ const Features = ({ ticket }: Props) => {
             Type of message:{" "}
           </span>
           <span className="font-bold text-base text-customBlack-v1">
-            {templateType(ticket.template?.isTwoWay ?? false)}
+            Undefined {/*templateType(ticket.template?.isTwoWay ?? false)*/}
           </span>
         </div>
       </div>
@@ -50,13 +54,13 @@ const Features = ({ ticket }: Props) => {
         <div className="flex gap-3">
           <span className="font-normal text-[#1D2433]/60">Template: </span>
           <span className="font-bold text-base text-customBlack-v1">
-            {ticket.template?.name}
+            {ticket.template?.name ?? "Undefined"}
           </span>
         </div>
         <div>
           <span className="font-normal text-[#1D2433]/60">Description: </span>
           <div className="text-[#1D2433]/60">
-            {ticket.template?.description}
+            {ticket.template?.description ?? "Undefined"}
           </div>
         </div>
       </div>

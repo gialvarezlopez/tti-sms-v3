@@ -3,8 +3,7 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
-import { useRouter } from "next/navigation";
-import { useSearchParams } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 
 import { toast } from "@/hooks/use-toast";
 import {
@@ -34,23 +33,14 @@ import ModalAdd from "./ModalAdd";
 import { BranchProps, UserProps } from "@/types/types";
 import useUsersStore from "@/store/useUsers";
 import useBranchesStore from "@/store/useBranches";
-import FormFilterBranch from "./shared/filter/FormFilterBranch";
+import FormFilterBranch from "./shared/filter/FormFilterUsersBranch";
 
 type Props = {
-  //setBranchesSelected: React.Dispatch<React.SetStateAction<BranchProps[]>>;
-  //setUserSelected: React.Dispatch<React.SetStateAction<UserProps[]>>;
-  //setDeleteUsers: React.Dispatch<React.SetStateAction<boolean>>;
   usersSelected: UserProps[];
   branchesSelected: BranchProps[];
 };
 
-const Filter = ({
-  //setBranchesSelected,
-  //setUserSelected,
-  //setDeleteUsers,
-  usersSelected,
-  branchesSelected,
-}: Props) => {
+const Filter = ({ usersSelected, branchesSelected }: Props) => {
   const router = useRouter();
   const searchParams = useSearchParams();
 
@@ -58,27 +48,20 @@ const Filter = ({
   const { setBranches } = useBranchesStore();
   const [selectedValue, setSelectedValue] = useState("users");
   const FormSchema = z.object({
-    username: z.string().optional(),
+    search: z.string().optional(),
   });
 
   const form = useForm<z.infer<typeof FormSchema>>({
     resolver: zodResolver(FormSchema),
     defaultValues: {
-      username: "",
+      search: "",
     },
   });
 
   function onSubmit(data: z.infer<typeof FormSchema>) {
-    /*
-    toast({
-      title: "You submitted the following values:",
-      description: (
-        <pre className="mt-2 w-[340px] rounded-md bg-slate-950 p-4">
-          <code className="text-white">{JSON.stringify(data, null, 2)}</code>
-        </pre>
-      ),
-    });
-    */
+    const params = new URLSearchParams(searchParams || "");
+    params.set("search", data.search ?? "");
+    router.push(`?${params.toString()}`);
   }
 
   const handleTypeClick = (typeValue: string) => {
@@ -90,6 +73,9 @@ const Filter = ({
     params.set("page", "1");
     params.delete("sortBy");
     params.delete("sortOrder");
+    params.delete("status");
+    params.delete("provinces");
+    params.delete("roles");
 
     router.push(`?${params.toString()}`);
   };
@@ -147,7 +133,7 @@ const Filter = ({
               >
                 <FormField
                   control={form.control}
-                  name="username"
+                  name="search"
                   render={({ field }) => (
                     <FormItem className="w-full">
                       <FormControl>

@@ -1,4 +1,5 @@
-import { highlightKeyword } from "@/lib/utils";
+import { formatDate } from "@/lib/utils/dateUtils";
+import { highlightKeyword } from "@/lib/utils/utils";
 import { TicketsProps } from "@/types/types";
 import React from "react";
 type Props = {
@@ -11,7 +12,7 @@ const OneWay = ({ ticket }: Props) => {
         <div className="flex gap-3">
           <span className="font-normal text-[#1D2433]/60">Message: </span>
           <span className="font-bold text-base text-customBlack-v1">
-            {ticket?.chat[0]?.date}
+            {ticket?.messages && formatDate(ticket?.messages[0]?.created_at)}
           </span>
         </div>
         <div>
@@ -21,7 +22,8 @@ const OneWay = ({ ticket }: Props) => {
           <div
             dangerouslySetInnerHTML={{
               __html: highlightKeyword(
-                ticket.template?.content ?? "",
+                (ticket?.messages && ticket?.messages[0]?.content) ??
+                  "Undefined",
                 ticket.template?.keywords?.map(({ keyword, value }) => ({
                   keyword,
                   value: keyword ?? "",

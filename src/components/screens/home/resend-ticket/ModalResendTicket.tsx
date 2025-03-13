@@ -31,8 +31,8 @@ const ModalResendTicket = ({ ticket, modalOpen, onClose }: Props) => {
           {ticket.template && (
             <FormBuildMessage
               template={ticket.template ?? []}
-              recipient={ticket.phoneNumber}
-              clientName={ticket.clientName}
+              recipient_number={ticket.recipient_number}
+              client={ticket.client}
               onClose={onClose}
               isFromModal={true}
             />

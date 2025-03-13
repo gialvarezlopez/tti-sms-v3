@@ -14,7 +14,8 @@ import UpdateUser from "./UpdateUser";
 import ModalResetPassword from "./modal-reset-password/ModalResetPassword";
 import useUsersStore from "@/store/useUsers";
 import { USER_ROLE } from "@/lib/constants";
-import { capitalizeFirstLetterOfEveryWord, formatDate } from "@/lib/utils";
+import { capitalizeFirstLetterOfEveryWord } from "@/lib/utils/utils";
+import { formatDate } from "@/lib/utils/dateUtils";
 
 const UpdateCell = ({
   user,

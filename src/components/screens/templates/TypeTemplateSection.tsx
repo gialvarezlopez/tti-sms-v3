@@ -1,7 +1,7 @@
 import { TemplateProps } from "@/types/types";
 import React from "react";
 import Link from "next/link"; // Asegúrate de importar Link desde Next.js
-import { templateType } from "@/lib/utils";
+import { templateType } from "@/lib/utils/utils";
 
 type Props = {
   dataTemplates: TemplateProps[];

@@ -10,7 +10,7 @@ import {
 import { MoreVertical } from "lucide-react";
 import { Dispatch, SetStateAction, useState } from "react";
 import useBranchesStore from "@/store/useBranches";
-import { branchStatus } from "@/lib/utils";
+import { branchStatus } from "@/lib/utils/utils";
 import UpdateBranch from "./UpdateBranch";
 
 const UpdateCell = ({

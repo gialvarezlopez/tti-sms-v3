@@ -12,7 +12,7 @@ import CustomInputMask from "@/components/ui/customInputMask";
 import CustomFormMessage from "../../../ui/CustomFormMessage";
 import { TicketsProps } from "@/types/types";
 import { TYPE_OF_MESSAGE } from "@/lib/constants";
-import { convertToSnakeCase, highlightKeyword } from "@/lib/utils";
+import { convertToSnakeCase, highlightKeyword } from "@/lib/utils/utils";
 
 type Props = {
   ticket: TicketsProps;
