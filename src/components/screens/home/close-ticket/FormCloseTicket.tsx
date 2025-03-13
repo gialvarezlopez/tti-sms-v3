@@ -8,7 +8,8 @@ import { Separator } from "@/components/ui/separator";
 import { Button } from "@/components/ui/button";
 import FieldsCloseTickets from "./FieldsCloseTickets";
 import { TicketsProps } from "@/types/types";
-import { capitalizeFirstLetterOfEveryWord } from "@/lib/utils";
+import { capitalizeFirstLetterOfEveryWord } from "@/lib/utils/utils";
+import { useCloseMultiplesTickets } from "@/hooks/useTickets";
 
 type Props = {
   setIsOpen: React.Dispatch<React.SetStateAction<boolean>>;
@@ -20,6 +21,11 @@ const FormCloseTicket = ({
   handleClearSelected,
   tickets,
 }: Props) => {
+  const {
+    mutate: mutateCloseMultipleTickets,
+    isPending: isClosingMultipleTickets,
+  } = useCloseMultiplesTickets();
+
   const FormSchema = z.object({
     reason: z.string().min(1, "Please provide a reason"),
   });
@@ -32,10 +38,26 @@ const FormCloseTicket = ({
   });
 
   function onSubmit(data: z.infer<typeof FormSchema>) {
-    setIsOpen(false);
-    showToast("success", "Success!", "Ticket successfully closed.");
-    handleClearSelected(true);
-    console.log(data);
+    const ids = tickets
+      .map((item) => String(item.id)) // Convierte a string, incluso si son números
+      .filter((id) => id !== undefined); // Filtra undefined, si fuera el caso
+
+    const addData = {
+      status: "closed",
+      closed_by: "system",
+      reason: data.reason,
+    };
+
+    mutateCloseMultipleTickets(
+      { ids, operation: "update", data: addData },
+      {
+        onSuccess(data) {
+          setIsOpen(false);
+          handleClearSelected(true);
+        },
+      }
+    );
+
     return false;
   }
 
@@ -47,8 +69,11 @@ const FormCloseTicket = ({
             {tickets &&
               tickets?.map((ticket, index) => (
                 <p key={index}>
-                  {capitalizeFirstLetterOfEveryWord(ticket.clientName)} -{" "}
-                  {ticket.phoneNumber} - {ticket.branch}
+                  {capitalizeFirstLetterOfEveryWord(ticket.client)} -{" "}
+                  {ticket.recipient_number} -{" "}
+                  {ticket.branch && typeof ticket.branch !== "string"
+                    ? ticket.branch.name
+                    : null}
                 </p>
               ))}
           </div>
@@ -61,6 +86,7 @@ const FormCloseTicket = ({
                 className="btn-white-normal w-full md:w-[33%] semibold"
                 variant={"outline"}
                 onClick={() => setIsOpen(false)}
+                disabled={isClosingMultipleTickets}
               >
                 Cancel
               </Button>
@@ -68,6 +94,8 @@ const FormCloseTicket = ({
                 type="submit"
                 className="bg-customRed-v3 w-full md:w-[33%]"
                 variant={"destructive"}
+                disabled={isClosingMultipleTickets}
+                isLoading={isClosingMultipleTickets}
               >
                 Submit
               </Button>

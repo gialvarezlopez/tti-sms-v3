@@ -10,7 +10,7 @@ import { Button } from "@/components/ui/button";
 
 import { TicketsProps } from "@/types/types";
 import FieldsResendMessage from "./FieldsSendRemainder";
-import { templateType } from "@/lib/utils";
+import { templateType } from "@/lib/utils/utils";
 
 type Props = {
   //closeModal: () => void;
@@ -44,7 +44,7 @@ const FormBuildRemainder = ({ onClose, ticket }: Props) => {
   useEffect(() => {
     if (ticket) {
       reset({
-        phoneNumber: ticket.phoneNumber,
+        phoneNumber: ticket.recipient_number,
         modelNumber: ticket.chat[0]?.keyword,
       });
     }

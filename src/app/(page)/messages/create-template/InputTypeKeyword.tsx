@@ -20,7 +20,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { keywordOptions } from "@/components/screens/add-keyword/keywordOptions";
-import { lineReplaceWithBreaks, renderIcon } from "@/lib/utils";
+import { lineReplaceWithBreaks, renderIcon } from "@/lib/utils/utils";
 
 type Props = {
   fields: KeywordProps[];

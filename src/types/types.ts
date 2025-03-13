@@ -7,11 +7,6 @@ export type RoleProps = {
   deleted_at?: string;
 };
 
-/*
-export type UserListProps={
-
-}
-*/
 export type UserProps = {
   id?: string;
   name?: string;
@@ -23,16 +18,6 @@ export type UserProps = {
   updated_at?: string;
 };
 export type LoginProps = {
-  //id?: string;
-  //status?: string;
-  //name?: string;
-  //first_name?: string;
-  //last_name?: string;
-  //username?: string;
-  //lastLogin?: string;
-  //active?: boolean;
-  //last_update?: string | null;
-  //image?: string;
   createdAt?: string;
   updatedAt?: string;
   data?: {
@@ -66,8 +51,8 @@ export type BranchProps = {
 };
 
 export type FormReviewMessageProps = {
-  clientName: string;
-  phoneNumber: string;
+  client: string;
+  recipient_number: string;
   keywords?: KeywordTemplates[];
   responses?: AutomaticResponsesTemplates[];
   content?: string;
@@ -80,18 +65,41 @@ type FormReviewMessagePropsWithoutKeywordsAndResponses = Omit<
 
 export type TicketsProps = FormReviewMessagePropsWithoutKeywordsAndResponses & {
   id?: string | number;
-  branch?: string;
+  branch?: BranchProps;
   lastSent: string;
-  lastReceived: string;
-  createdAt?: string;
+  lastReceivedMessage: lastReceivedMessageProps;
+  template?: TemplateProps;
+  created_at?: string;
   status: string;
   date?: string;
+  messages?: MessageProps[];
   errorMessage?: string;
   chat: ChatMessage[];
   reason?: string;
-  closedBy?: string;
-  template?: TemplateProps;
+  closedBy?: UserProps;
   closed?: string;
+};
+
+export type MessageProps = {
+  content: string;
+  created_at: string;
+  created_by: string;
+  id: string;
+  sent_by: string;
+  status: string;
+  thread_id: string;
+  updated_at: string;
+};
+
+export type lastReceivedMessageProps = {
+  id?: string;
+  content: string;
+  created_at: string;
+  created_by: string;
+  sent_by: string;
+  status: string;
+  thread_id: string;
+  updated_at: string;
 };
 
 export type KeywordTemplates = {
@@ -181,3 +189,15 @@ export interface RefetchOptions {
   sortBy?: string;
   sortOrder?: "asc" | "desc" | null;
 }
+
+export type StatsProps = {
+  error: string;
+  overdue: string;
+  toBeOverdue: string;
+  inProgress: string;
+  closed: {
+    total: 0;
+    closebyUser: 0;
+    manualClose: 0;
+  };
+};

@@ -1,10 +1,9 @@
 export const TICKETS_STATUS = {
   ERROR_IN_MESSAGE: "error",
-  //RESPONSE_TO_THE_CLIENT: "response_to_the_client",
-  WARNING: "warning",
-  COMPLETED: "completed",
   CLOSED: "closed",
   IN_PROGRESS: "in_progress",
+  OVERDUE: "overdue",
+  TO_BE_OVERDUE: "toBeOverdue",
 };
 
 export const USER_STATUS = {

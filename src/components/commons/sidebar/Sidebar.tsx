@@ -17,7 +17,7 @@ import {
   Settings,
 } from "lucide-react";
 import { USER_ROLE } from "@/lib/constants";
-import { isMobile } from "@/lib/utils";
+import { capitalizeFirstLetterOfEveryWord, isMobile } from "@/lib/utils/utils";
 
 type Props = {
   setIsSidebarOpen: Dispatch<SetStateAction<boolean>>;
@@ -262,7 +262,9 @@ const SideBar = ({ setIsSidebarOpen }: Props) => {
             </div>
             {isOpen && (
               <div className="space-y-2">
-                <p className="font-bold text-xs">{session?.user.name}</p>
+                <p className="font-bold text-xs">
+                  {capitalizeFirstLetterOfEveryWord(session?.user.name)}
+                </p>
                 <p className="text-xs font-normal">
                   {session?.user.branch.name}
                 </p>

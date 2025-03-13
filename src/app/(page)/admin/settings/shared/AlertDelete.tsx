@@ -23,22 +23,16 @@ import {
 } from "@/hooks/useBranches";
 
 type Props = {
-  //branchesSelected: BranchProps[];
-  //usersSelected: UserProps[];
   setClearRowsSelected: React.Dispatch<React.SetStateAction<boolean>>;
 };
 
-const AlertDelete = ({
-  setClearRowsSelected,
-}: //branchesSelected,
-//usersSelected,
-Props) => {
+const AlertDelete = ({ setClearRowsSelected }: Props) => {
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [, setIsFormSubmitted] = useState(false);
 
   //Store
-  const { users, clearUsers } = useUsersStore(); // Accedes a los usuarios
-  const { branches, clearBranches } = useBranchesStore(); // Accedes a los usuarios
+  const { users, clearUsers } = useUsersStore();
+  const { branches, clearBranches } = useBranchesStore();
 
   //Axios
   const { mutate: deleteUser, isPending: isDeletingUser } = useDeleteUser();
@@ -61,28 +55,8 @@ Props) => {
 
   const handleFormSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-
-    //await new Promise((resolve) => setTimeout(resolve, 3000)); // Simula una espera
-    setIsFormSubmitted(true); // Marcar como enviado
-    setIsDialogOpen(true); // Mostrar el diálogo después de la confirmación
-
-    // Mensaje para los usuarios seleccionados
-    const userMessage =
-      users.length === 1
-        ? "User removed successfully."
-        : users.length > 1
-        ? "Users removed successfully."
-        : "";
-
-    // Mensaje para las ramas seleccionadas
-    const branchMessage =
-      branches.length === 1
-        ? "Branch removed successfully."
-        : branches.length > 1
-        ? "Branches removed successfully."
-        : "";
-
-    //const message = userMessage || branchMessage;
+    setIsFormSubmitted(true); // Mark as sent
+    setIsDialogOpen(true);
 
     if (users && users.length === 1 && users[0]?.id) {
       deleteUser(users[0].id, {
@@ -131,8 +105,7 @@ Props) => {
   };
 
   const closeDialog = () => {
-    setIsDialogOpen(false); // Cerrar el diálogo cuando se haga una acción
-    //onClose();
+    setIsDialogOpen(false);
     clearUsers();
     clearBranches();
   };
@@ -158,7 +131,7 @@ Props) => {
                   onClick={closeDialog}
                   className="text-gray-500 hover:text-gray-800"
                 >
-                  <X size={20} /> {/* El ícono de la X */}
+                  <X size={20} />
                 </button>
               </div>
             </AlertDialogTitle>

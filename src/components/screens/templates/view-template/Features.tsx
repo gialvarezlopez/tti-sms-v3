@@ -1,12 +1,10 @@
 import React from "react";
 import { TemplateProps } from "@/types/types";
-import { formatDate, formatTextWithBold, highlightKeyword } from "@/lib/utils";
-//import OneWay from "./OneWay";
-//import TwoWay from "./TwoWay";
-import { templateType } from "../../../../lib/utils";
+import { highlightKeyword } from "@/lib/utils/utils";
+import { templateType } from "../../../../lib/utils/utils";
+import { formatDate } from "@/lib/utils/dateUtils";
 
 type Props = {
-  //ticket: TicketsProps;
   template: TemplateProps;
 };
 

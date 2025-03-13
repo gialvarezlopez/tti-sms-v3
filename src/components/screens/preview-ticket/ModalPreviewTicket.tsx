@@ -14,7 +14,7 @@ import { Separator } from "@/components/ui/separator";
 import { TicketsProps } from "@/types/types";
 import Features from "./Features";
 import { MESSAGE_EXCHANGE } from "@/lib/constants";
-import { generateSlug, templateType } from "@/lib/utils";
+import { generateSlug, templateType } from "@/lib/utils/utils";
 
 type Props = {
   ticket: TicketsProps;

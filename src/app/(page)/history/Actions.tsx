@@ -1,10 +1,8 @@
 "use client";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
+import { useRouter, useSearchParams } from "next/navigation";
 import { z } from "zod";
-import { toast } from "@/hooks/use-toast";
-//import { useRouter } from "next/navigation";
-//import { useSearchParams } from "next/navigation";
 import {
   Form,
   FormControl,
@@ -15,17 +13,13 @@ import {
 import { Input } from "@/components/ui/input";
 import { IconSearch } from "../../../assets/images";
 import Image from "next/image";
-//import AlertDeleteTickets from "./AlertDeleteTickets";
-//import { TicketsProps } from "@/types/types";
-import FormFilterHistory from "./filter/FormFilterHistory";
+import FormFilterHome from "../shared/modal-filter/FormFilterModal";
+import { useEffect } from "react";
 
-/*
-type Props = {
-  rowSelected: TicketsProps[];
-  handleClearSelected: (value: boolean) => void;
-};
-*/
-const Actions = (/*{ rowSelected, handleClearSelected }: Props*/) => {
+const Actions = () => {
+  const router = useRouter();
+  const searchParams = useSearchParams();
+
   const FormSchema = z.object({
     search: z.string().optional(),
   });
@@ -37,18 +31,19 @@ const Actions = (/*{ rowSelected, handleClearSelected }: Props*/) => {
     },
   });
 
+  const { setValue } = form;
+
   function onSubmit(data: z.infer<typeof FormSchema>) {
-    /*
-    toast({
-      title: "You submitted the following values:",
-      description: (
-        <pre className="mt-2 w-[340px] rounded-md bg-slate-950 p-4">
-          <code className="text-white">{JSON.stringify(data, null, 2)}</code>
-        </pre>
-      ),
-    });
-    */
+    const params = new URLSearchParams(searchParams || "");
+    params.set("search", data.search ?? "");
+    router.push(`?${params.toString()}`);
   }
+
+  useEffect(() => {
+    setValue("search", searchParams?.get("search") ?? "", {
+      shouldDirty: true,
+    });
+  }, [searchParams, setValue]);
 
   return (
     <div className="w-full gap-3 md:gap-6 flex flex-col md:flex-row items-center mt-4 relative">
@@ -78,7 +73,7 @@ const Actions = (/*{ rowSelected, handleClearSelected }: Props*/) => {
         </form>
       </Form>
       <div className="flex gap-3 w-full md:w-auto">
-        <FormFilterHistory />
+        <FormFilterHome fromPage="history" />
 
         {/* No option to delete for the moment */}
         {/*    
