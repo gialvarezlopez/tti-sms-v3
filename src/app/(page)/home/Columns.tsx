@@ -13,6 +13,7 @@ import { Dispatch, SetStateAction, useState } from "react";
 import {
   capitalizeFirstLetterOfEveryWord,
   convertToSnakeCase,
+  formatPhoneNumber,
   statusType,
   templateType,
 } from "@/lib/utils/utils";
@@ -421,7 +422,9 @@ const useColumns = () => {
         );
       },
       cell: ({ row }) => {
-        return <span>{row.original.recipient_number}</span>; //capitalizeFirstLetter(row.original.tipoCliente);
+        return (
+          <span>{formatPhoneNumber(row.original.recipientNumber ?? "")}</span>
+        ); //capitalizeFirstLetter(row.original.tipoCliente);
       },
     },
     // Add 'Branch' column only if user is 'admin'
@@ -475,7 +478,7 @@ const useColumns = () => {
       cell: ({ row }) => {
         return (
           <span className="text-nowrap">
-            {formatDate(row.original.lastReceivedMessage.created_at)}
+            {formatDate(row.original.lastReceivedMessage.createdAt)}
           </span>
         );
       },
@@ -524,7 +527,7 @@ const useColumns = () => {
       cell: ({ row }) => {
         return (
           <span className="text-nowrap">
-            {formatDate(row.original.created_at ?? "")}
+            {formatDate(row.original.firstMessage?.createdAt ?? "")}
           </span>
         );
       },

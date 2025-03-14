@@ -30,7 +30,12 @@ const CreateEditBranch = ({ setIsOpen, branch }: Props) => {
   const FormSchema = z
     .object({
       name: z.string().min(3, { message: "Name is required" }), // Ahora solo es un string
-      distributionList: z.string().email({ message: "Invalid email address" }),
+      //distributionList: z.string().email({ message: "Invalid email address" }),
+      distributionList: z
+        .string()
+        .email({ message: "Invalid email address" })
+        .optional()
+        .or(z.literal("")), // Permite un string vacío
       address: z.string().min(3, { message: "Enter the address" }), // Ahora solo es un string
       city: z.string().min(1, { message: "Enter the city" }),
       province: z.string().min(1, { message: "Select an province" }),

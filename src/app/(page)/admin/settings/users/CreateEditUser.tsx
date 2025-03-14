@@ -10,6 +10,7 @@ import FieldsUser from "./FieldsUser";
 import { UserProps } from "@/types/types";
 import { useCreateUser, useUpdateUser } from "@/hooks/useUsers";
 import { useGetBranches } from "@/hooks/useBranches";
+import { useGetRoles } from "@/hooks/useRoles";
 //import { dataBranches } from "../mock/dataBranch";
 
 type Props = {
@@ -26,10 +27,20 @@ const CreateEditUser = ({ setIsOpen, user }: Props) => {
 
   const {
     data: dataBranches,
-    error,
-    isLoading,
+    error: errorBranches,
+    isLoading: isLoadingBranches,
     refetch,
   } = useGetBranches({
+    page: 1,
+    limit: 100,
+    search: "",
+  });
+
+  const {
+    data: dataRoles,
+    error: errorRoles,
+    isLoading: isLoadingRoles,
+  } = useGetRoles({
     page: 1,
     limit: 100,
     search: "",
@@ -127,7 +138,15 @@ const CreateEditUser = ({ setIsOpen, user }: Props) => {
       <Form {...form}>
         <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-3">
           <div className="flex-1 overflow-y-auto max-h-[calc(100vh-300px)] px-6 pb-2">
-            <FieldsUser user={user} dataBranches={dataBranches?.data} />
+            <FieldsUser
+              user={user}
+              dataBranches={dataBranches?.data}
+              errorBranches={errorBranches}
+              isLoadingBranches={isLoadingBranches}
+              dataRoles={dataRoles?.data}
+              errorRoles={errorRoles}
+              isLoadingRoles={isLoadingRoles}
+            />
           </div>
           <div className="pb-3 pt-2">
             <Separator className="my-2" />

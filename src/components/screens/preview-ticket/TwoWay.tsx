@@ -24,11 +24,11 @@ const TwoWay = ({ ticket }: Props) => {
   return (
     <>
       <div>
-        {ticket?.chat?.map((item, index) => (
+        {ticket?.messages?.map((item, index) => (
           <div key={index} className={`border-b border-[#CCD1DC]  px-6  `}>
             <div
               className={`py-2  ${
-                item?.from === WHO_SEND_MESSAGE.CUSTOMER
+                item?.sentByType === WHO_SEND_MESSAGE.CUSTOMER
                   ? "bg-[#F9F9F9] px-2"
                   : ""
               } `}
@@ -37,11 +37,12 @@ const TwoWay = ({ ticket }: Props) => {
                 <div className="">
                   <div className="flex gap-3 w-auto">
                     <span className="font-normal text-[#1D2433]/60">
-                      {renderPreFix(
-                        item?.from as string,
-                        index,
-                        ticket?.chat.length
-                      )}
+                      {ticket?.messages &&
+                        renderPreFix(
+                          item?.sentByType as string,
+                          index,
+                          ticket?.messages?.length
+                        )}
                       Message:{" "}
                     </span>
                     <span className="font-bold text-base text-customBlack-v1">
@@ -50,7 +51,7 @@ const TwoWay = ({ ticket }: Props) => {
                   </div>
 
                   <div>
-                    <span className="">{item.message}</span>
+                    <span className="">{item.content}</span>
                   </div>
                 </div>
               </div>

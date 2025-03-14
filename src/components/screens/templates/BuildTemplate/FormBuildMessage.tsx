@@ -161,7 +161,7 @@ const FormBuildMessage = ({
           reply,
         })) ?? [],
     };
-    console.log(dateValue);
+    console.log("dateValue", dateValue);
     setFormState(dateValue);
     return false;
   }

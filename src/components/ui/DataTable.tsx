@@ -51,7 +51,12 @@ export type DataTableProps<T> = {
   messageNoRecord?: string;
   paramsUrl?: {
     hasParams: boolean;
-    removeAllParamsFromUrl: (router: ReturnType<typeof useRouter>) => void;
+    paramsToKeep?: string[];
+    removeAllParamsFromUrl?: (router: ReturnType<typeof useRouter>) => void;
+    removeParamsExcept?: (
+      router: ReturnType<typeof useRouter>,
+      paramsToKeep: string[]
+    ) => void;
   }; // Definir el tipo del objeto
 };
 
@@ -240,7 +245,13 @@ const DataTable = <T extends Record<string, any>>({
 
   const handleRemoveParams = () => {
     if (paramsUrl?.removeAllParamsFromUrl) {
-      paramsUrl.removeAllParamsFromUrl(router); // Pasar el router aquí
+      paramsUrl.removeAllParamsFromUrl(router);
+    }
+  };
+
+  const handleRemoveParamsExcept = () => {
+    if (paramsUrl?.removeParamsExcept && paramsUrl.paramsToKeep) {
+      paramsUrl.removeParamsExcept(router, paramsUrl.paramsToKeep);
     }
   };
 
@@ -267,7 +278,11 @@ const DataTable = <T extends Record<string, any>>({
                 <Button
                   variant={"destructive"}
                   className="px-8 tracking-wide font-normal"
-                  onClick={handleRemoveParams}
+                  onClick={
+                    paramsUrl.removeAllParamsFromUrl
+                      ? handleRemoveParams
+                      : handleRemoveParamsExcept
+                  }
                 >
                   Clear Filter
                 </Button>{" "}

@@ -129,6 +129,7 @@ const ListTemplate = ({ dataTemplates, isLoading }: Props) => {
   const selectedType = searchParams?.get("type");
   const selectedSearch = searchParams?.get("q")?.toLowerCase() || "";
 
+  /*
   const filteredTemplates = dataTemplates
     .filter((item) =>
       selectedType && selectedType !== "all"
@@ -139,13 +140,13 @@ const ListTemplate = ({ dataTemplates, isLoading }: Props) => {
     .filter((item) =>
       selectedSearch ? item?.name?.toLowerCase().includes(selectedSearch) : true
     );
-
-  /*
-  useEffect(() => {
-    setTimeout(() => setLoading(false), 500);
-  }, []);
-  */
-
+    */
+  const filteredTemplates = dataTemplates.filter((item) =>
+    selectedType && selectedType !== "all"
+      ? item.isTwoWay ===
+        (selectedType.toLowerCase() === "two way" ? true : false)
+      : true
+  );
   useEffect(() => {
     const checkPanelWidth = (entries: ResizeObserverEntry[]) => {
       for (const entry of entries) {

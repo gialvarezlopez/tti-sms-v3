@@ -34,6 +34,7 @@ import { BranchProps, UserProps } from "@/types/types";
 import useUsersStore from "@/store/useUsers";
 import useBranchesStore from "@/store/useBranches";
 import FormFilterBranch from "./shared/filter/FormFilterUsersBranch";
+import { useGetRoles } from "@/hooks/useRoles";
 
 type Props = {
   usersSelected: UserProps[];
@@ -46,6 +47,17 @@ const Filter = ({ usersSelected, branchesSelected }: Props) => {
 
   const { setUsers } = useUsersStore();
   const { setBranches } = useBranchesStore();
+
+  const {
+    data: dataRoles,
+    error: errorRoles,
+    isLoading: isLoadingRoles,
+  } = useGetRoles({
+    page: 1,
+    limit: 100,
+    search: "",
+  });
+
   const [selectedValue, setSelectedValue] = useState("users");
   const FormSchema = z.object({
     search: z.string().optional(),
@@ -57,6 +69,8 @@ const Filter = ({ usersSelected, branchesSelected }: Props) => {
       search: "",
     },
   });
+
+  const { setValue } = form;
 
   function onSubmit(data: z.infer<typeof FormSchema>) {
     const params = new URLSearchParams(searchParams || "");
@@ -103,6 +117,12 @@ const Filter = ({ usersSelected, branchesSelected }: Props) => {
 
   const type = searchParams ? searchParams.get("type") : null;
   //console.log(type);
+
+  useEffect(() => {
+    setValue("search", searchParams?.get("search") ?? "", {
+      shouldDirty: true,
+    });
+  }, [searchParams, setValue]);
 
   return (
     <>
@@ -170,7 +190,11 @@ const Filter = ({ usersSelected, branchesSelected }: Props) => {
                 Delete
               </Button>
             </div>
-            <FormFilterBranch />
+            <FormFilterBranch
+              dataRoles={dataRoles?.data ?? []}
+              errorRoles={errorRoles}
+              isLoadingRoles={isLoadingRoles}
+            />
             <ModalAdd selectedValue={selectedValue} />
           </div>
         </div>

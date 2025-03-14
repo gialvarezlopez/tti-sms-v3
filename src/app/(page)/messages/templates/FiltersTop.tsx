@@ -28,6 +28,7 @@ const Filter = () => {
 
   const router = useRouter();
   const searchParams = useSearchParams(); // Using the searchParams hook here.
+  const selectedSearch = searchParams?.get("q")?.toLowerCase() || "";
 
   const FormSchema = z.object({
     search: z.string().optional(),
@@ -39,6 +40,8 @@ const Filter = () => {
       search: "",
     },
   });
+
+  const { setValue } = form;
 
   const updateQueryParams = (key: string, value: string | null) => {
     const params = new URLSearchParams(searchParams?.toString());
@@ -77,6 +80,10 @@ const Filter = () => {
       resizeObserver.disconnect();
     };
   }, []);
+
+  useEffect(() => {
+    setValue("search", selectedSearch, { shouldDirty: true });
+  }, [selectedSearch, setValue]);
 
   return (
     <div className="w-full" ref={panelRef}>

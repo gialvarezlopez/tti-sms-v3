@@ -18,6 +18,7 @@ import { convertDateYYYYMMDD } from "@/lib/utils/dateUtils";
 import { TICKETS_STATUS, USER_ROLE } from "@/lib/constants";
 import dynamic from "next/dynamic";
 import { removeAllParamsFromUrl } from "../../../lib/utils/urlUtils";
+import useResizeObserver from "use-resize-observer";
 
 const Actions = dynamic(() => import("./Actions"), {
   ssr: false,
@@ -25,13 +26,18 @@ const Actions = dynamic(() => import("./Actions"), {
 
 type IsColumnSelectedFn<T> = (column: ColumnDef<T>, action?: string) => void;
 
+const paramsToIgnore = ["sortOrder", "page"];
+
 const Home = () => {
   const { data: session, status } = useSession();
   const router = useRouter(); // Acceder al router
   const searchParams = useSearchParams();
 
   const hasParams = searchParams
-    ? Array.from(searchParams.entries()).length > 0
+    ? Array.from(searchParams.entries()).filter(
+        ([key, value]) =>
+          !paramsToIgnore.includes(key) && !(key === "page" && value === "1")
+      ).length > 0
     : false;
 
   //const columns = useColumns();
@@ -40,6 +46,7 @@ const Home = () => {
   const [sortBy, setSortBy] = useState<string>(""); // Status for the sort field
   const [sortOrder, setSortOrder] = useState<"asc" | "desc">("asc"); // State for ascending or descending order
   const [data, setData] = useState<TicketsProps[]>([]);
+  const [isDataLoaded, setIsDataLoaded] = useState(false);
   const [totalPages, setTotalPages] = useState(0);
   const [clearSelected, setClearSelected] = useState(false);
   const [rowSelected, setRowSelected] = useState<TicketsProps[]>([]);
@@ -48,6 +55,8 @@ const Home = () => {
     pageIndex: 0,
     pageSize: 10,
   });
+
+  const { ref, width = 0 } = useResizeObserver<HTMLDivElement>();
 
   const searchParam = searchParams?.get("search") ?? "";
   const branchesParam = searchParams?.get("branches");
@@ -62,7 +71,7 @@ const Home = () => {
   const branches =
     branchesParam &&
     branchesParam !== "all" &&
-    session?.user?.primaryRole !== USER_ROLE.MEMBER // user
+    session?.user?.primaryRole !== USER_ROLE.USER // user
       ? branchesParam.split(",")
       : [];
 
@@ -121,6 +130,7 @@ const Home = () => {
     if (dataTickets) {
       setData(dataTickets.data);
       setTotalPages(dataTickets.meta.pagination.totalPages);
+      setIsDataLoaded(true);
     }
   }, [dataTickets]);
 
@@ -220,8 +230,14 @@ const Home = () => {
     router.push(`${window.location.pathname}?${params.toString()}`);
   }, [pagination.pageIndex, router, sortBy, sortOrder]);
 
+  useEffect(() => {
+    if (errorTickets) {
+      setIsDataLoaded(true);
+    }
+  }, [errorTickets]);
+
   return (
-    <div>
+    <div ref={ref}>
       <div className="flex gap-6 justify-between">
         <h1 className="font-bold text-2xl md:text-4xl">History</h1>
       </div>
@@ -232,10 +248,10 @@ const Home = () => {
         <Actions />
 
         <div className="mx-auto py-5">
-          {isLoadingTickets ? (
+          {isLoadingTickets || !isDataLoaded ? (
             <TableSkeleton
               rows={5}
-              cols={7}
+              cols={width <= 768 ? 3 : 7}
               checkbox={true}
               dots={true}
               width="w-full md:w-1/2"

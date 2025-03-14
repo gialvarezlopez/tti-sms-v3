@@ -19,6 +19,7 @@ const Page = () => {
   const searchParams = useSearchParams();
   const selectedPage = searchParams?.get("page");
   const selectedType = searchParams?.get("type");
+  const selectedSearch = searchParams?.get("q")?.toLowerCase() || "";
 
   const [data, setData] = useState<TemplateProps[]>([]);
   const [search, setSearch] = useState("");
@@ -35,13 +36,13 @@ const Page = () => {
   } = useGetTemplates({
     page: pagination.pageIndex + 1,
     limit: pagination.pageSize,
-    search,
+    query: selectedSearch,
   });
 
   useEffect(() => {
     if (response) {
-      setData(response.data);
-      setTotalPages(response.meta.pagination.totalPages);
+      setData(response?.data);
+      setTotalPages(response?.meta?.pagination?.totalPages);
     }
   }, [response]);
 

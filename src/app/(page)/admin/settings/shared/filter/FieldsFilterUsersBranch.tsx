@@ -3,7 +3,7 @@ import { useSearchParams } from "next/navigation";
 import { Controller, useFormContext } from "react-hook-form";
 import { Separator } from "@/components/ui/separator";
 import CustomMultiSelect from "@/components/ui/CustomMultiSelect";
-import { TypeComboBoxProps } from "@/types/types";
+import { RoleProps, TypeComboBoxProps } from "@/types/types";
 import { dataProvinces } from "../../mock/provinces";
 import { SETTINGS_PARAMETER_URL, USER_ROLE } from "@/lib/constants";
 
@@ -17,8 +17,16 @@ const dataStatus = [
     value: "Active",
   },
 ];
-
-const FieldsFilterBranch = () => {
+type Props = {
+  dataRoles: RoleProps[];
+  errorRoles: unknown;
+  isLoadingRoles: boolean;
+};
+const FieldsFilterBranch = ({
+  dataRoles,
+  errorRoles,
+  isLoadingRoles,
+}: Props) => {
   const searchParams = useSearchParams();
   const { control, reset, getValues } = useFormContext();
   const simplifiedProvinces: TypeComboBoxProps[] = useMemo(
@@ -43,6 +51,17 @@ const FieldsFilterBranch = () => {
     [dataStatus]
   );
 
+  const simplifiedUserRoles: TypeComboBoxProps[] = useMemo(
+    () =>
+      dataRoles &&
+      dataRoles.map((item) => ({
+        id: `${item.name}`!, // El operador ! indica que sabemos que no es undefined
+        value: `${item?.description}`,
+      })),
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [dataRoles]
+  );
+  /*
   const simplifiedUserRoles = useMemo(
     () =>
       USER_ROLE &&
@@ -53,7 +72,7 @@ const FieldsFilterBranch = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
     [USER_ROLE]
   );
-
+  */
   const resetSection = (fields: string[]) => {
     if (fields.length > 0) {
       // Get the current values ​​of the form

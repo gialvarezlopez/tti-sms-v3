@@ -89,6 +89,15 @@ const config: Config = {
       boxShadow: {
         custom: "0px 4px 12px 0px rgba(0, 0, 0, 0.16)",
       },
+      animation: {
+        pulse: "pulse 2.5s cubic-bezier(0.4, 0, 0.6, 1) infinite",
+      },
+      keyframes: {
+        pulse: {
+          "0%, 100%": { backgroundColor: "#f3f4f6" }, // Very light grey
+          "50%": { backgroundColor: "#9ca3af" }, // Dark grey
+        },
+      },
     },
   },
   variants: {

@@ -14,14 +14,25 @@ import { showToast } from "@/lib/toastUtil";
 
 const returnAfterSubmit = "/messages/templates";
 
-const useGetTemplates = ({ page, limit, search }: PaginateParams) => {
+interface TemplateParams extends PaginateParams {
+  query?: string;
+}
+
+const useGetTemplates = ({ page, limit, search, query }: TemplateParams) => {
   return useQuery({
-    queryKey: ["template-list", page, limit, search],
+    queryKey: ["template-list", page, limit, search, query],
     queryFn: async () => {
       try {
+        const params: TemplateParams = {
+          page,
+          limit,
+          search,
+          ...(query?.length && { query }),
+        };
+
         const url = templatesRoutes.list;
         const { data } = await axiosInstance.get(url, {
-          params: { page, limit, search },
+          params,
         });
         return data;
       } catch (e) {
@@ -35,7 +46,7 @@ const useGetTemplates = ({ page, limit, search }: PaginateParams) => {
             throw new Error(errorMessage);
           } else if (e.request) {
             // The request was made but no response was received (network problems)
-            throw new Error("Network error: Could not connect to the server");
+            throw new Error(e.message);
           } else {
             // Other errors (configuration, etc.)
             throw new Error("Error in request configuration");

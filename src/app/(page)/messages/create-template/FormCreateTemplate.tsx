@@ -225,20 +225,16 @@ const FormCreateTemplate = () => {
   } = form;
 
   function onSubmit(data: z.infer<typeof FormSchema>) {
-    /*
-    const { messageExchangeType, invalidReply, timeToRespond, ...restData } =
-      data;
-      */
-
-    const formData = {
+    const formData: Partial<typeof data> = {
       ...data,
       content: cleanOnlyWhiteSpace(data.content),
-      ...(data.isReminder ? { type: "reminder" } : {}), //we do this because the endpoints is receiving type inste of isReminder
+      ...(data.isReminder ? { type: "reminder" } : { type: "" }), //we do this because the endpoints is receiving type inste of isReminder
       //...(data.invalidReply ? { invalidReply } : {}),
     };
 
     //Remove isReminder to only send type
     delete formData.isReminder;
+    delete formData.messageExchangeType;
 
     if (elementId) {
       delete formData.branches;
@@ -276,7 +272,7 @@ const FormCreateTemplate = () => {
         id,
         name,
         description,
-        branch_id,
+        branch,
         content,
         keywords,
         responses,
@@ -294,6 +290,7 @@ const FormCreateTemplate = () => {
 
       const data = {
         name,
+        branches: [branch?.id],
         description,
         content,
         keywords,
