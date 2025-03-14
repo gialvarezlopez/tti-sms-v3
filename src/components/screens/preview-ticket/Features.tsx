@@ -30,7 +30,7 @@ const Features = ({ ticket }: Props) => {
             Telephone number:{" "}
           </span>
           <span className="font-bold text-base text-customBlack-v1 ">
-            {ticket.recipient_number}
+            {ticket.recipientNumber}
           </span>
         </div>
       </div>
@@ -46,7 +46,7 @@ const Features = ({ ticket }: Props) => {
             Type of message:{" "}
           </span>
           <span className="font-bold text-base text-customBlack-v1">
-            Undefined {/*templateType(ticket.template?.isTwoWay ?? false)*/}
+            {templateType(ticket.template?.isTwoWay ?? false)}
           </span>
         </div>
       </div>
@@ -68,7 +68,11 @@ const Features = ({ ticket }: Props) => {
       {convertToSnakeCase(templateType(ticket.template?.isTwoWay ?? false)) ===
         TYPE_OF_MESSAGE.ONE_WAY && <OneWay ticket={ticket} />}
       {convertToSnakeCase(templateType(ticket.template?.isTwoWay ?? false)) ===
-        TYPE_OF_MESSAGE.TWO_WAY && <TwoWay ticket={ticket} />}
+        TYPE_OF_MESSAGE.TWO_WAY && (
+        <>
+          <TwoWay ticket={ticket} />
+        </>
+      )}
     </>
   );
 };

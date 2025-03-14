@@ -13,7 +13,7 @@ import { PaginateParams, UserProps } from "@/types/types";
 import { showToast } from "@/lib/toastUtil";
 
 interface TicketParams extends PaginateParams {
-  status?: string[]; // Puede ser: 'in_progress', 'overdue', 'toBeOverdue', 'closed', 'error'
+  status?: string[]; // It can be: 'in_progress', 'overdue', 'toBeOverdue', 'closed', 'error'
   templates?: string[] | null; // Puede ser nulo
   branches?: string[] | null;
   types?: string[]; // Puede ser: 'oneway' o 'twoway'
@@ -87,8 +87,9 @@ const useGetTickets = ({
               "Unknown error";
             throw new Error(errorMessage);
           } else if (e.request) {
+            //console.log("e.request", e.message);
             // The request was made but no response was received (network problems)
-            throw new Error("Network error: Could not connect to the server");
+            throw new Error(e.message);
           } else {
             // Other errors (configuration, etc.)
             throw new Error("Error in request configuration");

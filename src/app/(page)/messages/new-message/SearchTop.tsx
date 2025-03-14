@@ -3,6 +3,7 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
+import { useRouter, useSearchParams } from "next/navigation";
 //import { useRouter } from "next/navigation";
 //import { useSearchParams } from "next/navigation";
 
@@ -21,29 +22,32 @@ import { IconSearch } from "../../../../assets/images";
 import Image from "next/image";
 
 const FilterTop = () => {
+  const router = useRouter();
+  const searchParams = useSearchParams(); // Using the searchParams hook here.
+  const selectedSearch = searchParams?.get("q")?.toLowerCase() || "";
+
   const FormSchema = z.object({
-    username: z.string().optional(),
+    search: z.string().optional(),
   });
 
   const form = useForm<z.infer<typeof FormSchema>>({
     resolver: zodResolver(FormSchema),
     defaultValues: {
-      username: "",
+      search: "",
     },
   });
 
-  function onSubmit(data: z.infer<typeof FormSchema>) {
-    /*
-    toast({
-      title: "You submitted the following values:",
-      description: (
-        <pre className="mt-2 w-[340px] rounded-md bg-slate-950 p-4">
-          <code className="text-white">{JSON.stringify(data, null, 2)}</code>
-        </pre>
-      ),
-    });
-    */
-  }
+  const updateQueryParams = (key: string, value: string | null) => {
+    const params = new URLSearchParams(searchParams?.toString());
+
+    if (value) {
+      params.set(key, value);
+    } else {
+      params.delete(key); // Remove "q" if it is empty
+    }
+
+    router.push(`?${params.toString()}`, { scroll: false });
+  };
 
   return (
     <div className="flex justify-between items-center gap-6 flex-1">
@@ -51,12 +55,14 @@ const FilterTop = () => {
         <div className="w-full md:w-full md:max-w-[336px] ">
           <Form {...form}>
             <form
-              onSubmit={form.handleSubmit(onSubmit)}
+              onSubmit={form.handleSubmit((data) =>
+                updateQueryParams("q", data.search ?? "")
+              )}
               className="w-full gap-6 flex items-center"
             >
               <FormField
                 control={form.control}
-                name="username"
+                name="search"
                 render={({ field }) => (
                   <FormItem className=" w-full">
                     <FormControl>

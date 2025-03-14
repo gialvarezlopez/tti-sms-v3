@@ -8,9 +8,12 @@ import DataTable from "@/components/ui/DataTable";
 import { columns } from "./Columns";
 import TableSkeleton from "@/components/skeletons/TableSkeleton";
 import { BranchProps, RefetchOptions } from "@/types/types";
-import { dataBranches } from "../mock/dataBranch";
 import { useGetBranches } from "@/hooks/useBranches";
 import ErrorFetching from "@/components/ui/errorFetching";
+import {
+  removeAllParamsFromUrl,
+  removeParamsExcept,
+} from "../../../../../lib/utils/urlUtils";
 
 type IsColumnSelectedFn<T> = (column: ColumnDef<T>, action?: string) => void;
 
@@ -28,6 +31,11 @@ const BranchesList = ({
   const { data: session, status } = useSession();
   const router = useRouter();
   const searchParams = useSearchParams();
+
+  const hasParams = searchParams
+    ? Array.from(searchParams.entries()).length > 0
+    : false;
+
   const selectedPage = searchParams?.get("page");
   const selectedSortOrder = searchParams ? searchParams.get("sortOrder") : null;
   const selectedSortBy = searchParams ? searchParams.get("sortBy") : null;
@@ -36,12 +44,13 @@ const BranchesList = ({
 
   const [search, setSearch] = useState("");
   const [sortBy, setSortBy] = useState<string>(selectedSortBy ?? ""); // Status for the sort field
-  const [sortOrder, setSortOrder] = useState<"asc" | "desc" | null>( // Permite null
+  const [sortOrder, setSortOrder] = useState<"asc" | "desc" | null>(
     selectedSortOrder === "asc" || selectedSortOrder === "desc"
       ? (selectedSortOrder.toLowerCase() as "asc" | "desc")
       : null
   );
   const [data, setData] = useState<BranchProps[]>([]);
+  const [isDataLoaded, setIsDataLoaded] = useState(false);
   const [totalPages, setTotalPages] = useState(0);
   const [clearSelected, setClearSelected] = useState(false);
   const [rowSelected, setRowSelected] = useState<number[]>([]);
@@ -51,6 +60,13 @@ const BranchesList = ({
     pageSize: 10,
   });
 
+  const queryParam = searchParams?.get("search") ?? "";
+  const provincesParams = searchParams?.get("provinces");
+  const provincesTypes =
+    provincesParams && provincesParams !== "all"
+      ? provincesParams.split(",")
+      : [];
+
   const {
     data: response,
     error,
@@ -59,13 +75,15 @@ const BranchesList = ({
   } = useGetBranches({
     page: pagination.pageIndex + 1,
     limit: pagination.pageSize,
-    search,
+    query: queryParam,
+    provinces: provincesTypes,
   });
 
   useEffect(() => {
     if (response) {
-      setData(response.data);
-      setTotalPages(response.meta.pagination.totalPages);
+      setData(response?.data);
+      setTotalPages(response?.meta?.pagination?.totalPages);
+      setIsDataLoaded(true);
     }
   }, [response]);
 
@@ -190,6 +208,12 @@ const BranchesList = ({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
+  useEffect(() => {
+    if (error) {
+      setIsDataLoaded(true);
+    }
+  }, [error]);
+
   return (
     <div ref={ref}>
       <div className="mx-auto py-2">
@@ -199,7 +223,7 @@ const BranchesList = ({
           </div>
         ) : (
           <>
-            {isLoading ? (
+            {isLoading || !isDataLoaded ? (
               <TableSkeleton
                 rows={5}
                 cols={width <= 768 ? 2 : 4}
@@ -218,10 +242,20 @@ const BranchesList = ({
                 fetchData={fetchData}
                 sortBy={sortBy}
                 sortOrder={sortOrder}
-                onSortChange={handleSortChange} // Pass the sort change function
+                onSortChange={handleSortChange}
                 isColumnSelected={selected}
-                clearSelected={clearSelected} //clear the checkboxes
-                onClearSelected={() => setClearSelected(false)} //change the status
+                clearSelected={clearSelected}
+                onClearSelected={() => setClearSelected(false)}
+                paramsUrl={{
+                  hasParams,
+                  paramsToKeep: ["type"],
+                  removeParamsExcept,
+                }}
+                messageNoRecord={
+                  hasParams
+                    ? "We have not found any results for your search."
+                    : ""
+                }
               />
             )}
           </>

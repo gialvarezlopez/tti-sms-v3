@@ -1,30 +1,24 @@
 import { isAxiosError } from "axios";
 import axiosInstance from "@/lib/axiosInstance";
-import { statsRoutes } from "@/config/apiRoutes";
-import {
-  QueryClient,
-  useMutation,
-  UseMutationResult,
-  useQuery,
-  useQueryClient,
-} from "@tanstack/react-query";
-import { PaginateParams, UserProps } from "@/types/types";
+import { availableNumbersRoutes } from "@/config/apiRoutes";
+import { useQuery } from "@tanstack/react-query";
 
-interface FilterParams {
-  branches: string[];
-  status: string;
+interface NumbersParams {
+  province?: string;
 }
 
-const useGetStats = ({ branches, status }: FilterParams) => {
+const useGetAvailableNumbersBranches = ({ province }: NumbersParams) => {
   return useQuery({
-    queryKey: ["stats-list", branches, status],
+    queryKey: ["available-list-number", province],
     queryFn: async () => {
       try {
-        const url = statsRoutes.get;
-        //We use post method due to get method is limited to send parameters
-        const { data } = await axiosInstance.post(url, {
-          branches,
-          status,
+        const params: NumbersParams = {
+          province,
+        };
+
+        const url = availableNumbersRoutes.list;
+        const { data } = await axiosInstance.get(url, {
+          params,
         });
         return data;
       } catch (e) {
@@ -53,4 +47,4 @@ const useGetStats = ({ branches, status }: FilterParams) => {
   });
 };
 
-export { useGetStats };
+export { useGetAvailableNumbersBranches };

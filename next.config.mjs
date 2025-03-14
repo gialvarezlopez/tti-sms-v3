@@ -1,3 +1,4 @@
+import TerserPlugin from "terser-webpack-plugin";
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   reactStrictMode: true,
@@ -10,9 +11,24 @@ const nextConfig = {
       },
       {
         protocol: "https",
-        hostname: "greywolfah.expertel.com",
+        hostname: "smstest.expertel.com",
       },
     ],
+  },
+  webpack: (config, { isServer }) => {
+    if (isServer) {
+      // Add the plugin only on the server
+      config.optimization.minimizer.push(
+        new TerserPlugin({
+          terserOptions: {
+            compress: {
+              drop_console: true, // Delete all console.log
+            },
+          },
+        })
+      );
+    }
+    return config;
   },
   //output: "export",
 };

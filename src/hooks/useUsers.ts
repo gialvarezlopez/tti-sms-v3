@@ -12,14 +12,26 @@ import {
 import { PaginateParams, UserProps } from "@/types/types";
 import { showToast } from "@/lib/toastUtil";
 
-const useGetUsers = ({ page, limit, search }: PaginateParams) => {
+interface UserParams extends PaginateParams {
+  role?: string; //string[];
+  query?: string;
+}
+
+const useGetUsers = ({ page, limit, role, query }: UserParams) => {
   return useQuery({
-    queryKey: ["user-list", page, limit, search],
+    queryKey: ["user-list", page, limit, role, query],
     queryFn: async () => {
       try {
+        const params: UserParams = {
+          page,
+          limit,
+          ...(role?.length && { role }),
+          ...(query?.length && { query }),
+        };
+
         const url = usersRoutes.list;
         const { data } = await axiosInstance.get(url, {
-          params: { page, limit, search },
+          params, //: { page, limit, search },
         });
         return data;
       } catch (e) {
@@ -33,7 +45,7 @@ const useGetUsers = ({ page, limit, search }: PaginateParams) => {
             throw new Error(errorMessage);
           } else if (e.request) {
             // The request was made but no response was received (network problems)
-            throw new Error("Network error: Could not connect to the server");
+            throw new Error(e.message);
           } else {
             // Other errors (configuration, etc.)
             throw new Error("Error in request configuration");

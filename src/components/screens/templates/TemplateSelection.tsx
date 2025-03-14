@@ -1,7 +1,6 @@
 import React, { useState } from "react";
 import Image from "next/image";
-
-//import { dataTemplates } from "@/components/screens/templates/dataMock";
+import { useRouter, useSearchParams } from "next/navigation";
 import TypeTemplateSection from "./TypeTemplateSection";
 import { Separator } from "@/components/ui/separator";
 import { IconKeyboardTab, IconTwoWay } from "@/assets/images";
@@ -24,6 +23,9 @@ const TemplateSelection = ({
   className = "grid grid-cols-1 md:grid-cols-3 gap-6",
   isLink,
 }: Props) => {
+  const searchParams = useSearchParams();
+  const selectedSearch = searchParams?.get("q")?.toLowerCase() || "";
+
   const [selected, setSelected] = useState<string | undefined>("");
 
   const {
@@ -34,7 +36,7 @@ const TemplateSelection = ({
   } = useGetTemplates({
     page: 1,
     limit: 100,
-    search: "",
+    query: selectedSearch,
   });
 
   // Filter objects by type

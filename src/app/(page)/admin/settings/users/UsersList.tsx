@@ -9,6 +9,7 @@ import { RefetchOptions, UserProps } from "@/types/types";
 import { useGetUsers } from "@/hooks/useUsers";
 import useColumns from "./Columns";
 import ErrorFetching from "@/components/ui/errorFetching";
+import { removeAllParamsFromUrl } from "../../../../../lib/utils/urlUtils";
 
 type IsColumnSelectedFn<T> = (column: ColumnDef<T>, action?: string) => void;
 type Props = {
@@ -25,6 +26,11 @@ const UsersList = ({
   const columns = useColumns();
   const router = useRouter();
   const searchParams = useSearchParams();
+
+  const hasParams = searchParams
+    ? Array.from(searchParams.entries()).length > 0
+    : false;
+
   const selectedPage = searchParams?.get("page");
   const selectedSortOrder = searchParams ? searchParams.get("sortOrder") : null;
   const selectedSortBy = searchParams ? searchParams.get("sortBy") : null;
@@ -38,8 +44,8 @@ const UsersList = ({
       ? (selectedSortOrder.toLowerCase() as "asc" | "desc")
       : null
   );
-
   const [data, setData] = useState<UserProps[]>([]);
+  const [isDataLoaded, setIsDataLoaded] = useState(false);
   const [totalPages, setTotalPages] = useState(0);
   const [clearSelected, setClearSelected] = useState(false);
   const [rowSelected, setRowSelected] = useState<number[]>([]);
@@ -49,6 +55,11 @@ const UsersList = ({
     pageSize: 10,
   });
 
+  const searchParam = searchParams?.get("search") ?? "";
+  //const rolesParams = searchParams?.get("roles");
+  //const roleTypes = rolesParams && rolesParams !== "all" ? rolesParams.split(",") : [];
+  const roleTypes = searchParams?.get("roles") ?? "";
+
   const {
     data: response,
     error,
@@ -57,13 +68,15 @@ const UsersList = ({
   } = useGetUsers({
     page: pagination.pageIndex + 1,
     limit: pagination.pageSize,
-    search,
+    query: searchParam,
+    role: roleTypes,
   });
 
   useEffect(() => {
     if (response) {
-      setData(response.data);
-      setTotalPages(response.meta.pagination.totalPages);
+      setData(response?.data);
+      setTotalPages(response?.meta?.pagination?.totalPages);
+      setIsDataLoaded(true);
     }
   }, [response]);
 
@@ -172,6 +185,12 @@ const UsersList = ({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
+  useEffect(() => {
+    if (error) {
+      setIsDataLoaded(true);
+    }
+  }, [error]);
+
   return (
     <div ref={ref}>
       <div className="mx-auto py-2">
@@ -181,7 +200,7 @@ const UsersList = ({
           </div>
         ) : (
           <>
-            {isLoading ? (
+            {isLoading || !isDataLoaded ? (
               <TableSkeleton
                 rows={5}
                 cols={width <= 768 ? 2 : 5}
@@ -204,6 +223,12 @@ const UsersList = ({
                 isColumnSelected={selected}
                 clearSelected={clearSelected} //clear the checkboxes
                 onClearSelected={() => setClearSelected(false)} //change the status
+                paramsUrl={{ hasParams, removeAllParamsFromUrl }}
+                messageNoRecord={
+                  hasParams
+                    ? "We have not found any results for your search."
+                    : ""
+                }
               />
             )}
           </>

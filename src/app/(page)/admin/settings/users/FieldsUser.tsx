@@ -15,16 +15,29 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { USER_ROLE } from "@/lib/constants";
 import { Eye, EyeOff } from "lucide-react";
 import { BranchProps, UserProps } from "@/types/types";
+import { RoleProps } from "../../../../../types/types";
 
 type Props = {
   user?: UserProps;
   dataBranches: BranchProps[];
+  errorBranches: unknown;
+  isLoadingBranches: boolean;
+  dataRoles: RoleProps[];
+  errorRoles: unknown;
+  isLoadingRoles: boolean;
 };
 
-const FieldsUser = ({ user, dataBranches }: Props) => {
+const FieldsUser = ({
+  user,
+  dataBranches,
+  errorBranches,
+  isLoadingBranches,
+  dataRoles,
+  errorRoles,
+  isLoadingRoles,
+}: Props) => {
   const { control } = useFormContext();
 
   const [showNewPassword, setShowNewPassword] = useState(false);
@@ -62,29 +75,45 @@ const FieldsUser = ({ user, dataBranches }: Props) => {
         render={({ field }) => (
           <FormItem>
             <FormLabel>User type</FormLabel>
-            <Select
-              value={
-                (field.value ||
-                  (user?.primary_role &&
-                    user?.primary_role.name?.toLocaleLowerCase())) ??
-                ""
-              }
-              onValueChange={field.onChange}
-              disabled={user && user.id !== undefined}
-            >
-              <FormControl>
-                <SelectTrigger>
-                  <SelectValue placeholder="Select a type" />
-                </SelectTrigger>
-              </FormControl>
-              <SelectContent>
-                {Object.entries(USER_ROLE).map(([key, value]) => (
-                  <SelectItem key={key} value={value} bg="#FFF2F2">
-                    {key}
-                  </SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
+            {errorRoles instanceof Error ? (
+              errorRoles?.message
+            ) : (
+              <>
+                {isLoadingRoles ? (
+                  "Fetching data..."
+                ) : (
+                  <Select
+                    value={
+                      (field.value ||
+                        (user?.primary_role &&
+                          user?.primary_role.name?.toLocaleLowerCase())) ??
+                      ""
+                    }
+                    onValueChange={field.onChange}
+                    disabled={user && user.id !== undefined}
+                  >
+                    <FormControl>
+                      <SelectTrigger>
+                        <SelectValue placeholder="Select a type" />
+                      </SelectTrigger>
+                    </FormControl>
+                    <SelectContent>
+                      {dataRoles &&
+                        dataRoles?.map((role) => (
+                          <SelectItem
+                            key={role.id}
+                            value={String(role.name)}
+                            bg="#FFF2F2"
+                          >
+                            {role.description}
+                          </SelectItem>
+                        ))}
+                    </SelectContent>
+                  </Select>
+                )}
+              </>
+            )}
+
             <CustomFormMessage className="w-full" />
           </FormItem>
         )}
@@ -118,28 +147,41 @@ const FieldsUser = ({ user, dataBranches }: Props) => {
           render={({ field }) => (
             <FormItem>
               <FormLabel>Branch</FormLabel>
-              <Select
-                onValueChange={field.onChange}
-                defaultValue={field.value || String(user?.branch?.id ?? "")}
-              >
-                <FormControl>
-                  <SelectTrigger>
-                    <SelectValue placeholder="Select a branch" />
-                  </SelectTrigger>
-                </FormControl>
-                <SelectContent>
-                  {dataBranches &&
-                    dataBranches?.map((branch) => (
-                      <SelectItem
-                        key={branch.id}
-                        value={String(branch.id)}
-                        bg="#FFF2F2"
-                      >
-                        {branch.name}
-                      </SelectItem>
-                    ))}
-                </SelectContent>
-              </Select>
+              {errorBranches instanceof Error ? (
+                errorBranches?.message
+              ) : (
+                <>
+                  {isLoadingBranches ? (
+                    "Fetching data..."
+                  ) : (
+                    <Select
+                      onValueChange={field.onChange}
+                      defaultValue={
+                        field.value || String(user?.branch?.id ?? "")
+                      }
+                    >
+                      <FormControl>
+                        <SelectTrigger>
+                          <SelectValue placeholder="Select a branch" />
+                        </SelectTrigger>
+                      </FormControl>
+                      <SelectContent>
+                        {dataBranches &&
+                          dataBranches?.map((branch) => (
+                            <SelectItem
+                              key={branch.id}
+                              value={String(branch.id)}
+                              bg="#FFF2F2"
+                            >
+                              {branch.name}
+                            </SelectItem>
+                          ))}
+                      </SelectContent>
+                    </Select>
+                  )}
+                </>
+              )}
+
               <CustomFormMessage className="w-full" />
             </FormItem>
           )}

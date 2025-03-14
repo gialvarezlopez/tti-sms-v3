@@ -6,8 +6,16 @@ const usersRoutes = {
   multiOption: `/api/v1/users/multi-op`, //Delete multi options
 };
 
+const rolesRoutes = {
+  list: `/api/v1/roles`,
+};
+
 const statsRoutes = {
   get: `/api/v1/threads/stats`, //We use post method due to get method is limited to send parameters
+};
+
+const availableNumbersRoutes = {
+  list: `/api/v1/sending_numbers/available`, //Delete multi options
 };
 
 const branchesRoutes = {
@@ -32,9 +40,9 @@ const templatesRoutes = {
 };
 
 const messagesRoutes = {
-  list: `/api/v1/messages`,
-  new: `/api/v1/messages`,
-  single: (id: string) => `/api/v1/messages/${id}`, //View, Delete, Update
+  list: `/api/v1/threads`,
+  new: `/api/v1/threads`,
+  single: (id: string) => `/api/v1/threads/${id}`, //View, Delete, Update
 };
 
 export {
@@ -44,4 +52,6 @@ export {
   messagesRoutes,
   statsRoutes,
   ticketsRoutes,
+  rolesRoutes,
+  availableNumbersRoutes,
 };

@@ -1,8 +1,8 @@
 import { useRouter } from "next/navigation";
 
 /**
- * Elimina todos los parámetros de la URL.
- * @param router - Instancia del router de Next.js.
+ * Removes all parameters from the URL.
+ * @param router - Next.js router instance.
  */
 export const removeAllParamsFromUrl = (
   router: ReturnType<typeof useRouter>
@@ -12,9 +12,9 @@ export const removeAllParamsFromUrl = (
 };
 
 /**
- * Elimina todos los parámetros de la URL excepto los especificados.
- * @param router - Instancia del router de Next.js.
- * @param paramsToKeep - Array de nombres de parámetros que se conservarán.
+ * Removes all parameters from the URL except the ones specified.
+ * @param router - Next.js router instance.
+ * @param paramsToKeep - Array of parameter names to be preserved.
  */
 export const removeParamsExcept = (
   router: ReturnType<typeof useRouter>,

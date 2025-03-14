@@ -29,7 +29,7 @@ const useGetMessages = ({ page, limit, search }: PaginateParams) => {
             throw new Error(errorMessage);
           } else if (e.request) {
             // The request was made but no response was received (network problems)
-            throw new Error("Network error: Could not connect to the server");
+            throw new Error(e.message);
           } else {
             // Other errors (configuration, etc.)
             throw new Error("Error in request configuration");
@@ -63,8 +63,10 @@ const useCreateMessage = () => {
         }
       }
     },
-    onSettled: () =>
-      queryClient.invalidateQueries({ queryKey: ["message-list"] }),
+    onSettled: () => {
+      queryClient.invalidateQueries({ queryKey: ["message-list"] });
+      queryClient.invalidateQueries({ queryKey: ["ticket-list"] });
+    },
     onSuccess: (value) => {
       push(`${returnAfterSubmit}`);
       showToast(

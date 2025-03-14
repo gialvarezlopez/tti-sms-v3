@@ -34,7 +34,7 @@ const TableSkeleton = ({
             {/* Si la propiedad image es true, muestra una columna adicional para la imagen */}
             {checkbox && (
               <th className="p-3 w-8">
-                <Skeleton className={`${width} w-4 h-4`} />
+                <Skeleton className={`w-4 h-4`} />
               </th>
             )}
             {image && (
@@ -52,8 +52,10 @@ const TableSkeleton = ({
               ))}
 
             {dots && (
-              <th className="p-3">
-                <Skeleton className={`${width} h-6 w-6`} />
+              <th className="p-3 space-y-1">
+                <Skeleton className={` h-1 w-1`} />
+                <Skeleton className={` h-1 w-1`} />
+                <Skeleton className={` h-1 w-1`} />
               </th>
             )}
           </tr>

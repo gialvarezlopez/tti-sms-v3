@@ -12,6 +12,7 @@ import { FormReviewMessageProps, TemplateProps } from "@/types/types";
 import DetailConfirm from "./DetailConfirm";
 import { Checkbox } from "@/components/ui/checkbox";
 import { useCreateMessage } from "@/hooks/useMessages";
+import { getJustNumber } from "@/lib/utils/utils";
 
 type Props = {
   template: TemplateProps;
@@ -48,10 +49,15 @@ const MessageReviewConfirm = ({
 
     const cleanData = {
       ...formState,
-      content: stringWithoutHtml,
-      recipient: formState.recipient_number,
+      message: { content: stringWithoutHtml },
+      template_id: template?.id,
+      recipient_number: getJustNumber(formState?.recipient_number ?? ""),
     };
-
+    delete cleanData.content;
+    delete cleanData.keywords;
+    delete cleanData.responses;
+    //console.log("cleanData", cleanData);
+    //return false;
     createMessage(cleanData, {
       onSuccess() {
         handleCloseModal();

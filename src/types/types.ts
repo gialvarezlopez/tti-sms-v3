@@ -1,10 +1,9 @@
 export type RoleProps = {
-  role_id?: string;
+  id?: string;
   name?: string;
   description?: string;
   created_at?: string;
   updated_at?: string;
-  deleted_at?: string;
 };
 
 export type UserProps = {
@@ -17,6 +16,7 @@ export type UserProps = {
   created_at?: string;
   updated_at?: string;
 };
+
 export type LoginProps = {
   createdAt?: string;
   updatedAt?: string;
@@ -62,12 +62,27 @@ type FormReviewMessagePropsWithoutKeywordsAndResponses = Omit<
   FormReviewMessageProps,
   "keywords" | "responses"
 >;
+export type SendMessageProps = {
+  id?: string;
+  content: string;
+  status: string;
+  createdAt: string;
+  updatedAt?: string;
+  threadId: string;
+  sentByType?: string;
+};
+
+export type ClosedByUserProps = UserProps & {
+  closedAt?: string;
+};
 
 export type TicketsProps = FormReviewMessagePropsWithoutKeywordsAndResponses & {
   id?: string | number;
   branch?: BranchProps;
   lastSent: string;
-  lastReceivedMessage: lastReceivedMessageProps;
+  recipientNumber?: string;
+  firstMessage?: SendMessageProps;
+  lastReceivedMessage: SendMessageProps; //lastReceivedMessageProps
   template?: TemplateProps;
   created_at?: string;
   status: string;
@@ -76,21 +91,21 @@ export type TicketsProps = FormReviewMessagePropsWithoutKeywordsAndResponses & {
   errorMessage?: string;
   chat: ChatMessage[];
   reason?: string;
-  closedBy?: UserProps;
+  closedBy?: ClosedByUserProps;
   closed?: string;
 };
 
 export type MessageProps = {
-  content: string;
-  created_at: string;
-  created_by: string;
   id: string;
-  sent_by: string;
+  content: string;
   status: string;
-  thread_id: string;
-  updated_at: string;
+  createdAt: string;
+  updatedAt: string;
+  sentByType: string;
+  threadId: string;
 };
 
+/*
 export type lastReceivedMessageProps = {
   id?: string;
   content: string;
@@ -101,7 +116,7 @@ export type lastReceivedMessageProps = {
   thread_id: string;
   updated_at: string;
 };
-
+*/
 export type KeywordTemplates = {
   id?: string | number;
   keyword: string;

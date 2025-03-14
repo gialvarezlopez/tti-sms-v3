@@ -1,7 +1,6 @@
 import { isAxiosError } from "axios";
 import axiosInstance from "@/lib/axiosInstance";
 import { branchesRoutes } from "@/config/apiRoutes";
-import { useRouter } from "next/navigation";
 import {
   QueryClient,
   useMutation,
@@ -9,17 +8,29 @@ import {
   useQuery,
   useQueryClient,
 } from "@tanstack/react-query";
-import { PaginateParams, UserProps } from "@/types/types";
+import { BranchProps, PaginateParams } from "@/types/types";
 import { showToast } from "@/lib/toastUtil";
 
-const useGetBranches = ({ page, limit, search }: PaginateParams) => {
+interface BranchParams extends PaginateParams {
+  provinces?: string[];
+  query?: string;
+}
+
+const useGetBranches = ({ page, limit, provinces, query }: BranchParams) => {
   return useQuery({
-    queryKey: ["branch-list", page, limit, search],
+    queryKey: ["branch-list", page, limit, provinces, query],
     queryFn: async () => {
       try {
+        const params: BranchParams = {
+          page,
+          limit,
+          ...(provinces?.length && { provinces }),
+          ...(query?.length && { query }),
+        };
+
         const url = branchesRoutes.list;
         const { data } = await axiosInstance.get(url, {
-          params: { page, limit, search },
+          params,
         });
         return data;
       } catch (e) {
@@ -33,7 +44,7 @@ const useGetBranches = ({ page, limit, search }: PaginateParams) => {
             throw new Error(errorMessage);
           } else if (e.request) {
             // The request was made but no response was received (network problems)
-            throw new Error("Network error: Could not connect to the server");
+            throw new Error(e.message);
           } else {
             // Other errors (configuration, etc.)
             throw new Error("Error in request configuration");
@@ -49,10 +60,9 @@ const useGetBranches = ({ page, limit, search }: PaginateParams) => {
 };
 
 const useCreateBranch = () => {
-  const { push } = useRouter();
   const queryClient = useQueryClient();
   return useMutation({
-    mutationFn: async (payload: UserProps) => {
+    mutationFn: async (payload: BranchProps) => {
       try {
         const url = branchesRoutes.new;
         const { data } = await axiosInstance.post(url, payload);
@@ -67,8 +77,14 @@ const useCreateBranch = () => {
         }
       }
     },
-    onSettled: () =>
-      queryClient.invalidateQueries({ queryKey: ["branch-list"] }),
+    onSettled: (data, error, variables) => {
+      queryClient.invalidateQueries({ queryKey: ["branch-list"] });
+      if (variables?.province) {
+        queryClient.invalidateQueries({
+          queryKey: ["available-list-number", variables.province],
+        });
+      }
+    },
     onSuccess: (value) => {
       showToast(
         "success",
@@ -87,11 +103,9 @@ const useCreateBranch = () => {
 };
 
 const useUpdateBranch = (id: string) => {
-  const { push } = useRouter();
-
   const queryClient = useQueryClient();
   return useMutation({
-    mutationFn: async (payload: UserProps) => {
+    mutationFn: async (payload: BranchProps) => {
       try {
         const url = branchesRoutes.single(id);
         const { data } = await axiosInstance.put(url, payload);
@@ -126,19 +140,15 @@ const useUpdateBranch = (id: string) => {
 };
 
 const useDeleteBranch = () => {
-  const { push } = useRouter();
-
   const queryClient = useQueryClient();
   return useMutation({
     mutationFn: async (id: string) => {
       try {
         const url = branchesRoutes.single(id);
         const { data } = await axiosInstance.delete(url);
-        return data; // Asumiendo que `data` ya es el arreglo de clientes
+        return data;
       } catch (e) {
         if (isAxiosError(e) && e.response) {
-          // Verificar si el error tiene una respuesta con un mensaje
-
           const errorMessage =
             e.response.data.message || e.response.data.error || "Unknown error";
           throw new Error(errorMessage);

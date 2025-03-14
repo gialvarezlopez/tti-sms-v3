@@ -18,24 +18,30 @@ import { convertDateYYYYMMDD } from "@/lib/utils/dateUtils";
 import { TICKETS_STATUS, USER_ROLE } from "@/lib/constants";
 import { removeAllParamsFromUrl } from "../../../lib/utils/urlUtils";
 import { capitalizeFirstLetterOfEveryWord } from "@/lib/utils/utils";
+import useResizeObserver from "use-resize-observer";
 
 type IsColumnSelectedFn<T> = (column: ColumnDef<T>, action?: string) => void;
 
+const paramsToIgnore = ["sortOrder", "page"];
+
 const Home = () => {
   const { data: session, status } = useSession();
-  const router = useRouter(); // Acceder al router
+  const router = useRouter();
   const searchParams = useSearchParams();
 
   const hasParams = searchParams
-    ? Array.from(searchParams.entries()).length > 0
+    ? Array.from(searchParams.entries()).filter(
+        ([key, value]) =>
+          !paramsToIgnore.includes(key) && !(key === "page" && value === "1")
+      ).length > 0
     : false;
 
   const columns = useColumns();
-  //const [loading, setLoading] = useState(true);
   const [search, setSearch] = useState("");
   const [sortBy, setSortBy] = useState<string>(""); // Status for the sort field
   const [sortOrder, setSortOrder] = useState<"asc" | "desc">("asc"); // State for ascending or descending order
   const [data, setData] = useState<TicketsProps[]>([]);
+  const [isDataLoaded, setIsDataLoaded] = useState(false);
   const [totalPages, setTotalPages] = useState(0);
   const [clearSelected, setClearSelected] = useState(false);
   const [rowSelected, setRowSelected] = useState<TicketsProps[]>([]);
@@ -44,6 +50,8 @@ const Home = () => {
     pageIndex: 0,
     pageSize: 10,
   });
+
+  const { ref, width = 0 } = useResizeObserver<HTMLDivElement>();
 
   const searchParam = searchParams?.get("search") ?? "";
   const branchesParam = searchParams?.get("branches");
@@ -57,7 +65,7 @@ const Home = () => {
   const branches =
     branchesParam &&
     branchesParam !== "all" &&
-    session?.user?.primaryRole !== USER_ROLE.MEMBER // user
+    session?.user?.primaryRole !== USER_ROLE.USER // user
       ? branchesParam.split(",")
       : [];
 
@@ -121,6 +129,7 @@ const Home = () => {
     if (dataTickets) {
       setData(dataTickets.data);
       setTotalPages(dataTickets.meta.pagination.totalPages);
+      setIsDataLoaded(true);
     }
   }, [dataTickets]);
 
@@ -138,7 +147,6 @@ const Home = () => {
     }
     console.log("ids", ids);
     setRowSelected(ids);
-    //setBranchesSelected(ids);
     setClearSelected(false);
   };
 
@@ -221,8 +229,14 @@ const Home = () => {
     router.push(`${window.location.pathname}?${params.toString()}`);
   }, [pagination.pageIndex, router, sortBy, sortOrder]);
 
+  useEffect(() => {
+    if (errorTickets) {
+      setIsDataLoaded(true);
+    }
+  }, [errorTickets]);
+
   return (
-    <div>
+    <div ref={ref}>
       <div className="flex gap-6 justify-between">
         <h1 className="font-bold text-2xl md:text-4xl">
           Welcome {capitalizeFirstLetterOfEveryWord(session?.user.name)}
@@ -236,7 +250,7 @@ const Home = () => {
 
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-3 mt-4">
         {isLoadingStats ? (
-          Array(5)
+          Array(width <= 768 ? 2 : 5)
             .fill(0)
             .map((_, index) => (
               <div key={index} className="h-full">
@@ -264,10 +278,10 @@ const Home = () => {
         />
 
         <div className="mx-auto py-5">
-          {isLoadingTickets ? (
+          {isLoadingTickets || !isDataLoaded ? (
             <TableSkeleton
               rows={5}
-              cols={7}
+              cols={width <= 768 ? 3 : 7}
               checkbox={true}
               dots={true}
               width="w-full md:w-1/2"

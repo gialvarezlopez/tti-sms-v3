@@ -1,30 +1,18 @@
 import { isAxiosError } from "axios";
 import axiosInstance from "@/lib/axiosInstance";
-import { statsRoutes } from "@/config/apiRoutes";
-import {
-  QueryClient,
-  useMutation,
-  UseMutationResult,
-  useQuery,
-  useQueryClient,
-} from "@tanstack/react-query";
-import { PaginateParams, UserProps } from "@/types/types";
+import { rolesRoutes } from "@/config/apiRoutes";
 
-interface FilterParams {
-  branches: string[];
-  status: string;
-}
+import { useQuery } from "@tanstack/react-query";
+import { PaginateParams } from "@/types/types";
 
-const useGetStats = ({ branches, status }: FilterParams) => {
+const useGetRoles = ({ page, limit, search }: PaginateParams) => {
   return useQuery({
-    queryKey: ["stats-list", branches, status],
+    queryKey: ["role-list", page, limit, search],
     queryFn: async () => {
       try {
-        const url = statsRoutes.get;
-        //We use post method due to get method is limited to send parameters
-        const { data } = await axiosInstance.post(url, {
-          branches,
-          status,
+        const url = rolesRoutes.list;
+        const { data } = await axiosInstance.get(url, {
+          params: { page, limit, search },
         });
         return data;
       } catch (e) {
@@ -53,4 +41,4 @@ const useGetStats = ({ branches, status }: FilterParams) => {
   });
 };
 
-export { useGetStats };
+export { useGetRoles };

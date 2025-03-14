@@ -9,10 +9,17 @@ import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
 import FieldsFilterBranch from "./FieldsFilterUsersBranch";
 import { IconFilterList } from "@/assets/images";
+import { RoleProps } from "@/types/types";
 
 type FormField = "roles" | "provinces" | "status";
 
-const FormFilterBranch = () => {
+type Props = {
+  dataRoles: RoleProps[];
+  errorRoles: unknown;
+  isLoadingRoles: boolean;
+};
+
+const FormFilterBranch = ({ dataRoles, errorRoles, isLoadingRoles }: Props) => {
   const router = useRouter();
   const searchParams = useSearchParams();
 
@@ -110,6 +117,7 @@ const FormFilterBranch = () => {
 
   const resetAll = () => {
     const params = new URLSearchParams(window.location.search);
+    params.delete("search");
     params.delete("roles");
     params.delete("provinces");
     params.delete("status");
@@ -262,7 +270,11 @@ const FormFilterBranch = () => {
                 className="space-y-3"
               >
                 <div className="flex-1 overflow-y-auto max-h-[300px]">
-                  <FieldsFilterBranch />
+                  <FieldsFilterBranch
+                    dataRoles={dataRoles ?? []}
+                    errorRoles={errorRoles}
+                    isLoadingRoles={isLoadingRoles}
+                  />
                 </div>
                 <div className="pb-3">
                   <Separator className="my-2" />

@@ -14,6 +14,7 @@ import {
   capitalizeFirstLetterOfEveryWord,
   templateType,
 } from "@/lib/utils/utils";
+import { formatDate } from "@/lib/utils/dateUtils";
 
 const PreviewCell = ({
   ticket,
@@ -125,7 +126,7 @@ export const columns: ColumnDef<TicketsProps>[] = [
       );
     },
     cell: ({ row }) => {
-      return <span>{row.original.recipient_number}</span>;
+      return <span>{row.original.recipientNumber}</span>;
     },
   },
 
@@ -171,7 +172,7 @@ export const columns: ColumnDef<TicketsProps>[] = [
     cell: ({ row }) => {
       return (
         <span className="text-nowrap">
-          {row.original.closed ?? "Undefined"}
+          {formatDate(row.original.closedBy?.closedAt ?? "") ?? "Undefined"}
         </span>
       );
     },

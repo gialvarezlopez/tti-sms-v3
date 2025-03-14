@@ -270,3 +270,15 @@ export const renderIcon = (type: string) => {
       return <LetterText className="ml-auto h-4 w-4 opacity-50" />;
   }
 };
+
+export const formatPhoneNumber = (phone: string | number): string => {
+  const phoneStr = getJustNumber(phone); //phone.toString().replace(/\D/g, "");
+
+  return `(${phoneStr.slice(0, 3)}) ${phoneStr.slice(3, 6)}-${phoneStr.slice(
+    6
+  )}`;
+};
+
+export const getJustNumber = (word: string | number) => {
+  return word.toString().replace(/\D/g, "");
+};
