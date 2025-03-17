@@ -9,18 +9,9 @@ import { Separator } from "@/components/ui/separator";
 type Props = {
   setOpenKeyword: React.Dispatch<React.SetStateAction<boolean>>;
   keywordOption: KeywordProps;
-  //setMessage: React.Dispatch<React.SetStateAction<string>>;
-  //message: string;
-  //removeKeyword: () => void;
 };
 
-const Keyword = ({
-  setOpenKeyword,
-  keywordOption,
-}: //setMessage,
-//message,
-//removeKeyword,
-Props) => {
+const Keyword = ({ setOpenKeyword, keywordOption }: Props) => {
   const { control } = useFormContext();
 
   const { fields, append, remove } = useFieldArray({
@@ -36,7 +27,6 @@ Props) => {
         value: "",
       });
     }
-    //console.log("keywordOption", keywordOption);
   }, [append, keywordOption]);
   return (
     <>

@@ -2,32 +2,21 @@ import { isAxiosError } from "axios";
 import axiosInstance from "@/lib/axiosInstance";
 import { templatesRoutes } from "@/config/apiRoutes";
 import { useRouter } from "next/navigation";
-import {
-  QueryClient,
-  useMutation,
-  UseMutationResult,
-  useQuery,
-  useQueryClient,
-} from "@tanstack/react-query";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { PaginateParams, UserProps } from "@/types/types";
 import { showToast } from "@/lib/toastUtil";
 
 const returnAfterSubmit = "/messages/templates";
 
-interface TemplateParams extends PaginateParams {
-  query?: string;
-}
-
-const useGetTemplates = ({ page, limit, search, query }: TemplateParams) => {
+const useGetTemplates = ({ page, limit, query }: PaginateParams) => {
   return useQuery({
-    queryKey: ["template-list", page, limit, search, query],
+    queryKey: ["template-list", page, limit, query],
     queryFn: async () => {
       try {
-        const params: TemplateParams = {
+        const params = {
           page,
           limit,
-          search,
-          ...(query?.length && { query }),
+          query,
         };
 
         const url = templatesRoutes.list;

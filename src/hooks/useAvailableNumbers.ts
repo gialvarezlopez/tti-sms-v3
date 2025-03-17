@@ -15,7 +15,6 @@ const useGetAvailableNumbersBranches = ({ province }: NumbersParams) => {
         const params: NumbersParams = {
           province,
         };
-
         const url = availableNumbersRoutes.list;
         const { data } = await axiosInstance.get(url, {
           params,

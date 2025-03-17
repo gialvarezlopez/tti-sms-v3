@@ -56,8 +56,7 @@ const MessageReviewConfirm = ({
     delete cleanData.content;
     delete cleanData.keywords;
     delete cleanData.responses;
-    //console.log("cleanData", cleanData);
-    //return false;
+
     createMessage(cleanData, {
       onSuccess() {
         handleCloseModal();

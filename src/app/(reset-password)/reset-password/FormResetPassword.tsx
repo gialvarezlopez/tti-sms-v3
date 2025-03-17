@@ -1,14 +1,11 @@
 "use client";
 import { useState } from "react";
-//import { useRouter } from "next/navigation";
-//import Cookies from "js-cookie";
-//import { signIn, getSession } from "next-auth/react";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { Form } from "@/components/ui/form";
 import { Button } from "@/components/ui/button";
-import { showToast } from "@/lib/toastUtil"; // Make sure to import toastUtil
+import { showToast } from "@/lib/toastUtil";
 import {
   Card,
   CardContent,
@@ -26,7 +23,6 @@ import Fields from "./Fields";
 const FormResetPassword = () => {
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
-  //const router = useRouter();
 
   const FormSchema = z
     .object({
@@ -37,7 +33,7 @@ const FormResetPassword = () => {
     })
     .refine((data) => data.password === data.confirm_password, {
       message: "Passwords do not match",
-      path: ["confirm_password"], // Indica el campo que debe mostrar el error
+      path: ["confirm_password"],
     });
 
   const form = useForm<z.infer<typeof FormSchema>>({
@@ -48,28 +44,8 @@ const FormResetPassword = () => {
     },
   });
 
-  const {
-    //reset,
-    //formState: { errors },
-  } = form;
-
   async function onSubmit(data: z.infer<typeof FormSchema>) {
-    console.log("data", data);
     showToast("success", "Success!", "Password updated successfully");
-
-    //setLoading(true); // Empieza el loading
-    /*
-    const session = await getSession();
-      if (session && session.user?.accessToken) {
-        // Set the session cookie that lasts for 30 days
-        Cookies.set("session-token", session.user?.accessToken, {
-          expires: 30,
-          secure: process.env.NODE_ENV === "production", // Ensures that the cookie is only sent over HTTPS in production
-          sameSite: "strict",
-        });
-        router.push("/");
-      }
-    */
   }
 
   return (

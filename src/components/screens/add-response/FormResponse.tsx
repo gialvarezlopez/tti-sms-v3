@@ -2,12 +2,9 @@ import React from "react";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
-//import { showToast } from "@/lib/toastUtil"; // Make sure to import toastUtil
-
 import { Form } from "@/components/ui/form";
 import { Separator } from "@/components/ui/separator";
 import { Button } from "@/components/ui/button";
-//import FieldsCloseTickets from "./FieldsCloseTickets";
 import { ResponseProps } from "@/types/types";
 import FieldsResponse from "./FieldsResponse";
 type Props = {
@@ -18,7 +15,7 @@ const FormResponse = ({ setIsOpen, setResponseOption }: Props) => {
   const FormSchema = z.object({
     response: z.string().min(1, "Please enter the response name"),
     automaticReply: z.string().min(1, {
-      message: "Please enter the automatic reply.", // El mensaje de error debe ir en 'message' en vez de 'required_error'
+      message: "Please enter the automatic reply.",
     }),
   });
 
@@ -36,7 +33,7 @@ const FormResponse = ({ setIsOpen, setResponseOption }: Props) => {
       response: data.response,
       automaticReply: data.automaticReply,
     });
-    console.log(data);
+
     return false;
   }
 

@@ -110,14 +110,14 @@ export const columns: ColumnDef<TicketsProps>[] = [
     },
     cell: ({ row }) => {
       return (
-        <span className="text-nowrap md:text-wrap">
+        <span className="text-nowrap">
           {capitalizeFirstLetterOfEveryWord(row.original.client)}
         </span>
       );
     },
   },
   {
-    accessorKey: "TelephoneNumber",
+    accessorKey: "recipientNumber",
     header: () => {
       return (
         <Button variant="ghost" className="px-0">
@@ -126,12 +126,15 @@ export const columns: ColumnDef<TicketsProps>[] = [
       );
     },
     cell: ({ row }) => {
-      return <span>{row.original.recipientNumber}</span>;
+      return (
+        <span className="text-nowrap">{row.original.recipientNumber}</span>
+      );
     },
   },
 
   {
     accessorKey: "typeOfMessage",
+    id: "template.isTwoWay",
     header: () => {
       return (
         <Button variant="ghost" className="px-0">
@@ -148,6 +151,7 @@ export const columns: ColumnDef<TicketsProps>[] = [
 
   {
     accessorKey: "template",
+    id: "template.name",
     header: () => {
       return (
         <Button variant="ghost" className="px-0">
@@ -162,6 +166,7 @@ export const columns: ColumnDef<TicketsProps>[] = [
 
   {
     accessorKey: "closed",
+    id: "closedBy.closedAt",
     header: () => {
       return (
         <Button variant="ghost" className="px-0">
@@ -179,6 +184,7 @@ export const columns: ColumnDef<TicketsProps>[] = [
   },
   {
     accessorKey: "closedBy",
+    id: "user.name",
     header: () => {
       return (
         <Button variant="ghost" className="px-0">
@@ -189,51 +195,15 @@ export const columns: ColumnDef<TicketsProps>[] = [
     cell: ({ row }) => {
       return (
         <span className="text-nowrap">
-          {row.original.closedBy?.name ?? "Undefined"}
+          {row.original.closedBy?.user?.name ?? "Undefined"}
         </span>
       );
     },
   },
-  /*
-  ...(role === USER_ROLE.ADMIN || role === USER_ROLE.CUSTOMER_EXPERIENCE
-    ? [
-        {
-          accessorKey: "Branch",
-          id: "branch",
-          header: ({}: { column: ColumnDef<TicketsProps> }) => {
-            return (
-              <Button variant="ghost" className="px-0">
-                Branch
-              </Button>
-            );
-          },
-          cell: ({ row }: { row: Row<TicketsProps> }) => {
-            return (
-              <span className="text-nowrap md:text-wrap">
-                {row.original.branch}
-              </span>
-            );
-          },
-        },
-      ]
-    : []),
 
   {
-    accessorKey: "status",
-    header: () => {
-      return (
-        <Button variant="ghost" className="px-0">
-          Status
-        </Button>
-      );
-    },
-    cell: ({ row }) => {
-      return <>{statusType(row.original.status, true)}</>;
-    },
-  },
-  */
-  {
     accessorKey: "reason",
+    id: "closedBy.closedReason",
     header: () => {
       return (
         <Button variant="ghost" className="px-0">
@@ -244,7 +214,7 @@ export const columns: ColumnDef<TicketsProps>[] = [
     cell: ({ row }) => {
       return (
         <>
-          <div>{row.original.reason ?? "Undefined"}</div>
+          <div>{row.original.closedBy?.closedReason ?? "Undefined"}</div>
         </>
       );
     },

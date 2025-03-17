@@ -107,7 +107,6 @@ const FormFilterBranch = ({ dataRoles, errorRoles, isLoadingRoles }: Props) => {
 
     router.push(`?${params.toString()}`);
 
-    console.log("data", data);
     reset({
       provinces: [],
       status: [],
@@ -206,7 +205,6 @@ const FormFilterBranch = ({ dataRoles, errorRoles, isLoadingRoles }: Props) => {
     ];
 
     params.forEach(({ param, field, isArray }) => {
-      console.log("field", field);
       if (param !== null) {
         // Ensures that 'field' is one of the values ​​of type 'FormField'
         updateFormField(param, field as FormField, isArray);

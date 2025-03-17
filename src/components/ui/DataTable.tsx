@@ -1,6 +1,5 @@
 import React, { useEffect } from "react";
 import { useRouter } from "next/navigation";
-import { useSession } from "next-auth/react";
 import {
   useReactTable,
   getCoreRowModel,
@@ -25,10 +24,7 @@ import {
   PaginationNext,
   PaginationPrevious,
 } from "@/components/ui/pagination";
-
-import { AlertCircle, Search } from "lucide-react";
-import { SortDirection } from "@tanstack/react-table";
-import { Button } from "./button";
+import NoRecordFound from "./NoRecordFound";
 
 // Defines a type for the isColumnSelected prop
 type IsColumnSelectedFn<T> = (column: ColumnDef<T>, action?: string) => void;
@@ -80,6 +76,7 @@ const DataTable = <T extends Record<string, any>>({
   paramsUrl,
 }: DataTableProps<T>) => {
   const router = useRouter();
+
   // Memorize sorted data
   const sortedData = React.useMemo(() => {
     if (!sortBy) return data; // If there is no column to sort, return the original data
@@ -243,54 +240,15 @@ const DataTable = <T extends Record<string, any>>({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [table.getSelectedRowModel()]);
 
-  const handleRemoveParams = () => {
-    if (paramsUrl?.removeAllParamsFromUrl) {
-      paramsUrl.removeAllParamsFromUrl(router);
-    }
-  };
-
-  const handleRemoveParamsExcept = () => {
-    if (paramsUrl?.removeParamsExcept && paramsUrl.paramsToKeep) {
-      paramsUrl.removeParamsExcept(router, paramsUrl.paramsToKeep);
-    }
-  };
-
   const message = messageNoRecord ? messageNoRecord : "No records found";
   return (
     <>
       {table.getRowModel().rows.length === 0 ? (
         <>
-          <div className="flex flex-col gap-4 items-center justify-between px-4 py-8 mb-4 text-gray-700 bg-gradient-to-r from-gray-50 via-white to-gray-50 border border-gray-300 rounded-lg">
-            <span className="bg-gray-300 rounded-full p-2">
-              <Search />
-            </span>
-            <div className="flex items-center gap-3">
-              <AlertCircle className="h-6 w-6 text-red-600 animate-bounce" />
-              <div>
-                <h3 className="text-base font-semibold text-gray-800">
-                  Information
-                </h3>
-              </div>
-            </div>
-            <p className="text-sm">{message}</p>
-            {paramsUrl?.hasParams && (
-              <div className="text-center">
-                <Button
-                  variant={"destructive"}
-                  className="px-8 tracking-wide font-normal"
-                  onClick={
-                    paramsUrl.removeAllParamsFromUrl
-                      ? handleRemoveParams
-                      : handleRemoveParamsExcept
-                  }
-                >
-                  Clear Filter
-                </Button>{" "}
-                <p className="text-center">or</p>
-                <p className="">Change the parameters in the filter</p>
-              </div>
-            )}
-          </div>
+          <NoRecordFound
+            paramsUrl={paramsUrl}
+            messageNoRecord={messageNoRecord}
+          />
         </>
       ) : (
         <div className="overflow-x-auto w-full">

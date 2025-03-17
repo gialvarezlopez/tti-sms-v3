@@ -15,8 +15,6 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-
-//import { dataProvinces } from "../mock/provinces";
 import { dataCountry } from "../mock/dataCountry";
 import { FormFields } from "./FormFieldType";
 import CustomInputMask from "@/components/ui/customInputMask";
@@ -65,7 +63,7 @@ const StepOneFieldsBranch = ({
                   {...field}
                   onChange={(e) => {
                     field.onChange(e);
-                    handleChange("name"); // Llamas a handleChange cuando el valor cambia
+                    handleChange("name");
                   }}
                 />
               </FormControl>
@@ -86,7 +84,7 @@ const StepOneFieldsBranch = ({
                   {...field}
                   onChange={(e) => {
                     field.onChange(e);
-                    handleChange("distributionList"); // Llamas a handleChange cuando el valor cambia
+                    handleChange("distributionList");
                   }}
                 />
               </FormControl>

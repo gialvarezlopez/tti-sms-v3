@@ -15,7 +15,6 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { dataCountry } from "../mock/dataCountry";
-//import { dataPhoneNumber } from "../mock/dataAvailablePhoneNumbers";
 import { useGetAvailableNumbersBranches } from "@/hooks/useAvailableNumbers";
 import { Skeleton } from "@/components/ui/skeleton";
 import ErrorFetching from "@/components/ui/errorFetching";
@@ -31,14 +30,11 @@ const StepTwoFieldsBranch = () => {
     data: dataPhoneNumber,
     error,
     isLoading,
-    refetch,
   } = useGetAvailableNumbersBranches({
     province: provinceValue,
   });
 
   useEffect(() => {
-    console.log("dataCountry:", dataCountry);
-    console.log("current country value:", countryValue);
     if (dataCountry.length === 1 && !countryValue) {
       setValue("country", String(dataCountry[0].id), {
         shouldValidate: true,
@@ -78,7 +74,7 @@ const StepTwoFieldsBranch = () => {
               ) : (
                 <FormField
                   control={control}
-                  name="phoneNumber"
+                  name="phone_number"
                   render={({ field }) => (
                     <FormItem>
                       <FormLabel>Select Available number</FormLabel>

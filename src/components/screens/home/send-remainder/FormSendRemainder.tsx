@@ -2,18 +2,15 @@ import React, { useEffect } from "react";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
-import { showToast } from "@/lib/toastUtil"; // Make sure to import toastUtil
-
+import { showToast } from "@/lib/toastUtil";
 import { Form } from "@/components/ui/form";
 import { Separator } from "@/components/ui/separator";
 import { Button } from "@/components/ui/button";
-
 import { TicketsProps } from "@/types/types";
 import FieldsResendMessage from "./FieldsSendRemainder";
 import { templateType } from "@/lib/utils/utils";
 
 type Props = {
-  //closeModal: () => void;
   ticket: TicketsProps;
   onClose: () => void;
 };
@@ -36,8 +33,6 @@ const FormBuildRemainder = ({ onClose, ticket }: Props) => {
   function onSubmit(data: z.infer<typeof FormSchema>) {
     onClose();
     showToast("success", "Success!", "Message sent successfully.");
-    //handleClearSelected(true);
-    console.log(data);
     return false;
   }
 

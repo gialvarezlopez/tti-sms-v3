@@ -39,7 +39,7 @@ export type BranchProps = {
   name?: string;
   address?: string;
   province?: ProvincesProps | string;
-  number?: string;
+  phone_number?: string;
   sending_number_id?: string;
   status?: string;
   distributionList?: string;
@@ -72,8 +72,10 @@ export type SendMessageProps = {
   sentByType?: string;
 };
 
-export type ClosedByUserProps = UserProps & {
+export type ClosedByUserProps = {
   closedAt?: string;
+  closedReason?: string;
+  user?: UserProps;
 };
 
 export type TicketsProps = FormReviewMessagePropsWithoutKeywordsAndResponses & {
@@ -82,6 +84,7 @@ export type TicketsProps = FormReviewMessagePropsWithoutKeywordsAndResponses & {
   lastSent: string;
   recipientNumber?: string;
   firstMessage?: SendMessageProps;
+  lastMessage?: SendMessageProps;
   lastReceivedMessage: SendMessageProps; //lastReceivedMessageProps
   template?: TemplateProps;
   created_at?: string;
@@ -189,7 +192,7 @@ export type PhoneNumberProps = {
 export interface PaginateParams {
   page?: number;
   limit?: number | string;
-  search?: string;
+  query?: string;
 }
 
 export interface PaginationOptions {
@@ -200,7 +203,7 @@ export interface PaginationOptions {
 // Opciones para refetch
 export interface RefetchOptions {
   pagination: PaginationOptions;
-  search: string;
+  query: string;
   sortBy?: string;
   sortOrder?: "asc" | "desc" | null;
 }

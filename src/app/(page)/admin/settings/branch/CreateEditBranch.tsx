@@ -29,30 +29,20 @@ const CreateEditBranch = ({ setIsOpen, branch }: Props) => {
 
   const FormSchema = z
     .object({
-      name: z.string().min(3, { message: "Name is required" }), // Ahora solo es un string
-      //distributionList: z.string().email({ message: "Invalid email address" }),
+      name: z.string().min(3, { message: "Name is required" }),
       distributionList: z
         .string()
         .email({ message: "Invalid email address" })
         .optional()
         .or(z.literal("")), // Permite un string vacío
-      address: z.string().min(3, { message: "Enter the address" }), // Ahora solo es un string
+      address: z.string().min(3, { message: "Enter the address" }),
       city: z.string().min(1, { message: "Enter the city" }),
       province: z.string().min(1, { message: "Select an province" }),
       country: z.string().min(1, { message: "Select an country" }),
       postalCode: z.string().min(1, { message: "Postal code is required" }),
-      phoneNumber: branch
+      phone_number: branch
         ? z.string().optional()
         : z.string().min(1, { message: "Please select one phone number" }),
-      /*
-      phoneNumber: branch
-        ? z.string().optional()
-        : z
-            .string()
-            .regex(/^\(\d{3}\) \d{3}-\d{4}$/, {
-              message: "Phone number must be in the format (999) 999-9999",
-            })
-            .min(1, { message: "Phone number is required" }),*/
     })
     .superRefine((data, ctx) => {
       const { country, postalCode } = data;
@@ -92,26 +82,24 @@ const CreateEditBranch = ({ setIsOpen, branch }: Props) => {
       province: "",
       country: "",
       postalCode: "",
-      phoneNumber: "", // Additional field for step 2
+      phone_number: "", // Additional field for step 2
     },
   });
 
   const {
     reset,
-    //formState: { errors },
+    formState: { errors },
     //handleSubmit,
     trigger,
     clearErrors,
   } = form;
 
   function onSubmit(data: z.infer<typeof FormSchema>) {
-    //setIsOpen(false);
     /*
-    console.log("data", data);
-    const message = branch
-      ? "Branch updated successfully"
-      : "Branch created successfully";
-    showToast("success", "Success!", message);
+    const formData = {
+      ...data,
+      phone_number: data.phoneNumber,
+    } as Partial<BranchProps> & { phone_number?: string };
     */
 
     if (branch) {
@@ -171,7 +159,6 @@ const CreateEditBranch = ({ setIsOpen, branch }: Props) => {
 
   useEffect(() => {
     if (branch && !loadingProvinces) {
-      console.log("branch", branch);
       const data = {
         name: branch.name,
         address: branch.address,
@@ -179,23 +166,14 @@ const CreateEditBranch = ({ setIsOpen, branch }: Props) => {
           typeof branch.province === "string"
             ? branch?.province
             : (branch?.province?.id as string),
-        number: branch.number,
+        phone_number: branch.phone_number,
         status: branch.status,
         distributionList: branch.distributionList,
         city: branch.city,
         country: branch.country,
         postalCode: branch.postalCode,
       };
-      console.log("data", data);
       reset(data);
-      /*
-      if (branch?.province?.id) {
-        setValue("province", branch.province.id, {
-          shouldValidate: false,
-          shouldDirty: true,
-        }); // Marca como "dirty"
-      }
-      */
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [branch, reset, dataProvinces, loadingProvinces]);
@@ -222,6 +200,7 @@ const CreateEditBranch = ({ setIsOpen, branch }: Props) => {
             )}
             {currentStep === 2 && <StepTwoFieldsBranch />}
           </div>
+          {/*<pre>{JSON.stringify(errors, null, 2)}</pre>*/}
           <div className="pb-3 pt-2">
             <Separator className="my-2" />
             <div className="flex gap-3 justify-end px-6 pt-2">

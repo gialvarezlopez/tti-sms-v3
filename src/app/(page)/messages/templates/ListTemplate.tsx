@@ -20,10 +20,27 @@ import ModalViewTemplate from "@/components/screens/templates/view-template/View
 import { TemplateProps } from "@/types/types";
 import ModalDeleteTicket from "./ModalDeleteTemplate";
 import { templateType } from "@/lib/utils/utils";
-
+import {
+  PaginationContent,
+  PaginationEllipsis,
+  PaginationItem,
+  PaginationLink,
+  PaginationNext,
+  PaginationPrevious,
+} from "@/components/ui/pagination";
+import { removeAllParamsFromUrl } from "@/lib/utils/urlUtils";
+import NoRecordFound from "@/components/ui/NoRecordFound";
+const paramsToIgnore = [""];
 type Props = {
   dataTemplates: TemplateProps[];
   isLoading: boolean;
+  isDataLoaded: boolean;
+  pagination: {
+    //pageIndex: number;
+    currentPage: number;
+    totalPages: number;
+  };
+  onPageChange: (page: number) => void;
 };
 
 const PreviewCell = ({
@@ -116,8 +133,13 @@ const Cell = ({ row }: { row: TemplateProps }) => {
 
 const setMaxWidth = 720;
 
-const ListTemplate = ({ dataTemplates, isLoading }: Props) => {
-  //const [loading, setLoading] = useState(true);
+const ListTemplate = ({
+  dataTemplates,
+  isLoading,
+  isDataLoaded,
+  pagination,
+  onPageChange,
+}: Props) => {
   const searchParams = useSearchParams();
 
   const panelRef = useRef<HTMLDivElement | null>(null);
@@ -127,20 +149,13 @@ const ListTemplate = ({ dataTemplates, isLoading }: Props) => {
     console.log(item);
   };
   const selectedType = searchParams?.get("type");
-  const selectedSearch = searchParams?.get("q")?.toLowerCase() || "";
+  const hasParams = searchParams
+    ? Array.from(searchParams.entries()).filter(
+        ([key, value]) =>
+          !paramsToIgnore.includes(key) && !(key === "page" && value === "1")
+      ).length > 0
+    : false;
 
-  /*
-  const filteredTemplates = dataTemplates
-    .filter((item) =>
-      selectedType && selectedType !== "all"
-        ? item.isTwoWay ===
-          (selectedType.toLowerCase() === "two way" ? true : false)
-        : true
-    )
-    .filter((item) =>
-      selectedSearch ? item?.name?.toLowerCase().includes(selectedSearch) : true
-    );
-    */
   const filteredTemplates = dataTemplates.filter((item) =>
     selectedType && selectedType !== "all"
       ? item.isTwoWay ===
@@ -166,45 +181,178 @@ const ListTemplate = ({ dataTemplates, isLoading }: Props) => {
       resizeObserver.disconnect();
     };
   }, []);
+
+  const renderPaginationItems = () => {
+    const items = [];
+    const currentPage = pagination.currentPage;
+    const totalPage = pagination.totalPages;
+    const maxVisiblePages = 2;
+
+    if (totalPage <= maxVisiblePages + 4) {
+      for (let i = 0; i < totalPage; i++) {
+        items.push(
+          <PaginationItem key={i} active={i === currentPage}>
+            <PaginationLink
+              onClick={() => (i !== currentPage ? onPageChange(i) : "")}
+            >
+              {i + 1}
+            </PaginationLink>
+          </PaginationItem>
+        );
+      }
+    } else {
+      const firstPage = 0;
+      const lastPage = totalPage - 1;
+
+      items.push(
+        <PaginationItem key={firstPage} active={firstPage === currentPage}>
+          <PaginationLink onClick={() => onPageChange(firstPage)}>
+            {firstPage + 1}
+          </PaginationLink>
+        </PaginationItem>
+      );
+
+      if (currentPage > 2) {
+        items.push(
+          <PaginationItem key="ellipsis-start">
+            <PaginationEllipsis />
+          </PaginationItem>
+        );
+      }
+
+      const start = Math.max(1, currentPage - 1);
+      const end = Math.min(lastPage - 1, currentPage + 1);
+
+      for (let i = start; i <= end; i++) {
+        items.push(
+          <PaginationItem key={i} active={i === currentPage}>
+            <PaginationLink onClick={() => onPageChange(i)}>
+              {i + 1}
+            </PaginationLink>
+          </PaginationItem>
+        );
+      }
+
+      if (currentPage < totalPage - 3) {
+        items.push(
+          <PaginationItem key="ellipsis-end">
+            <PaginationEllipsis />
+          </PaginationItem>
+        );
+      }
+
+      items.push(
+        <PaginationItem key={lastPage} active={lastPage === currentPage}>
+          <PaginationLink onClick={() => onPageChange(lastPage)}>
+            {lastPage + 1}
+          </PaginationLink>
+        </PaginationItem>
+      );
+    }
+
+    return items;
+  };
   return (
     <>
-      <div
-        className={`grid grid-cols-1 ${
-          panelWidth <= setMaxWidth
-            ? "lg:grid-cols-2"
-            : "md:grid-cols-2 lg:grid-cols-3"
-        } gap-6 mt-8`}
-        ref={panelRef}
-      >
-        {isLoading ? (
-          <TemplatesSkeleton />
+      <div ref={panelRef}>
+        {isLoading || !isDataLoaded ? (
+          <div
+            className={`grid grid-cols-1 ${
+              panelWidth <= setMaxWidth
+                ? "lg:grid-cols-2"
+                : "md:grid-cols-2 lg:grid-cols-3"
+            } gap-6 mt-8`}
+          >
+            <TemplatesSkeleton />
+          </div>
         ) : (
           <>
-            {filteredTemplates.map((item, index) => (
-              <div className="w-full" key={index}>
-                <div
-                  className={`border-2 rounded-lg   h-full`}
-                  onClick={() => handleSelected((item?.id ?? "") as string)}
-                >
-                  <div className="flex gap-3 justify-between bg-[#F9F9F9] p-4 rounded-tl-lg rounded-tr-lg">
-                    <span className="text-base font-semibold">{item.name}</span>
-                    <div className="flex gap-2 items-center">
-                      <span className="bg-[#CCCCCC] text-white rounded-full px-2 py-1 font-normal text-xs tracking-[2%] text-center">
-                        {templateType(item?.isTwoWay ?? false)}
+            <div
+              className={`grid grid-cols-1 ${
+                panelWidth <= setMaxWidth
+                  ? "lg:grid-cols-2"
+                  : "md:grid-cols-2 lg:grid-cols-3"
+              } gap-6 mt-8`}
+            >
+              {filteredTemplates.map((item, index) => (
+                <div className="w-full" key={index}>
+                  <div
+                    className={`border-2 rounded-lg   h-full`}
+                    onClick={() => handleSelected((item?.id ?? "") as string)}
+                  >
+                    <div className="flex gap-3 justify-between bg-[#F9F9F9] p-4 rounded-tl-lg rounded-tr-lg">
+                      <span className="text-base font-semibold">
+                        {item.name}
                       </span>
-                      <Cell row={item} />
+                      <div className="flex gap-2 items-center">
+                        <span className="bg-[#CCCCCC] text-white rounded-full px-2 py-1 font-normal text-xs tracking-[2%] text-center">
+                          {templateType(item?.isTwoWay ?? false)}
+                        </span>
+                        <Cell row={item} />
+                      </div>
+                    </div>
+
+                    <div className="p-4 text-[#1D2433]/60 text-sm">
+                      <div className="line-clamp-2">{item.description}</div>
                     </div>
                   </div>
-
-                  <div className="p-4 text-[#1D2433]/60 text-sm">
-                    <div className="line-clamp-2">{item.description}</div>
-                  </div>
                 </div>
-              </div>
-            ))}
+              ))}
+            </div>
+
+            {filteredTemplates.length === 0 && (
+              <NoRecordFound
+                paramsUrl={{ hasParams, removeAllParamsFromUrl }}
+                messageNoRecord={
+                  hasParams
+                    ? "We have not found any results for your search."
+                    : ""
+                }
+                messageFooter={"Change the parameters"}
+              />
+            )}
           </>
         )}
       </div>
+      {!isLoading && filteredTemplates.length > 0 && (
+        <>
+          {/* Controles de paginación */}
+          <div className="flex items-center justify-end mt-6">
+            <div className="flex-1 flex justify-between sm:hidden">
+              <PaginationPrevious
+                onClick={() => onPageChange(pagination.currentPage - 1)}
+                disabled={pagination.currentPage === 0}
+                className="cursor-pointer border border-[#1D2433]/80"
+              >
+                Previous
+              </PaginationPrevious>
+
+              <PaginationNext
+                onClick={() => onPageChange(pagination.currentPage + 1)}
+                disabled={pagination.currentPage >= pagination.totalPages - 1}
+                className="cursor-pointer border border-[#1D2433]/80"
+              >
+                Next
+              </PaginationNext>
+            </div>
+            <div className="hidden sm:flex-1 sm:flex sm:items-center md:justify-end ">
+              <PaginationContent>
+                <PaginationPrevious
+                  onClick={() => onPageChange(pagination.currentPage - 1)}
+                  disabled={pagination.currentPage === 0}
+                  className="cursor-pointer border border-[#1D2433]/80"
+                />
+                {renderPaginationItems()}
+                <PaginationNext
+                  onClick={() => onPageChange(pagination.currentPage + 1)}
+                  disabled={pagination.currentPage >= pagination.totalPages - 1}
+                  className="cursor-pointer border border-[#1D2433]/80"
+                />
+              </PaginationContent>
+            </div>
+          </div>
+        </>
+      )}
     </>
   );
 };

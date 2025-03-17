@@ -6,11 +6,7 @@ import { showToast } from "@/lib/toastUtil";
 import { Form } from "@/components/ui/form";
 import { Separator } from "@/components/ui/separator";
 import { Button } from "@/components/ui/button";
-import {
-  FormReviewMessageProps,
-  TemplateProps,
-  TicketsProps,
-} from "@/types/types";
+import { FormReviewMessageProps, TemplateProps } from "@/types/types";
 import FieldsResendMessage from "./FieldsBuildMessage";
 
 import Link from "next/link";
@@ -141,7 +137,7 @@ const FormBuildMessage = ({
     },
   });
 
-  const { reset, setValue } = form;
+  const { reset, setValue, watch } = form;
 
   function onSubmit(data: z.infer<typeof FormSchema>) {
     if (onClose && isFromModal) {
@@ -161,7 +157,7 @@ const FormBuildMessage = ({
           reply,
         })) ?? [],
     };
-    console.log("dateValue", dateValue);
+
     setFormState(dateValue);
     return false;
   }
@@ -171,7 +167,6 @@ const FormBuildMessage = ({
       setValue("recipient_number", recipient_number ?? "");
       setValue("client", client ?? "");
     }
-    console.log("clientName", client);
   }, [template, isFromModal, setValue, recipient_number, client]);
 
   return (
@@ -235,6 +230,7 @@ const FormBuildMessage = ({
                   isFromModal ? "w-full md:w-[33%]" : "px-8"
                 }`}
                 variant={"destructive"}
+                disabled={watch("content") === ""}
               >
                 Submit
               </Button>

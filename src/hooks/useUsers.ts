@@ -2,31 +2,24 @@ import { isAxiosError } from "axios";
 import axiosInstance from "@/lib/axiosInstance";
 import { usersRoutes } from "@/config/apiRoutes";
 import { useRouter } from "next/navigation";
-import {
-  QueryClient,
-  useMutation,
-  UseMutationResult,
-  useQuery,
-  useQueryClient,
-} from "@tanstack/react-query";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { PaginateParams, UserProps } from "@/types/types";
 import { showToast } from "@/lib/toastUtil";
 
 interface UserParams extends PaginateParams {
-  role?: string; //string[];
-  query?: string;
+  roles?: string[]; //string[];
 }
 
-const useGetUsers = ({ page, limit, role, query }: UserParams) => {
+const useGetUsers = ({ page, limit, roles, query }: UserParams) => {
   return useQuery({
-    queryKey: ["user-list", page, limit, role, query],
+    queryKey: ["user-list", page, limit, roles, query],
     queryFn: async () => {
       try {
         const params: UserParams = {
           page,
           limit,
-          ...(role?.length && { role }),
-          ...(query?.length && { query }),
+          query,
+          ...(roles?.length && { roles }),
         };
 
         const url = usersRoutes.list;

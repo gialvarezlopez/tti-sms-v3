@@ -8,7 +8,10 @@ import { Separator } from "@/components/ui/separator";
 import { Button } from "@/components/ui/button";
 import FieldsCloseTickets from "./FieldsCloseTickets";
 import { TicketsProps } from "@/types/types";
-import { capitalizeFirstLetterOfEveryWord } from "@/lib/utils/utils";
+import {
+  capitalizeFirstLetterOfEveryWord,
+  formatPhoneNumber,
+} from "@/lib/utils/utils";
 import { useCloseMultiplesTickets } from "@/hooks/useTickets";
 
 type Props = {
@@ -45,7 +48,7 @@ const FormCloseTicket = ({
     const addData = {
       status: "closed",
       closed_by: "system",
-      reason: data.reason,
+      closed_reason: data.reason,
     };
 
     mutateCloseMultipleTickets(
@@ -69,8 +72,8 @@ const FormCloseTicket = ({
             {tickets &&
               tickets?.map((ticket, index) => (
                 <p key={index}>
-                  {capitalizeFirstLetterOfEveryWord(ticket.client)} -{" "}
-                  {ticket.recipient_number} -{" "}
+                  {capitalizeFirstLetterOfEveryWord(ticket.client)} /{" "}
+                  {formatPhoneNumber(ticket.recipientNumber ?? "", true)} /{" "}
                   {ticket.branch && typeof ticket.branch !== "string"
                     ? ticket.branch.name
                     : null}

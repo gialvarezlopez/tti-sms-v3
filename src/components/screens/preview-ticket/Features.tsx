@@ -2,6 +2,7 @@ import React from "react";
 import { TYPE_OF_MESSAGE } from "@/lib/constants";
 import {
   convertToSnakeCase,
+  formatPhoneNumber,
   statusType,
   templateType,
 } from "@/lib/utils/utils";
@@ -30,7 +31,7 @@ const Features = ({ ticket }: Props) => {
             Telephone number:{" "}
           </span>
           <span className="font-bold text-base text-customBlack-v1 ">
-            {ticket.recipientNumber}
+            {formatPhoneNumber(ticket.recipientNumber ?? "", true)}
           </span>
         </div>
       </div>

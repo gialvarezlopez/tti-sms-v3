@@ -1,30 +1,31 @@
 import { isAxiosError } from "axios";
 import axiosInstance from "@/lib/axiosInstance";
 import { branchesRoutes } from "@/config/apiRoutes";
-import {
-  QueryClient,
-  useMutation,
-  UseMutationResult,
-  useQuery,
-  useQueryClient,
-} from "@tanstack/react-query";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { BranchProps, PaginateParams } from "@/types/types";
 import { showToast } from "@/lib/toastUtil";
 
 interface BranchParams extends PaginateParams {
   provinces?: string[];
-  query?: string;
+  status?: string[];
 }
 
-const useGetBranches = ({ page, limit, provinces, query }: BranchParams) => {
+const useGetBranches = ({
+  page,
+  limit,
+  provinces,
+  status,
+  query,
+}: BranchParams) => {
   return useQuery({
-    queryKey: ["branch-list", page, limit, provinces, query],
+    queryKey: ["branch-list", page, limit, provinces, query, status],
     queryFn: async () => {
       try {
         const params: BranchParams = {
           page,
           limit,
           ...(provinces?.length && { provinces }),
+          ...(status?.length && { status }),
           ...(query?.length && { query }),
         };
 

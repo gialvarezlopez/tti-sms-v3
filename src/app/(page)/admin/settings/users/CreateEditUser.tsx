@@ -29,11 +29,10 @@ const CreateEditUser = ({ setIsOpen, user }: Props) => {
     data: dataBranches,
     error: errorBranches,
     isLoading: isLoadingBranches,
-    refetch,
   } = useGetBranches({
     page: 1,
     limit: 100,
-    search: "",
+    query: "",
   });
 
   const {
@@ -43,7 +42,7 @@ const CreateEditUser = ({ setIsOpen, user }: Props) => {
   } = useGetRoles({
     page: 1,
     limit: 100,
-    search: "",
+    query: "",
   });
 
   const FormSchema = z
@@ -76,7 +75,6 @@ const CreateEditUser = ({ setIsOpen, user }: Props) => {
       branch_id: "",
       role: "",
     },
-    //shouldUnregister: true,
   });
 
   const {
@@ -85,7 +83,6 @@ const CreateEditUser = ({ setIsOpen, user }: Props) => {
   } = form;
 
   function onSubmit(data: z.infer<typeof FormSchema>) {
-    //console.log("data", data);
     const formattedData: Partial<typeof data> = {
       ...data,
       branch_id: data.branch_id,
@@ -118,7 +115,6 @@ const CreateEditUser = ({ setIsOpen, user }: Props) => {
 
   useEffect(() => {
     if (user) {
-      //console.log("user", user);
       const data = {
         name: user.name ?? "",
         role:
@@ -127,7 +123,7 @@ const CreateEditUser = ({ setIsOpen, user }: Props) => {
         email: user.email ?? "",
         branch_id: String(user.branch?.id ?? ""),
       };
-      console.log("data", data);
+
       reset(data);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps

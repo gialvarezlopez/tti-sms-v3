@@ -1,7 +1,7 @@
 import { useSession } from "next-auth/react";
 import { ColumnDef, Row } from "@tanstack/react-table";
 import { Checkbox } from "@/components/ui/checkbox";
-import { TemplateProps, TicketsProps } from "@/types/types";
+import { TicketsProps } from "@/types/types";
 import { Button } from "@/components/ui/button";
 import {
   DropdownMenu,
@@ -406,14 +406,14 @@ const useColumns = () => {
       },
       cell: ({ row }) => {
         return (
-          <span className="text-nowrap md:text-wrap">
+          <span className="text-nowrap">
             {capitalizeFirstLetterOfEveryWord(row.original.client)}
           </span>
         );
       },
     },
     {
-      accessorKey: "TelephoneNumber",
+      accessorKey: "recipientNumber",
       header: () => {
         return (
           <Button variant="ghost" className="px-0">
@@ -423,7 +423,9 @@ const useColumns = () => {
       },
       cell: ({ row }) => {
         return (
-          <span>{formatPhoneNumber(row.original.recipientNumber ?? "")}</span>
+          <span className="text-nowrap">
+            {formatPhoneNumber(row.original.recipientNumber ?? "", true)}
+          </span>
         ); //capitalizeFirstLetter(row.original.tipoCliente);
       },
     },
@@ -432,7 +434,7 @@ const useColumns = () => {
       ? [
           {
             accessorKey: "Branch",
-            id: "branch",
+            id: "branch.name",
             header: ({}: { column: ColumnDef<TicketsProps> }) => {
               return (
                 <Button variant="ghost" className="px-0">
@@ -442,7 +444,7 @@ const useColumns = () => {
             },
             cell: ({ row }: { row: Row<TicketsProps> }) => {
               return (
-                <span className="text-nowrap md:text-wrap">
+                <span className="text-nowrap">
                   {row.original.branch &&
                   typeof row.original.branch !== "string"
                     ? row.original.branch.name
@@ -455,6 +457,7 @@ const useColumns = () => {
       : []),
     {
       accessorKey: "lastSent",
+      id: "lastMessage.createdAt",
       header: () => {
         return (
           <Button variant="ghost" className="px-0">
@@ -463,11 +466,16 @@ const useColumns = () => {
         );
       },
       cell: ({ row }) => {
-        return <span className="text-nowrap">{row.original.lastSent}</span>;
+        return (
+          <span className="text-nowrap">
+            {formatDate(row.original.lastMessage?.createdAt ?? "")}
+          </span>
+        );
       },
     },
     {
       accessorKey: "lastReceived",
+      id: "lastReceivedMessage.createdAt",
       header: () => {
         return (
           <Button variant="ghost" className="px-0">
@@ -485,6 +493,7 @@ const useColumns = () => {
     },
     {
       accessorKey: "typeOfMessage",
+      id: "template.isTwoWay",
       header: () => {
         return (
           <Button variant="ghost" className="px-0">
@@ -534,13 +543,13 @@ const useColumns = () => {
     },
   ];
 
-  // Columna para las acciones
+  // Column for actions
   columnDefs.push({
     id: "actions",
     cell: ({ row }) => <Cell row={row.original} />,
   });
 
-  return columnDefs; // Retornar las columnas dinámicas
+  return columnDefs;
 };
 
 export default useColumns;

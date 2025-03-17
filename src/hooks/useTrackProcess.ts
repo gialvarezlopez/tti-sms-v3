@@ -1,14 +1,7 @@
 import { isAxiosError } from "axios";
 import axiosInstance from "@/lib/axiosInstance";
 import { statsRoutes } from "@/config/apiRoutes";
-import {
-  QueryClient,
-  useMutation,
-  UseMutationResult,
-  useQuery,
-  useQueryClient,
-} from "@tanstack/react-query";
-import { PaginateParams, UserProps } from "@/types/types";
+import { useQuery } from "@tanstack/react-query";
 
 interface FilterParams {
   branches: string[];

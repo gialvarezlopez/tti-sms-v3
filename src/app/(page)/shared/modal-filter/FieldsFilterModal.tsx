@@ -62,7 +62,7 @@ const FieldsFilterModal = ({ fromPage }: Props) => {
   } = useGetBranches({
     page: 1,
     limit: 50,
-    search: "",
+    query: "",
   });
 
   const {
@@ -72,7 +72,7 @@ const FieldsFilterModal = ({ fromPage }: Props) => {
   } = useGetTemplates({
     page: 1,
     limit: 50,
-    search: "",
+    query: "",
   });
 
   const inputLastSentFrom = watch("lastSentFrom");

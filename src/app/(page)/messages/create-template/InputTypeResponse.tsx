@@ -16,14 +16,9 @@ import { UseFieldArrayRemove, useFormContext } from "react-hook-form";
 type Props = {
   fields: AutomaticResponsesTemplates[];
   remove: UseFieldArrayRemove;
-  //setMessage: React.Dispatch<React.SetStateAction<string>>;
-  //message: string;
 };
 
-const InputTypeResponse = ({
-  fields,
-  remove /*message, setMessage*/,
-}: Props) => {
+const InputTypeResponse = ({ fields, remove }: Props) => {
   const { control, setValue, watch } = useFormContext();
 
   const handleRemoveResponse = (index: number, keywordName: string) => {
@@ -50,7 +45,6 @@ const InputTypeResponse = ({
   };
 
   useEffect(() => {
-    console.log("item");
     fields.forEach((item, index) => {
       setValue(`responses[${index}].response`, item.response);
       setValue(`responses[${index}].reply`, item.reply);

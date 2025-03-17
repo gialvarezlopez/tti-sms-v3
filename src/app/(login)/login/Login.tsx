@@ -56,8 +56,6 @@ const LoginPage = () => {
   } = form;
 
   async function onSubmit(data: z.infer<typeof FormSchema>) {
-    //console.log("data", data);
-
     setLoading(true); // Empieza el loading
 
     const result = await signIn("credentials", {
@@ -71,7 +69,6 @@ const LoginPage = () => {
       setLoading(false); // Termina el loading
     } else {
       const session = await getSession();
-      console.log("session", session);
       if (session && session.user?.jwt) {
         // Set the session cookie that lasts for 30 days
         Cookies.set("session-token", session.user?.jwt, {

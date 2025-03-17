@@ -5,9 +5,8 @@ import React, { useEffect } from "react";
 import { FieldErrors, useFieldArray, useFormContext } from "react-hook-form";
 import InputTypeResponse from "./InputTypeResponse";
 
-// Define el tipo de los elementos en fields
 type FormValues = {
-  responses: AutomaticResponsesTemplates[]; // Asegúrate de que la propiedad "responses" tenga este tipo
+  responses: AutomaticResponsesTemplates[];
 };
 
 type Props = {
@@ -21,8 +20,6 @@ type Props = {
     }[];
     branch?: string[] | undefined;
   }>;
-  //setMessage: React.Dispatch<React.SetStateAction<string>>;
-  //message: string;
 };
 
 const Response = ({
@@ -30,9 +27,7 @@ const Response = ({
   responseOption,
   setResponseOption,
   errors,
-}: //setMessage,
-//message,
-Props) => {
+}: Props) => {
   const { control } = useFormContext<FormValues>();
   const { fields, append, remove } = useFieldArray<FormValues>({
     control,
@@ -40,7 +35,6 @@ Props) => {
   });
 
   useEffect(() => {
-    console.log("responseOption.name", responseOption.response);
     if (
       responseOption &&
       responseOption.response &&
@@ -61,8 +55,6 @@ Props) => {
       if (fields.length === 0) {
         setResponseOption({ response: "", automaticReply: "" });
       }
-
-      console.log("fields", fields);
     }
   }, [fields, responseOption, append, setResponseOption]);
 

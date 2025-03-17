@@ -4,7 +4,6 @@ import { useSession } from "next-auth/react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { ColumnDef } from "@tanstack/react-table";
 import DataTable from "@/components/ui/DataTable";
-//import { columns } from "./Columns";
 import useColumns from "./Columns";
 import Actions from "./Actions";
 import { RefetchOptions, TicketsProps } from "@/types/types";
@@ -29,6 +28,8 @@ const Home = () => {
   const router = useRouter();
   const searchParams = useSearchParams();
 
+  const selectedPage = searchParams?.get("page");
+
   const hasParams = searchParams
     ? Array.from(searchParams.entries()).filter(
         ([key, value]) =>
@@ -47,7 +48,7 @@ const Home = () => {
   const [rowSelected, setRowSelected] = useState<TicketsProps[]>([]);
 
   const [pagination, setPagination] = useState({
-    pageIndex: 0,
+    pageIndex: selectedPage ? +selectedPage - 1 : 0,
     pageSize: 10,
   });
 
@@ -116,10 +117,9 @@ const Home = () => {
   } = useGetTickets({
     page: pagination.pageIndex + 1,
     limit: pagination.pageSize,
-    search: searchParam,
+    query: searchParam,
     branches,
     status: statusTickets,
-    //template_id: [],
     last_sent,
     last_received,
     types: typeTicket,
@@ -133,9 +133,9 @@ const Home = () => {
     }
   }, [dataTickets]);
 
-  const fetchData = (page: number, pageSize: number, search: string) => {
+  const fetchData = (page: number, pageSize: number) => {
     setPagination({ pageIndex: page - 1, pageSize });
-    setSearch(search);
+    //setSearch(search);
   };
 
   const selected: IsColumnSelectedFn<TicketsProps> = (
@@ -145,7 +145,7 @@ const Home = () => {
     for (const [clave, valor] of Object.entries(column)) {
       ids.push(valor);
     }
-    console.log("ids", ids);
+
     setRowSelected(ids);
     setClearSelected(false);
   };
@@ -207,14 +207,14 @@ const Home = () => {
           page: pagination.pageIndex + 1,
           limit: pagination.pageSize,
         },
-        search,
+        query: searchParam,
         sortBy,
         sortOrder,
       };
 
       refetch(refetchOptions as object);
     }
-  }, [pagination, search, sortBy, sortOrder, refetch]);
+  }, [pagination, searchParam, sortBy, sortOrder, refetch]);
 
   //4. Handling pagination
   useEffect(() => {
@@ -245,8 +245,6 @@ const Home = () => {
       <p className="py-2">
         Do a follow up of your messages and track their process.
       </p>
-
-      {/*JSON.stringify(session?.user?.primaryRole)*/}
 
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-3 mt-4">
         {isLoadingStats ? (
@@ -299,7 +297,7 @@ const Home = () => {
               pagination={pagination}
               setPagination={setPagination}
               totalPages={totalPages}
-              search={search}
+              search={searchParam}
               fetchData={fetchData}
               sortBy={sortBy}
               sortOrder={sortOrder}
@@ -315,7 +313,6 @@ const Home = () => {
               }
             />
           )}
-          {/*JSON.stringify(searchParams && Array.from(searchParams.entries()))*/}
         </div>
       </div>
     </div>

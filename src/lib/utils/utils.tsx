@@ -90,8 +90,8 @@ export const branchStatus = (status: string, withCircle: boolean = true) => {
       circle: "bg-[#1D2433]/80",
     },
     [USER_STATUS.ACTIVE]: {
-      bg: "bg-green-500  text-success-v2",
-      circle: "bg-success-v2",
+      bg: "bg-[#EDFDF8]  text-[#16A374]",
+      circle: "bg-[#16A374]",
     },
 
     [USER_STATUS.UNKNOWN]: {
@@ -224,8 +224,8 @@ export const cleanOnlyWhiteSpace = (str: string): string => {
 };
 
 export const formatTextWithBold = (text: string) => {
-  const regex = /\[(.*?)\]/g; // Expresión regular para capturar texto dentro de []
-  const parts = text.split(regex); // Divide el texto en partes, manteniendo las palabras entre []
+  const regex = /\[(.*?)\]/g; // Regular expression to capture text inside []
+  const parts = text.split(regex); // Split the text into parts, keeping the words between []
 
   return parts.map((part, index) =>
     text.match(regex)?.includes(`[${part}]`) ? (
@@ -238,13 +238,13 @@ export const formatTextWithBold = (text: string) => {
 
 export const generateSlug = (text: string): string => {
   return text
-    .toLowerCase() // Convertir a minúsculas
-    .normalize("NFD") // Normalizar caracteres (para quitar acentos)
-    .replace(/[\u0300-\u036f]/g, "") // Eliminar diacríticos (acentos, tildes)
-    .replace(/[^a-z0-9\s-]/g, "") // Eliminar caracteres especiales
-    .trim() // Eliminar espacios al inicio y al final
-    .replace(/\s+/g, "-") // Reemplazar espacios por "-"
-    .replace(/-+/g, "-"); // Evitar múltiples guiones seguidos
+    .toLowerCase()
+    .normalize("NFD") // Normalize characters (to remove accents)
+    .replace(/[\u0300-\u036f]/g, "") // Remove diacritics (accents, tildes)
+    .replace(/[^a-z0-9\s-]/g, "") // Remove special characters
+    .trim()
+    .replace(/\s+/g, "-") // Replace spaces with "-"
+    .replace(/-+/g, "-"); // Avoid multiple hyphens in a row
 };
 
 export const templateType = (isTwoWay: boolean) => {
@@ -258,7 +258,7 @@ export const isMobile = () => {
 };
 
 export const renderIcon = (type: string) => {
-  // Función para devolver el ícono según el tipo seleccionado
+  // Function to return the icon according to the selected type
   switch (type) {
     case "date":
       return <CalendarRange className="ml-auto h-4 w-4 opacity-50" />;
@@ -271,12 +271,34 @@ export const renderIcon = (type: string) => {
   }
 };
 
-export const formatPhoneNumber = (phone: string | number): string => {
-  const phoneStr = getJustNumber(phone); //phone.toString().replace(/\D/g, "");
+export const formatPhoneNumber = (
+  phone: string | number,
+  addPlus?: boolean
+): string => {
+  const phoneStr = getJustNumber(phone); // remove non-numeric characters
 
-  return `(${phoneStr.slice(0, 3)}) ${phoneStr.slice(3, 6)}-${phoneStr.slice(
-    6
-  )}`;
+  // If the number has less than 10 digits or more than 11, return it as is
+  if (phoneStr.length < 10 || phoneStr.length > 11) return phoneStr;
+
+  let formattedNumber = "";
+
+  if (phoneStr.length === 11 && phoneStr.startsWith("1")) {
+    // If the number has 11 digits and starts with "1", remove the "1" to format it
+    formattedNumber = `(${phoneStr.slice(1, 4)}) ${phoneStr.slice(
+      4,
+      7
+    )}-${phoneStr.slice(7)}`;
+    return `+1 ${formattedNumber}`; // Always with "+1"
+  } else if (phoneStr.length === 10) {
+    // If the number has 10 digits, format it normally
+    formattedNumber = `(${phoneStr.slice(0, 3)}) ${phoneStr.slice(
+      3,
+      6
+    )}-${phoneStr.slice(6)}`;
+    return addPlus ? `+1 ${formattedNumber}` : formattedNumber;
+  }
+
+  return phoneStr;
 };
 
 export const getJustNumber = (word: string | number) => {

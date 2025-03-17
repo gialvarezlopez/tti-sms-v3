@@ -154,7 +154,7 @@ const AlertDelete = ({ setClearRowsSelected }: Props) => {
 
                   {branches?.map((branch, index) => (
                     <p key={index}>
-                      {branch.name} - {branch.number}
+                      {branch.name} - {branch.phone_number}
                     </p>
                   ))}
                 </p>

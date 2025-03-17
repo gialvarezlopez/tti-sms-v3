@@ -6,4 +6,4 @@ export type FormFields =
   | "province"
   | "country"
   | "postalCode"
-  | "phoneNumber";
+  | "phone_number";
