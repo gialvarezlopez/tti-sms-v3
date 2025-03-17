@@ -1,10 +1,8 @@
 import React, { useState } from "react";
-import { Button } from "@/components/ui/button";
 import {
   Dialog,
   DialogContent,
   DialogDescription,
-  //DialogFooter,
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
@@ -12,8 +10,6 @@ import {
 import { Separator } from "@/components/ui/separator";
 import { UserProps } from "@/types/types";
 import FormReset from "./FormReset";
-//import FormBuildMessage from "../templates/BuildTemplate/FormBuildMessage";
-//import TemplatesSend from "./templates-send/TemplatesSend";
 
 type Props = {
   user: UserProps;
@@ -23,8 +19,7 @@ type Props = {
 
 const ModalResetPassword = ({ user, modalOpen, onClose }: Props) => {
   const [isOpen] = useState(modalOpen);
-  //console.log("modalOpen", modalOpen);
-  //const closeModal = () => setIsOpen(false);
+
   return (
     <div>
       <Dialog open={isOpen} onOpenChange={onClose}>

@@ -10,10 +10,7 @@ import TableSkeleton from "@/components/skeletons/TableSkeleton";
 import { BranchProps, RefetchOptions } from "@/types/types";
 import { useGetBranches } from "@/hooks/useBranches";
 import ErrorFetching from "@/components/ui/errorFetching";
-import {
-  removeAllParamsFromUrl,
-  removeParamsExcept,
-} from "../../../../../lib/utils/urlUtils";
+import { removeParamsExcept } from "../../../../../lib/utils/urlUtils";
 
 type IsColumnSelectedFn<T> = (column: ColumnDef<T>, action?: string) => void;
 
@@ -62,10 +59,14 @@ const BranchesList = ({
 
   const queryParam = searchParams?.get("search") ?? "";
   const provincesParams = searchParams?.get("provinces");
+  const statusParams = searchParams?.get("status");
+
   const provincesTypes =
     provincesParams && provincesParams !== "all"
       ? provincesParams.split(",")
       : [];
+  const statusTypes =
+    statusParams && statusParams !== "all" ? statusParams.split(",") : [];
 
   const {
     data: response,
@@ -77,6 +78,7 @@ const BranchesList = ({
     limit: pagination.pageSize,
     query: queryParam,
     provinces: provincesTypes,
+    status: statusTypes,
   });
 
   useEffect(() => {
@@ -89,24 +91,7 @@ const BranchesList = ({
 
   const fetchData = (page: number, pageSize: number, search: string) => {
     setPagination({ pageIndex: page - 1, pageSize });
-    setSearch(search);
   };
-
-  // Trigger refetch when pagination or search changes
-  useEffect(() => {
-    // We ensure that useGetUsers is executed only when pagination is updated
-    if (pagination.pageIndex >= 0) {
-      const refetchOptions: RefetchOptions = {
-        pagination: {
-          page: pagination.pageIndex + 1,
-          limit: pagination.pageSize,
-        },
-        search,
-      };
-
-      refetch(refetchOptions as object);
-    }
-  }, [pagination, search, refetch]);
 
   const selected: IsColumnSelectedFn<BranchProps> = (
     column: ColumnDef<BranchProps>
@@ -115,7 +100,7 @@ const BranchesList = ({
     for (const [clave, valor] of Object.entries(column)) {
       ids.push(valor);
     }
-    console.log("ids", ids);
+
     setRowSelected(ids);
     setBranchesSelected(ids);
     setClearRowsSelected(false);
@@ -178,14 +163,14 @@ const BranchesList = ({
           page: pagination.pageIndex + 1,
           limit: pagination.pageSize,
         },
-        search,
+        query: queryParam,
         sortBy,
         sortOrder,
       };
 
       refetch(refetchOptions as object);
     }
-  }, [pagination, search, sortBy, sortOrder, refetch]);
+  }, [pagination, queryParam, sortBy, sortOrder, refetch]);
 
   //4. Handling pagination
   useEffect(() => {
@@ -238,7 +223,7 @@ const BranchesList = ({
                 pagination={pagination}
                 setPagination={setPagination}
                 totalPages={totalPages}
-                search={search}
+                search={queryParam}
                 fetchData={fetchData}
                 sortBy={sortBy}
                 sortOrder={sortOrder}

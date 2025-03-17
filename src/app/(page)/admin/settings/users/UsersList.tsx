@@ -56,9 +56,10 @@ const UsersList = ({
   });
 
   const searchParam = searchParams?.get("search") ?? "";
-  //const rolesParams = searchParams?.get("roles");
-  //const roleTypes = rolesParams && rolesParams !== "all" ? rolesParams.split(",") : [];
-  const roleTypes = searchParams?.get("roles") ?? "";
+  const rolesParams = searchParams?.get("roles");
+  const roleTypes =
+    rolesParams && rolesParams !== "all" ? rolesParams.split(",") : [];
+  //const roleTypes = searchParams?.get("roles") ?? "";
 
   const {
     data: response,
@@ -69,7 +70,7 @@ const UsersList = ({
     page: pagination.pageIndex + 1,
     limit: pagination.pageSize,
     query: searchParam,
-    role: roleTypes,
+    roles: roleTypes,
   });
 
   useEffect(() => {
@@ -80,9 +81,9 @@ const UsersList = ({
     }
   }, [response]);
 
-  const fetchData = (page: number, pageSize: number, search: string) => {
+  const fetchData = (page: number, pageSize: number) => {
     setPagination({ pageIndex: page - 1, pageSize });
-    setSearch(search);
+    //setSearch(search);
   };
 
   const selected: IsColumnSelectedFn<UserProps> = (
@@ -92,7 +93,7 @@ const UsersList = ({
     for (const [clave, valor] of Object.entries(column)) {
       ids.push(valor);
     }
-    console.log("ids", ids);
+
     setRowSelected(ids);
     setUsersSelected(ids);
     setClearRowsSelected(false);
@@ -155,14 +156,14 @@ const UsersList = ({
           page: pagination.pageIndex + 1,
           limit: pagination.pageSize,
         },
-        search,
+        query: searchParam,
         sortBy,
         sortOrder,
       };
 
       refetch(refetchOptions as object);
     }
-  }, [pagination, search, sortBy, sortOrder, refetch]);
+  }, [pagination, searchParam, sortBy, sortOrder, refetch]);
 
   //4. Handling pagination
   useEffect(() => {
@@ -215,7 +216,7 @@ const UsersList = ({
                 pagination={pagination}
                 setPagination={setPagination}
                 totalPages={totalPages}
-                search={search}
+                search={searchParam}
                 fetchData={fetchData}
                 sortBy={sortBy}
                 sortOrder={sortOrder}

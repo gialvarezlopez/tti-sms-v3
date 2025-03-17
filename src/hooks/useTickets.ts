@@ -2,13 +2,7 @@ import { isAxiosError } from "axios";
 import axiosInstance from "@/lib/axiosInstance";
 import { ticketsRoutes } from "@/config/apiRoutes";
 import { useRouter } from "next/navigation";
-import {
-  QueryClient,
-  useMutation,
-  UseMutationResult,
-  useQuery,
-  useQueryClient,
-} from "@tanstack/react-query";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { PaginateParams, UserProps } from "@/types/types";
 import { showToast } from "@/lib/toastUtil";
 
@@ -24,7 +18,7 @@ interface TicketParams extends PaginateParams {
 const useGetTickets = ({
   page,
   limit,
-  search,
+  query,
   status,
   templates,
   types,
@@ -37,7 +31,7 @@ const useGetTickets = ({
       "ticket-list",
       page,
       limit,
-      search,
+      query,
       status,
       templates,
       branches,
@@ -48,6 +42,7 @@ const useGetTickets = ({
     queryFn: async () => {
       try {
         const isFilter =
+          query?.length ||
           status?.length ||
           templates?.length ||
           branches?.length ||
@@ -59,7 +54,7 @@ const useGetTickets = ({
         const params: TicketParams = {
           page,
           limit,
-          search,
+          query,
           ...(status?.length && { status }),
           ...(templates?.length && { templates }),
           ...(branches?.length && { branches }),
@@ -87,7 +82,6 @@ const useGetTickets = ({
               "Unknown error";
             throw new Error(errorMessage);
           } else if (e.request) {
-            //console.log("e.request", e.message);
             // The request was made but no response was received (network problems)
             throw new Error(e.message);
           } else {

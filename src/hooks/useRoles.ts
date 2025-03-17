@@ -1,18 +1,23 @@
 import { isAxiosError } from "axios";
 import axiosInstance from "@/lib/axiosInstance";
 import { rolesRoutes } from "@/config/apiRoutes";
-
 import { useQuery } from "@tanstack/react-query";
 import { PaginateParams } from "@/types/types";
 
-const useGetRoles = ({ page, limit, search }: PaginateParams) => {
+const useGetRoles = ({ page, limit, query }: PaginateParams) => {
   return useQuery({
-    queryKey: ["role-list", page, limit, search],
+    queryKey: ["role-list", page, limit, query],
     queryFn: async () => {
       try {
+        const params = {
+          page,
+          limit,
+          query,
+        };
+
         const url = rolesRoutes.list;
         const { data } = await axiosInstance.get(url, {
-          params: { page, limit, search },
+          params,
         });
         return data;
       } catch (e) {

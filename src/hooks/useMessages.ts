@@ -8,15 +8,20 @@ import { showToast } from "@/lib/toastUtil";
 
 const returnAfterSubmit = "/messages/new-message";
 
-const useGetMessages = ({ page, limit, search }: PaginateParams) => {
+const useGetMessages = ({ page, limit, query }: PaginateParams) => {
   return useQuery({
-    queryKey: ["message-list", page, limit, search],
+    queryKey: ["message-list", page, limit, query],
     queryFn: async () => {
       try {
         const url = messagesRoutes.list;
-        const { data } = await axiosInstance.get(url, {
-          params: { page, limit, search },
-        });
+
+        const params = {
+          page,
+          limit,
+          query,
+        };
+
+        const { data } = await axiosInstance.get(url, { params });
         return data;
       } catch (e) {
         if (isAxiosError(e)) {

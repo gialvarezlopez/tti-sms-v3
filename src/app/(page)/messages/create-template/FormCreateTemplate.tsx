@@ -71,7 +71,7 @@ const FormCreateTemplate = () => {
   } = useGetBranches({
     page: 1,
     limit: 50,
-    search: "",
+    query: "",
   });
 
   const FormSchema = z
@@ -229,7 +229,6 @@ const FormCreateTemplate = () => {
       ...data,
       content: cleanOnlyWhiteSpace(data.content),
       ...(data.isReminder ? { type: "reminder" } : { type: "" }), //we do this because the endpoints is receiving type inste of isReminder
-      //...(data.invalidReply ? { invalidReply } : {}),
     };
 
     //Remove isReminder to only send type
@@ -239,9 +238,6 @@ const FormCreateTemplate = () => {
     if (elementId) {
       delete formData.branches;
     }
-
-    //console.log("formData", formData);
-    //return false;
 
     if (elementId) {
       updateTemplate(formData);
@@ -269,7 +265,6 @@ const FormCreateTemplate = () => {
   useEffect(() => {
     if (elementId && currentTemplate) {
       const {
-        id,
         name,
         description,
         branch,

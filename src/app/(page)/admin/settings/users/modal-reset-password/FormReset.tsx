@@ -1,6 +1,5 @@
 import React, { useEffect } from "react";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useFormContext } from "react-hook-form";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { showToast } from "@/lib/toastUtil"; // Make sure to import toastUtil
@@ -25,7 +24,6 @@ const FormReset = ({ user, onClose }: Props) => {
     defaultValues: {
       email: "",
     },
-    //shouldUnregister: true,
   });
 
   const {
@@ -34,8 +32,6 @@ const FormReset = ({ user, onClose }: Props) => {
   } = form;
 
   function onSubmit(data: z.infer<typeof FormSchema>) {
-    //setIsOpen(false);
-    console.log("data", data);
     showToast(
       "success",
       "Success!",

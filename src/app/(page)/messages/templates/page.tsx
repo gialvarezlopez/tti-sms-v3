@@ -4,12 +4,9 @@ import React, { Suspense, useEffect, useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import dynamic from "next/dynamic";
 import ListTemplate from "./ListTemplate";
-import { dataTemplates } from "@/components/screens/templates/dataMock";
 import { useGetTemplates } from "@/hooks/useTemplates";
 import { TemplateProps } from "@/types/types";
-import CustomFormMessage from "@/components/ui/CustomFormMessage";
 import ErrorFetching from "@/components/ui/errorFetching";
-//import FilterTop from "./FiltersTop";
 
 // Dynamic loading of FilterTop to avoid SSR (static rendering)
 const FilterTop = dynamic(() => import("./FiltersTop"), { ssr: false });
@@ -22,10 +19,11 @@ const Page = () => {
   const selectedSearch = searchParams?.get("q")?.toLowerCase() || "";
 
   const [data, setData] = useState<TemplateProps[]>([]);
+  const [isDataLoaded, setIsDataLoaded] = useState(false);
   const [search, setSearch] = useState("");
   const [totalPages, setTotalPages] = useState(0);
   const [pagination, setPagination] = useState({
-    pageIndex: 0,
+    pageIndex: selectedPage ? +selectedPage - 1 : 0,
     pageSize: 10,
   });
 
@@ -43,12 +41,23 @@ const Page = () => {
     if (response) {
       setData(response?.data);
       setTotalPages(response?.meta?.pagination?.totalPages);
+      setIsDataLoaded(true);
     }
   }, [response]);
 
   const fetchData = (page: number, pageSize: number, search: string) => {
     setPagination({ pageIndex: page - 1, pageSize });
     setSearch(search);
+  };
+
+  const handlePageChange = (newPageIndex: number) => {
+    const params = new URLSearchParams(window.location.search);
+    setPagination((prev) => ({
+      ...prev,
+      pageIndex: newPageIndex,
+    }));
+    params.set("page", (+newPageIndex + 1).toString());
+    router.push(`${window.location.pathname}?${params.toString()}`);
   };
 
   return (
@@ -70,7 +79,16 @@ const Page = () => {
       )}
 
       <Suspense fallback={<div>Loading Templates...</div>}>
-        <ListTemplate dataTemplates={data ?? []} isLoading={isLoading} />
+        <ListTemplate
+          dataTemplates={data ?? []}
+          isLoading={isLoading}
+          isDataLoaded={isDataLoaded}
+          pagination={{
+            currentPage: pagination.pageIndex, // Current page (0-based)
+            totalPages: totalPages,
+          }}
+          onPageChange={handlePageChange}
+        />
       </Suspense>
     </div>
   );

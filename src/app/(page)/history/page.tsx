@@ -5,14 +5,9 @@ import { useRouter, useSearchParams } from "next/navigation";
 import { ColumnDef } from "@tanstack/react-table";
 import DataTable from "@/components/ui/DataTable";
 import { columns } from "./Columns";
-//import useColumns from "./Columns";
-//import Actions from "./Actions";
 import { RefetchOptions, TicketsProps } from "@/types/types";
-import CardProcessSkeleton from "../../../components/skeletons/CardProcessSkeleton";
 import TableSkeleton from "@/components/skeletons/TableSkeleton";
-import { useGetStats } from "@/hooks/useTrackProcess";
 import ErrorFetching from "@/components/ui/errorFetching";
-//import Items from "./card/Items";
 import { useGetTickets } from "@/hooks/useTickets";
 import { convertDateYYYYMMDD } from "@/lib/utils/dateUtils";
 import { TICKETS_STATUS, USER_ROLE } from "@/lib/constants";
@@ -32,7 +27,7 @@ const Home = () => {
   const { data: session, status } = useSession();
   const router = useRouter(); // Acceder al router
   const searchParams = useSearchParams();
-
+  const selectedPage = searchParams?.get("page");
   const hasParams = searchParams
     ? Array.from(searchParams.entries()).filter(
         ([key, value]) =>
@@ -41,8 +36,6 @@ const Home = () => {
     : false;
 
   //const columns = useColumns();
-  const [loading, setLoading] = useState(true);
-  const [search, setSearch] = useState("");
   const [sortBy, setSortBy] = useState<string>(""); // Status for the sort field
   const [sortOrder, setSortOrder] = useState<"asc" | "desc">("asc"); // State for ascending or descending order
   const [data, setData] = useState<TicketsProps[]>([]);
@@ -52,7 +45,7 @@ const Home = () => {
   const [rowSelected, setRowSelected] = useState<TicketsProps[]>([]);
 
   const [pagination, setPagination] = useState({
-    pageIndex: 0,
+    pageIndex: selectedPage ? +selectedPage - 1 : 0,
     pageSize: 10,
   });
 
@@ -77,8 +70,6 @@ const Home = () => {
 
   const templates =
     templatesParam && templatesParam !== "all" ? templatesParam.split(",") : [];
-
-  console.log("templates", templates);
 
   const statusArray = Object.values(TICKETS_STATUS).filter(
     (status) => status === TICKETS_STATUS.CLOSED
@@ -117,7 +108,7 @@ const Home = () => {
   } = useGetTickets({
     page: pagination.pageIndex + 1,
     limit: pagination.pageSize,
-    search: searchParam,
+    query: searchParam,
     status: statusTickets,
     branches,
     templates,
@@ -134,9 +125,8 @@ const Home = () => {
     }
   }, [dataTickets]);
 
-  const fetchData = (page: number, pageSize: number, search: string) => {
+  const fetchData = (page: number, pageSize: number) => {
     setPagination({ pageIndex: page - 1, pageSize });
-    setSearch(search);
   };
 
   const selected: IsColumnSelectedFn<TicketsProps> = (
@@ -146,9 +136,7 @@ const Home = () => {
     for (const [clave, valor] of Object.entries(column)) {
       ids.push(valor);
     }
-    console.log("ids", ids);
     setRowSelected(ids);
-    //setBranchesSelected(ids);
     setClearSelected(false);
   };
 
@@ -208,14 +196,14 @@ const Home = () => {
           page: pagination.pageIndex + 1,
           limit: pagination.pageSize,
         },
-        search,
+        query: searchParam,
         sortBy,
         sortOrder,
       };
 
       refetch(refetchOptions as object);
     }
-  }, [pagination, search, sortBy, sortOrder, refetch]);
+  }, [pagination, searchParam, sortBy, sortOrder, refetch]);
 
   //4. Handling pagination
   useEffect(() => {
@@ -269,7 +257,7 @@ const Home = () => {
               pagination={pagination}
               setPagination={setPagination}
               totalPages={totalPages}
-              search={search}
+              search={searchParam}
               fetchData={fetchData}
               sortBy={sortBy}
               sortOrder={sortOrder}

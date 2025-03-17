@@ -6,7 +6,7 @@ import {
   TemplateProps,
   TicketsProps,
 } from "@/types/types";
-import OneWay from "./OneWay";
+import OneAndTwoWay from "./OneAndTwoWay";
 
 type Props = {
   template: TemplateProps;
@@ -18,7 +18,7 @@ const DetailConfirm = ({ template, formState }: Props) => {
 
   return (
     <>
-      <div className="grid grid-cols-2 gap-3 border-b border-[#d5d8df]  px-6 py-2">
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-3 border-b border-[#d5d8df]  px-6 py-2">
         <div className="flex gap-1">
           <span className="font-normal text-[#1D2433]/60 text-nowrap">
             Telephone number:{" "}
@@ -38,7 +38,7 @@ const DetailConfirm = ({ template, formState }: Props) => {
         </div>
       </div>
 
-      <OneWay formState={formState} />
+      <OneAndTwoWay formState={formState} />
 
       {/*convertToSnakeCase(templateType(template.isTwoWay ?? false)) ===
         TYPE_OF_MESSAGE.ONE_WAY && <OneWay formState={formState} />*/}

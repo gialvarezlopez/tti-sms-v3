@@ -68,7 +68,7 @@ const DeleteCell = ({
       {
         id: branch.id,
         name: branch.name,
-        number: branch.number,
+        phone_number: branch.phone_number,
         address: branch.address,
         province: branch.province,
         status: branch.status,
@@ -79,8 +79,7 @@ const DeleteCell = ({
       },
     ];
 
-    console.log("newBranch", newBranch);
-    setBranches(newBranch); // Actualiza la lista de usuarios con nuevos datos
+    setBranches(newBranch); // Update the list of users with new data
   };
 
   return (
@@ -191,7 +190,7 @@ export const columns: ColumnDef<BranchProps>[] = [
     cell: ({ row }) => {
       return (
         <span className="text-nowrap">
-          {row.original.number ?? "No number assigned"}
+          {row.original.phone_number ?? "No number assigned"}
         </span>
       );
     },

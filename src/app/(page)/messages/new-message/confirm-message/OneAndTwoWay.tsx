@@ -4,7 +4,7 @@ import React from "react";
 type Props = {
   formState: FormReviewMessageProps;
 };
-const OneWay = ({ formState }: Props) => {
+const OneAndTwoWay = ({ formState }: Props) => {
   const renderMessage = () => {
     const content = formState && formState.content ? formState?.content : "";
     const responses =
@@ -52,4 +52,4 @@ const OneWay = ({ formState }: Props) => {
   );
 };
 
-export default OneWay;
+export default OneAndTwoWay;

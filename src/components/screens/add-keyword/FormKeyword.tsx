@@ -2,14 +2,12 @@ import React from "react";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
-//import { showToast } from "@/lib/toastUtil"; // Make sure to import toastUtil
-
 import { Form } from "@/components/ui/form";
 import { Separator } from "@/components/ui/separator";
 import { Button } from "@/components/ui/button";
-//import FieldsCloseTickets from "./FieldsCloseTickets";
 import { KeywordProps } from "@/types/types";
 import FieldsKeyword from "./FieldsKeyword";
+
 type Props = {
   setIsOpen: React.Dispatch<React.SetStateAction<boolean>>;
   setKeywordOption: React.Dispatch<React.SetStateAction<KeywordProps>>;
@@ -33,7 +31,6 @@ const FormKeyword = ({ setIsOpen, setKeywordOption }: Props) => {
   function onSubmit(data: z.infer<typeof FormSchema>) {
     setIsOpen(false);
     setKeywordOption({ keyword: data.keywordName, type: data.keywordType });
-    console.log(data);
     return false;
   }
 

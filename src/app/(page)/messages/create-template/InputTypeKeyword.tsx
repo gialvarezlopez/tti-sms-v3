@@ -1,17 +1,12 @@
 import { Button } from "@/components/ui/button";
-import CustomFormMessage from "@/components/ui/CustomFormMessage";
 import {
   FormControl,
   FormField,
   FormItem,
   FormLabel,
 } from "@/components/ui/form";
-//import { Input } from "@/components/ui/input";
-import { KeywordProps } from "@/types/types";
 import React, { useEffect } from "react";
 import { UseFieldArrayRemove, useFormContext, useWatch } from "react-hook-form";
-
-//import CalendarField from "@/components/ui/CalendarField";
 import {
   Select,
   SelectContent,
@@ -19,8 +14,10 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { KeywordProps } from "@/types/types";
+import CustomFormMessage from "@/components/ui/CustomFormMessage";
 import { keywordOptions } from "@/components/screens/add-keyword/keywordOptions";
-import { lineReplaceWithBreaks, renderIcon } from "@/lib/utils/utils";
+import { renderIcon } from "@/lib/utils/utils";
 
 type Props = {
   fields: KeywordProps[];
@@ -60,11 +57,9 @@ const InputTypeKeyword = ({ fields, remove }: Props) => {
   };
 
   useEffect(() => {
-    console.log("fields", fields);
     fields.forEach((item, index) => {
       if (!item.type) {
         setValue(`keywords[${index}].type`, item.type, { shouldDirty: true });
-        console.log("fields", fields);
       }
     });
   }, [fields, setValue]);

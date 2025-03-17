@@ -1,11 +1,10 @@
 "use client";
-
+import { useEffect, useState } from "react";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { useRouter, useSearchParams } from "next/navigation";
-
-import { toast } from "@/hooks/use-toast";
+import Image from "next/image";
 import {
   Form,
   FormControl,
@@ -14,10 +13,7 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-
 import { IconSearch } from "../../../../assets/images";
-import Image from "next/image";
-
 import {
   Select,
   SelectContent,
@@ -28,7 +24,6 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Button } from "@/components/ui/button";
-import { useEffect, useState } from "react";
 import ModalAdd from "./ModalAdd";
 import { BranchProps, UserProps } from "@/types/types";
 import useUsersStore from "@/store/useUsers";
@@ -55,7 +50,7 @@ const Filter = ({ usersSelected, branchesSelected }: Props) => {
   } = useGetRoles({
     page: 1,
     limit: 100,
-    search: "",
+    query: "",
   });
 
   const [selectedValue, setSelectedValue] = useState("users");
@@ -89,6 +84,7 @@ const Filter = ({ usersSelected, branchesSelected }: Props) => {
     params.delete("sortOrder");
     params.delete("status");
     params.delete("provinces");
+    params.delete("status");
     params.delete("roles");
 
     router.push(`?${params.toString()}`);
@@ -116,7 +112,6 @@ const Filter = ({ usersSelected, branchesSelected }: Props) => {
   }, []);
 
   const type = searchParams ? searchParams.get("type") : null;
-  //console.log(type);
 
   useEffect(() => {
     setValue("search", searchParams?.get("search") ?? "", {

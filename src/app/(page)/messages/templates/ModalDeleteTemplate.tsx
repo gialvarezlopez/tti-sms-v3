@@ -1,6 +1,5 @@
 import React, { useState } from "react";
 import Image from "next/image";
-import { showToast } from "@/lib/toastUtil";
 import { Button } from "@/components/ui/button";
 import {
   Dialog,
@@ -28,17 +27,12 @@ const ModalDeleteTicket = ({ rowSelected, onCloseMenu }: Props) => {
   };
 
   const handleDelete = () => {
-    console.log("rowSelected", rowSelected);
     mutate(rowSelected?.id as string, {
       onSuccess(data) {
         closeModal();
         onCloseMenu();
       },
     });
-    //showToast("suaccess", "Success!", "Template delete successfully.");
-    //console.log("rowSelected", rowSelected);
-    //closeModal();
-    //onCloseMenu();
   };
 
   return (
