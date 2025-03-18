@@ -32,8 +32,8 @@ const FieldsCloseTickets = () => {
                 </SelectTrigger>
               </FormControl>
               <SelectContent>
-                <SelectItem value="Customer Contacted" bg="custom">
-                  Customer Contacted
+                <SelectItem value="Customer contacted" bg="custom">
+                  Customer contacted
                 </SelectItem>
                 <SelectItem value="Customer did not respond" bg="custom">
                   Customer did not respond

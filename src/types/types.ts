@@ -39,7 +39,8 @@ export type BranchProps = {
   name?: string;
   address?: string;
   province?: ProvincesProps | string;
-  phone_number?: string;
+  phone_number?: string; //if the correct is sendingNumber, then remove phone_number
+  sendingNumber?: string;
   sending_number_id?: string;
   status?: string;
   distributionList?: string;

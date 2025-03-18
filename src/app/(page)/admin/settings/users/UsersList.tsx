@@ -35,7 +35,8 @@ const UsersList = ({
   const selectedSortOrder = searchParams ? searchParams.get("sortOrder") : null;
   const selectedSortBy = searchParams ? searchParams.get("sortBy") : null;
 
-  const { ref, width = 0 } = useResizeObserver<HTMLDivElement>();
+  const { ref: refMainDiv, width: widthMainDiv = 0 } =
+    useResizeObserver<HTMLDivElement>();
 
   const [search, setSearch] = useState("");
   const [sortBy, setSortBy] = useState<string>(selectedSortBy ?? ""); // Status for the sort field
@@ -192,8 +193,12 @@ const UsersList = ({
     }
   }, [error]);
 
+  const maxHeightScrollTable = () => {
+    return widthMainDiv <= 768 ? `max-h-[450px]` : `max-h-[calc(100vh-310px)]`;
+  };
+
   return (
-    <div ref={ref}>
+    <div ref={refMainDiv}>
       <div className="mx-auto py-2">
         {error ? (
           <div className="mt-4">
@@ -204,7 +209,7 @@ const UsersList = ({
             {isLoading || !isDataLoaded ? (
               <TableSkeleton
                 rows={5}
-                cols={width <= 768 ? 2 : 5}
+                cols={widthMainDiv <= 768 ? 2 : 5}
                 checkbox={true}
                 dots={true}
                 width="w-full md:w-1/2"
@@ -230,6 +235,7 @@ const UsersList = ({
                     ? "We have not found any results for your search."
                     : ""
                 }
+                scrollBody={maxHeightScrollTable()}
               />
             )}
           </>

@@ -54,6 +54,7 @@ export type DataTableProps<T> = {
       paramsToKeep: string[]
     ) => void;
   }; // Definir el tipo del objeto
+  scrollBody?: string;
 };
 
 // Use the generic type in the component definition
@@ -74,6 +75,7 @@ const DataTable = <T extends Record<string, any>>({
   onClearSelected,
   messageNoRecord,
   paramsUrl,
+  scrollBody,
 }: DataTableProps<T>) => {
   const router = useRouter();
 
@@ -253,60 +255,66 @@ const DataTable = <T extends Record<string, any>>({
       ) : (
         <div className="overflow-x-auto w-full">
           <div className="min-w-full">
-            <Table className="table-auto divide-y divide-gray-200 dataTable">
-              <TableHeader className="bg-[#E1E1E1] hover:text-accent-foreground ">
-                {table.getHeaderGroups().map((headerGroup) => (
-                  <TableRow key={headerGroup.id}>
-                    {headerGroup.headers.map((header) => {
-                      const isSorted = sortBy === header.id;
-                      const sortDirection = isSorted ? sortOrder : undefined;
+            <div
+              className={` ${
+                scrollBody ? scrollBody : ""
+              } relative overflow-y-auto`}
+            >
+              <Table className="table-auto divide-y divide-gray-200 dataTable">
+                <TableHeader className="bg-[#E1E1E1] hover:text-accent-foreground sticky top-0">
+                  {table.getHeaderGroups().map((headerGroup) => (
+                    <TableRow key={headerGroup.id}>
+                      {headerGroup.headers.map((header) => {
+                        const isSorted = sortBy === header.id;
+                        const sortDirection = isSorted ? sortOrder : undefined;
 
-                      return (
-                        <TableHead
-                          key={header.id}
-                          onClick={() =>
-                            header.column.columnDef.enableSorting !== false &&
-                            onSortChange(header.id as string)
-                          }
-                          className={`${
-                            header.column.columnDef.enableSorting === false
-                              ? ""
-                              : "cursor-pointer"
-                          } text-nowrap font-semibold text-[#1D2433]`}
-                        >
+                        return (
+                          <TableHead
+                            key={header.id}
+                            onClick={() =>
+                              header.column.columnDef.enableSorting !== false &&
+                              onSortChange(header.id as string)
+                            }
+                            className={`${
+                              header.column.columnDef.enableSorting === false
+                                ? ""
+                                : "cursor-pointer"
+                            } text-nowrap font-semibold text-[#1D2433]`}
+                          >
+                            {flexRender(
+                              header.column.columnDef.header,
+                              header.getContext()
+                            )}
+                            {isSorted ? (
+                              sortDirection === "asc" ? (
+                                <span className="pl-2">&uarr;</span>
+                              ) : (
+                                <span className="pl-2">&darr;</span>
+                              )
+                            ) : null}{" "}
+                          </TableHead>
+                        );
+                      })}
+                    </TableRow>
+                  ))}
+                </TableHeader>
+
+                <TableBody>
+                  {table.getRowModel().rows.map((row) => (
+                    <TableRow key={row.id}>
+                      {row.getVisibleCells().map((cell) => (
+                        <TableCell key={cell.id}>
                           {flexRender(
-                            header.column.columnDef.header,
-                            header.getContext()
+                            cell.column.columnDef.cell,
+                            cell.getContext()
                           )}
-                          {isSorted ? (
-                            sortDirection === "asc" ? (
-                              <span className="pl-2">&uarr;</span>
-                            ) : (
-                              <span className="pl-2">&darr;</span>
-                            )
-                          ) : null}{" "}
-                        </TableHead>
-                      );
-                    })}
-                  </TableRow>
-                ))}
-              </TableHeader>
-
-              <TableBody>
-                {table.getRowModel().rows.map((row) => (
-                  <TableRow key={row.id}>
-                    {row.getVisibleCells().map((cell) => (
-                      <TableCell key={cell.id}>
-                        {flexRender(
-                          cell.column.columnDef.cell,
-                          cell.getContext()
-                        )}
-                      </TableCell>
-                    ))}
-                  </TableRow>
-                ))}
-              </TableBody>
-            </Table>
+                        </TableCell>
+                      ))}
+                    </TableRow>
+                  ))}
+                </TableBody>
+              </Table>
+            </div>
             <div className="flex items-center justify-end mt-4">
               <div className="flex-1 flex justify-between sm:hidden">
                 <PaginationPrevious
