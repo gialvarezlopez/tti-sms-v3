@@ -52,7 +52,8 @@ const Home = () => {
     pageSize: 10,
   });
 
-  const { ref, width = 0 } = useResizeObserver<HTMLDivElement>();
+  const { ref: refMainDiv, width: widthMainDiv = 0 } =
+    useResizeObserver<HTMLDivElement>();
 
   const searchParam = searchParams?.get("search") ?? "";
   const branchesParam = searchParams?.get("branches");
@@ -235,8 +236,12 @@ const Home = () => {
     }
   }, [errorTickets]);
 
+  const maxHeightScrollTable = () => {
+    return widthMainDiv <= 768 ? `max-h-[450px]` : `max-h-[calc(100vh-540px)]`;
+  };
+
   return (
-    <div ref={ref}>
+    <div ref={refMainDiv}>
       <div className="flex gap-6 justify-between">
         <h1 className="font-bold text-2xl md:text-4xl">
           Welcome {capitalizeFirstLetterOfEveryWord(session?.user.name)}
@@ -248,7 +253,7 @@ const Home = () => {
 
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-3 mt-4">
         {isLoadingStats ? (
-          Array(width <= 768 ? 2 : 5)
+          Array(widthMainDiv <= 768 ? 2 : 5)
             .fill(0)
             .map((_, index) => (
               <div key={index} className="h-full">
@@ -279,7 +284,7 @@ const Home = () => {
           {isLoadingTickets || !isDataLoaded ? (
             <TableSkeleton
               rows={5}
-              cols={width <= 768 ? 3 : 7}
+              cols={widthMainDiv <= 768 ? 3 : 7}
               checkbox={true}
               dots={true}
               width="w-full md:w-1/2"
@@ -311,6 +316,7 @@ const Home = () => {
                   ? "We have not found any results for your search."
                   : ""
               }
+              scrollBody={maxHeightScrollTable()}
             />
           )}
         </div>

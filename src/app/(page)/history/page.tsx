@@ -49,7 +49,8 @@ const Home = () => {
     pageSize: 10,
   });
 
-  const { ref, width = 0 } = useResizeObserver<HTMLDivElement>();
+  const { ref: refMainDiv, width: widthMainDiv = 0 } =
+    useResizeObserver<HTMLDivElement>();
 
   const searchParam = searchParams?.get("search") ?? "";
   const branchesParam = searchParams?.get("branches");
@@ -224,22 +225,30 @@ const Home = () => {
     }
   }, [errorTickets]);
 
+  const maxHeightScrollTable = () => {
+    return widthMainDiv <= 768 ? `max-h-[450px]` : `max-h-[calc(100vh-400px)]`;
+  };
+
   return (
-    <div ref={ref}>
-      <div className="flex gap-6 justify-between">
-        <h1 className="font-bold text-2xl md:text-4xl">History</h1>
+    <div ref={refMainDiv}>
+      <div>
+        <div className="flex gap-6 justify-between">
+          <h1 className="font-bold text-2xl md:text-4xl">History</h1>
+        </div>
+        <p className="py-2">
+          All your closed tickets are here for consultation.
+        </p>
       </div>
-      <p className="py-2">All your closed tickets are here for consultation.</p>
-
       <div className="rounded-lg bg-white my-6 p-4">
-        <h3 className="text-xl font-semibold">Tickets</h3>
-        <Actions />
-
+        <div>
+          <h3 className="text-xl font-semibold">Tickets</h3>
+          <Actions />
+        </div>
         <div className="mx-auto py-5">
           {isLoadingTickets || !isDataLoaded ? (
             <TableSkeleton
               rows={5}
-              cols={width <= 768 ? 3 : 7}
+              cols={widthMainDiv <= 768 ? 3 : 7}
               checkbox={true}
               dots={true}
               width="w-full md:w-1/2"
@@ -271,6 +280,7 @@ const Home = () => {
                   ? "We have not found any results for your search."
                   : ""
               }
+              scrollBody={maxHeightScrollTable()}
             />
           )}
         </div>

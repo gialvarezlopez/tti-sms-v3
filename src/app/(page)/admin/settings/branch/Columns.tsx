@@ -190,7 +190,9 @@ export const columns: ColumnDef<BranchProps>[] = [
     cell: ({ row }) => {
       return (
         <span className="text-nowrap">
-          {row.original.phone_number ?? "No number assigned"}
+          {row.original.sendingNumber
+            ? row.original.sendingNumber
+            : row.original.phone_number ?? "No number assigned"}
         </span>
       );
     },
