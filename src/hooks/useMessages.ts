@@ -3,7 +3,11 @@ import axiosInstance from "@/lib/axiosInstance";
 import { messagesRoutes } from "@/config/apiRoutes";
 import { useRouter } from "next/navigation";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { FormReviewMessageProps, PaginateParams } from "@/types/types";
+import {
+  FormReviewMessageProps,
+  PaginateParams,
+  ResendMessageProps,
+} from "@/types/types";
 import { showToast } from "@/lib/toastUtil";
 
 const returnAfterSubmit = "/messages/new-message";
@@ -91,6 +95,7 @@ const useCreateMessage = () => {
   });
 };
 
+/*
 const useSingleMessage = (id: string) => {
   return useQuery({
     queryKey: ["message-single", id],
@@ -113,5 +118,47 @@ const useSingleMessage = (id: string) => {
     enabled: !!id,
   });
 };
+*/
+const useResendMessage = (id: string) => {
+  const { push } = useRouter();
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: async (payload: ResendMessageProps) => {
+      try {
+        const url = messagesRoutes.resend(id);
+        const { data } = await axiosInstance.post(url, payload);
 
-export { useGetMessages, useCreateMessage, useSingleMessage };
+        return data;
+      } catch (e) {
+        if (isAxiosError(e) && e.response) {
+          const errorMessage =
+            e.response.data.message || e.response.data.error || "Unknown error";
+          throw new Error(errorMessage);
+        } else {
+          throw new Error("Unknown error");
+        }
+      }
+    },
+    onSettled: () => {
+      queryClient.invalidateQueries({ queryKey: ["message-list"] });
+      queryClient.invalidateQueries({ queryKey: ["ticket-list"] });
+    },
+    onSuccess: (value) => {
+      showToast(
+        "success",
+        "Success!",
+        `${value?.message ?? "Message sent successfully"}`
+      );
+    },
+    onError: (error) => {
+      const errorMessage =
+        error instanceof Error
+          ? error.message
+          : "An unexpected error has occurred.";
+
+      showToast("destructive", "Error!", `${errorMessage}`);
+    },
+  });
+};
+
+export { useGetMessages, useCreateMessage, useResendMessage };

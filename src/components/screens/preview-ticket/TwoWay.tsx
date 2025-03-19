@@ -1,4 +1,6 @@
 import { WHO_SEND_MESSAGE } from "@/lib/constants";
+import { formatDate } from "@/lib/utils/dateUtils";
+import { highlightKeyword } from "@/lib/utils/utils";
 import { TicketsProps } from "@/types/types";
 import React from "react";
 type Props = {
@@ -26,6 +28,20 @@ const TwoWay = ({ ticket }: Props) => {
       <div>
         {ticket?.messages?.map((item, index) => (
           <div key={index} className={`border-b border-[#CCD1DC]  px-6  `}>
+            <div className="text-[#1D2433]/60 pt-3">
+              {index === 0 ? (
+                <>{` First Message - ${formatDate(item.createdAt)} `}</>
+              ) : (
+                ""
+              )}
+
+              {ticket?.messages?.length === index + 1 ? (
+                <>{` Last Message - ${formatDate(item.createdAt)} `}</>
+              ) : (
+                ""
+              )}
+            </div>
+
             <div
               className={`py-2  ${
                 item?.sentByType === WHO_SEND_MESSAGE.CUSTOMER
@@ -50,9 +66,23 @@ const TwoWay = ({ ticket }: Props) => {
                     </span>
                   </div>
 
-                  <div>
-                    <span className="">{item.content}</span>
-                  </div>
+                  <div
+                    dangerouslySetInnerHTML={{
+                      __html: highlightKeyword(
+                        item.content ?? "Undefined",
+                        ticket.template?.keywords?.map(
+                          ({ keyword, value }) => ({
+                            keyword,
+                            value: keyword ?? "",
+                          })
+                        ) ?? [],
+                        "red",
+                        [], //No keyword
+
+                        true
+                      ),
+                    }}
+                  />
                 </div>
               </div>
             </div>

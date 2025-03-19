@@ -12,7 +12,12 @@ import { FormReviewMessageProps, TemplateProps } from "@/types/types";
 import DetailConfirm from "./DetailConfirm";
 import { Checkbox } from "@/components/ui/checkbox";
 import { useCreateMessage } from "@/hooks/useMessages";
-import { getJustNumber } from "@/lib/utils/utils";
+import {
+  getJustNumber,
+  removeBrackets,
+  removeHtmlTags,
+} from "@/lib/utils/utils";
+import { WHO_SEND_MESSAGE } from "@/lib/constants";
 
 type Props = {
   template: TemplateProps;
@@ -45,11 +50,11 @@ const MessageReviewConfirm = ({
     const stringWithoutHtml =
       formState &&
       formState?.content &&
-      formState?.content.replace(/<[^>]*>/g, "");
+      removeBrackets(removeHtmlTags(formState?.content ?? ""));
 
     const cleanData = {
       ...formState,
-      message: { content: stringWithoutHtml },
+      message: { content: stringWithoutHtml, sent_by: WHO_SEND_MESSAGE.ADMIN },
       template_id: template?.id,
       recipient_number: getJustNumber(formState?.recipient_number ?? ""),
     };

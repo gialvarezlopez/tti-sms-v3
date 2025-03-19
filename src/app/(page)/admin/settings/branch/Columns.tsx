@@ -10,7 +10,7 @@ import {
 import { MoreVertical } from "lucide-react";
 import { Dispatch, SetStateAction, useState } from "react";
 import useBranchesStore from "@/store/useBranches";
-import { branchStatus } from "@/lib/utils/utils";
+import { branchStatus, formatPhoneNumber } from "@/lib/utils/utils";
 import UpdateBranch from "./UpdateBranch";
 
 const UpdateCell = ({
@@ -190,9 +190,8 @@ export const columns: ColumnDef<BranchProps>[] = [
     cell: ({ row }) => {
       return (
         <span className="text-nowrap">
-          {row.original.sendingNumber
-            ? row.original.sendingNumber
-            : row.original.phone_number ?? "No number assigned"}
+          {formatPhoneNumber(row.original.sendingNumber?.phoneNumber ?? "") ??
+            "No number assigned"}
         </span>
       );
     },

@@ -31,7 +31,12 @@ const ModalAdd = ({ selectedValue }: Props) => {
       </Button>
 
       <Dialog open={isOpen} onOpenChange={closeModal}>
-        <DialogContent className="sm:max-w-md md:max-w-[473px] p-0 max-h-[90vh]">
+        <DialogContent
+          className="sm:max-w-md md:max-w-[473px] p-0 max-h-[90vh]"
+          onInteractOutside={(e) => {
+            e.preventDefault();
+          }}
+        >
           {!isNext && (
             <Add
               setIsNext={setIsNext}

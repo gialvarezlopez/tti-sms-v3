@@ -31,6 +31,7 @@ const ticketsRoutes = {
   new: `/api/v1/threads`,
   single: (id: string) => `/api/v1/threads/${id}`, //View, Delete, Update
   multiOption: `/api/v1/threads/multi-op`, //Delete multi options
+  resendLast: (id: string) => `/api/v1/threads/${id}/resend_last`,
 };
 
 const templatesRoutes = {
@@ -40,9 +41,12 @@ const templatesRoutes = {
 };
 
 const messagesRoutes = {
+  //Threads sections
   list: `/api/v1/threads`,
   new: `/api/v1/threads`,
-  single: (id: string) => `/api/v1/threads/${id}`, //View, Delete, Update
+  //single: (id: string) => `/api/v1/threads/${id}`, //View, Delete, Update
+  //Messages section
+  resend: (id: string) => `/api/v1/messages/${id}/resend`,
 };
 
 export {

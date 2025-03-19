@@ -11,8 +11,13 @@ import { Input } from "@/components/ui/input";
 import { Separator } from "@/components/ui/separator";
 import CustomInputMask from "@/components/ui/customInputMask";
 import CustomFormMessage from "../../../ui/CustomFormMessage";
-import { KeywordTemplates, TemplateProps } from "@/types/types";
-import { cn, highlightKeyword, renderIcon } from "@/lib/utils/utils";
+import { KeywordTemplates, TemplateProps, TicketsProps } from "@/types/types";
+import {
+  cn,
+  highlightKeyword,
+  renderIcon,
+  templateType,
+} from "@/lib/utils/utils";
 import {
   Popover,
   PopoverContent,
@@ -24,6 +29,7 @@ import { Calendar } from "@/components/ui/calendar";
 type Props = {
   template: TemplateProps;
   isFromModal: boolean;
+  ticket?: TicketsProps;
 };
 
 interface Keyword {
@@ -33,7 +39,7 @@ interface Keyword {
   type: string;
 }
 
-const FieldsResendMessage = ({ template, isFromModal }: Props) => {
+const FieldsResendMessage = ({ template, isFromModal, ticket }: Props) => {
   const { control, setValue, watch, getValues } = useFormContext();
 
   const [isPopoverOpen, setIsPopoverOpen] = useState(false);
@@ -47,7 +53,6 @@ const FieldsResendMessage = ({ template, isFromModal }: Props) => {
     return date && !isNaN(new Date(date).getTime());
   };
 
-  /*
   const handleKeywordChange = (index: number, value: string) => {
     setValue(`keywords[${index}].value`, value);
 
@@ -58,44 +63,19 @@ const FieldsResendMessage = ({ template, isFromModal }: Props) => {
     const message = template?.content ?? "";
     const updatedMessage = highlightKeyword(
       message,
-      keywordValues.map(({ keyword, value, type }) => ({
-        keyword,
-        value:
-          type === "currency"
-            ? value.startsWith("$")
-              ? value
-              : `$${value}`
-            : value, // Add "$" only if it is `currency`
-      }))
-    );
-
-    setValue("content", updatedMessage, { shouldDirty: true });
-  };
-  */
-
-  const handleKeywordChange = (index: number, value: string) => {
-    setValue(`keywords[${index}].value`, value);
-
-    // Obtén los valores actualizados de los keywords
-    const keywordValues = getValues("keywords") as Keyword[];
-
-    // Actualiza el `content` con los valores de los keywords
-    const message = template?.content ?? "";
-    const updatedMessage = highlightKeyword(
-      message,
       keywordValues.map(({ keyword, value, type }) => {
         let formattedValue = value;
 
-        // Verifica si el tipo es "currency" y el valor es numérico
+        // Check if the type is "currency" and the value is numeric
         if (type === "currency") {
-          const numericValue = value?.replace("$", ""); // Elimina el símbolo "$" si ya existe
+          const numericValue = value?.replace("$", ""); // Remove the "$" symbol if it already exists
           if (
             /^\d+(\.\d{1,2})?$/.test(numericValue) ||
             numericValue === "" ||
             Number(numericValue) >= 0
           ) {
-            // Verifica si es un número válido
-            formattedValue = `$${numericValue}`; // Agrega el símbolo "$"
+            // Check if it is a valid number
+            formattedValue = `$${numericValue}`; // Add the "$" symbol
           }
         }
 
@@ -134,6 +114,7 @@ const FieldsResendMessage = ({ template, isFromModal }: Props) => {
 
   return (
     <div className="pb-2">
+      {/*<pre>{JSON.stringify(template, null, 2)}</pre>*/}
       <div className="w-full grid grid-cols-1 md:grid-cols-2 gap-3">
         <FormField
           control={control}
@@ -146,7 +127,7 @@ const FieldsResendMessage = ({ template, isFromModal }: Props) => {
                   placeholder={"Client Name"}
                   type="text"
                   {...field}
-                  readOnly={isFromModal}
+                  //readOnly={isFromModal}
                 />
               </FormControl>
               <CustomFormMessage className="w-full" />
@@ -167,7 +148,9 @@ const FieldsResendMessage = ({ template, isFromModal }: Props) => {
                   type="text"
                   {...field}
                   upperCase={true}
-                  readOnly={isFromModal}
+                  value={field.value} // Asegurar que toma el valor actualizado
+                  onChange={(e) => field.onChange(e.target.value)} // Actualizar estado
+                  //readOnly={isFromModal}
                 />
               </FormControl>
               <CustomFormMessage className="w-full" />
@@ -184,7 +167,10 @@ const FieldsResendMessage = ({ template, isFromModal }: Props) => {
             <div
               dangerouslySetInnerHTML={{
                 __html: highlightKeyword(
-                  watch("content") || template?.content,
+                  watch("content") ||
+                    (template?.isTwoWay
+                      ? template?.content
+                      : ticket?.messages?.at(-1)?.content),
                   /*
                   (isFromModal
                     ? template?.keywords

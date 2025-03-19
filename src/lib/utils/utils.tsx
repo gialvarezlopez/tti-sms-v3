@@ -236,6 +236,15 @@ export const formatTextWithBold = (text: string) => {
   );
 };
 
+//remove the brackets
+export const removeBrackets = (str: string): string => {
+  return str.replace(/[\[\]]/g, "");
+};
+
+export const removeHtmlTags = (str: string): string => {
+  return str.replace(/<[^>]*>/g, "");
+};
+
 export const generateSlug = (text: string): string => {
   return text
     .toLowerCase()
@@ -299,6 +308,27 @@ export const formatPhoneNumber = (
   }
 
   return phoneStr;
+};
+
+export const formatPhoneNumberWithoutAreCode = (phone: string) => {
+  return phone.length > 10 ? phone.slice(-10) : phone;
+};
+
+export const addFormatPhoneNumberMask = (number: string): string => {
+  const cleanNumber = number.replace(/\D/g, ""); // Remueve caracteres no numéricos
+  if (cleanNumber.length === 11 && cleanNumber.startsWith("1")) {
+    const withoutAreaCode = cleanNumber.slice(1); // Elimina el código de área
+    return `(${withoutAreaCode.slice(0, 3)}) ${withoutAreaCode.slice(
+      3,
+      6
+    )}-${withoutAreaCode.slice(6)}`;
+  } else if (cleanNumber.length === 10) {
+    return `(${cleanNumber.slice(0, 3)}) ${cleanNumber.slice(
+      3,
+      6
+    )}-${cleanNumber.slice(6)}`;
+  }
+  return number; // Si no cumple con los requisitos, devolverlo sin cambios
 };
 
 export const getJustNumber = (word: string | number) => {

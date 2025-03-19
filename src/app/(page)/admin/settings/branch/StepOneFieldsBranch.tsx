@@ -59,7 +59,7 @@ const StepOneFieldsBranch = ({
               <FormLabel>Branch Name</FormLabel>
               <FormControl>
                 <Input
-                  placeholder="User Name"
+                  placeholder="Branch Name"
                   {...field}
                   onChange={(e) => {
                     field.onChange(e);
@@ -80,7 +80,7 @@ const StepOneFieldsBranch = ({
               <FormLabel>Distribution List</FormLabel>
               <FormControl>
                 <Input
-                  placeholder="User Name"
+                  placeholder="Distribution List"
                   {...field}
                   onChange={(e) => {
                     field.onChange(e);

@@ -6,19 +6,32 @@ import { showToast } from "@/lib/toastUtil";
 import { Form } from "@/components/ui/form";
 import { Separator } from "@/components/ui/separator";
 import { Button } from "@/components/ui/button";
-import { FormReviewMessageProps, TemplateProps } from "@/types/types";
+import {
+  FormReviewMessageProps,
+  TemplateProps,
+  TicketsProps,
+} from "@/types/types";
 import FieldsResendMessage from "./FieldsBuildMessage";
 
 import Link from "next/link";
 import MessageReviewConfirm from "@/app/(page)/messages/new-message/confirm-message/MessageReviewConfirm";
-import { templateType } from "@/lib/utils/utils";
+import {
+  addFormatPhoneNumberMask,
+  formatPhoneNumber,
+  formatPhoneNumberWithoutAreCode,
+  removeBrackets,
+  removeHtmlTags,
+  templateType,
+} from "@/lib/utils/utils";
+import { useResendLastThread } from "@/hooks/useTickets";
+import { useResendMessage } from "@/hooks/useMessages";
+import { ReceiptCent } from "lucide-react";
 
 type Props = {
   template: TemplateProps;
-  recipient_number?: string;
-  client?: string;
   onClose?: () => void;
   isFromModal: boolean;
+  ticket?: TicketsProps;
 };
 
 const KeywordSchema = z
@@ -86,11 +99,20 @@ const ResponseSchema = z.object({
 const FormBuildMessage = ({
   onClose,
   template,
-  recipient_number,
-  client,
   isFromModal = true,
+  ticket,
 }: Props) => {
   const [openConfirm, setOpenConfirm] = useState(false);
+
+  //For two way
+  const { mutate: resendReminder, isPending: isSendingReminder } =
+    useResendLastThread((ticket?.id as string) ?? "");
+
+  //For one way
+  const { mutate: resendMessage, isPending: isSendingMessage } =
+    useResendMessage(
+      (ticket?.messages?.at(-1)?.id ?? ticket?.firstMessage?.id) as string
+    );
 
   const [formState, setFormState] = useState<FormReviewMessageProps>({
     client: "",
@@ -137,15 +159,41 @@ const FormBuildMessage = ({
     },
   });
 
-  const { reset, setValue, watch } = form;
+  const { setValue, watch, trigger } = form;
 
   function onSubmit(data: z.infer<typeof FormSchema>) {
-    if (onClose && isFromModal) {
-      onClose();
-    }
+    console.log("data", data);
+
     if (isFromModal) {
-      showToast("success", "Success!", "Message sent successfully.");
+      //Its two way
+      if (template?.isTwoWay) {
+        const formData = {
+          content: removeBrackets(removeHtmlTags(data.content ?? "")),
+        };
+        resendReminder(formData, {
+          onSuccess() {
+            if (onClose) onClose();
+          },
+        });
+      } else {
+        //Its one way
+        const messageId = (ticket?.messages?.at(-1)?.id ??
+          ticket?.firstMessage?.id) as string;
+
+        const payload = {
+          client: data.client ?? "",
+          recipient: data.recipient_number ?? "",
+          content: ticket?.messages?.at(-1)?.content ?? "",
+        };
+
+        resendMessage(payload, {
+          onSuccess() {
+            if (onClose) onClose();
+          },
+        });
+      }
     } else {
+      //Crea new message
       setOpenConfirm(true);
     }
 
@@ -163,11 +211,24 @@ const FormBuildMessage = ({
   }
 
   useEffect(() => {
-    if (template && isFromModal) {
-      setValue("recipient_number", recipient_number ?? "");
-      setValue("client", client ?? "");
+    if (template && isFromModal && ticket?.recipientNumber) {
+      const formattedNumber = formatPhoneNumberWithoutAreCode(
+        ticket.recipientNumber
+      );
+
+      //console.log("Formatted Number:", formattedNumber); // Debug
+
+      setValue("recipient_number", addFormatPhoneNumberMask(formattedNumber), {
+        shouldDirty: true,
+        shouldValidate: true,
+      });
+
+      setValue("client", ticket.client ?? "", {
+        shouldDirty: true,
+      });
+      trigger("recipient_number");
     }
-  }, [template, isFromModal, setValue, recipient_number, client]);
+  }, [template, isFromModal, setValue, ticket, trigger]);
 
   return (
     <div className="w-full">
@@ -195,9 +256,11 @@ const FormBuildMessage = ({
                   : ""
               }`}
             >
+              {/*<pre>{JSON.stringify(ticket, null, 2)}</pre>*/}
               <FieldsResendMessage
                 template={template}
                 isFromModal={isFromModal}
+                ticket={ticket}
               />
             </div>
           </div>
@@ -212,13 +275,16 @@ const FormBuildMessage = ({
                   }`}
                   variant={"outline"}
                   onClick={onClose}
+                  disabled={isSendingReminder || isSendingMessage}
                 >
                   Cancel
                 </Button>
               ) : (
                 <Link
                   href="/messages/new-message"
-                  className="btn-white-normal semibold link px-6"
+                  className={`btn-white-normal semibold link px-6 ${
+                    isSendingReminder || isSendingMessage ? "disabled" : ""
+                  } `}
                 >
                   Cancel
                 </Link>
@@ -230,9 +296,15 @@ const FormBuildMessage = ({
                   isFromModal ? "w-full md:w-[33%]" : "px-8"
                 }`}
                 variant={"destructive"}
-                disabled={watch("content") === ""}
+                disabled={
+                  (watch("content") === "" ||
+                    isSendingReminder ||
+                    isSendingMessage) &&
+                  template?.isTwoWay
+                }
+                isLoading={isSendingReminder || isSendingMessage}
               >
-                Submit
+                {isSendingReminder ? "Sending..." : "Submit"}
               </Button>
             </div>
           </div>

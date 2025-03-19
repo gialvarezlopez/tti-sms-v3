@@ -191,20 +191,28 @@ const Cell = ({ row }: { row: TicketsProps }) => {
       <DropdownMenuContent align="end">
         <PreviewCell ticket={template} setIsOpenDropdown={setIsOpenDropdown} />
 
-        {convertToSnakeCase(template.status) ===
+        {/*convertToSnakeCase(template.status) ===
           TICKETS_STATUS.ERROR_IN_MESSAGE && (
+          <ResendMessageCell
+            template={template}
+            setIsOpenDropdown={setIsOpenDropdown}
+          />
+        )*/}
+
+        {!template?.template?.isTwoWay && (
           <ResendMessageCell
             template={template}
             setIsOpenDropdown={setIsOpenDropdown}
           />
         )}
 
-        {convertToSnakeCase(template.status) === TICKETS_STATUS.IN_PROGRESS && (
-          <SendRemainderCell
-            ticket={template}
-            setIsOpenDropdown={setIsOpenDropdown}
-          />
-        )}
+        {convertToSnakeCase(template.status) === TICKETS_STATUS.IN_PROGRESS &&
+          template?.template?.isTwoWay && (
+            <SendRemainderCell
+              ticket={template}
+              setIsOpenDropdown={setIsOpenDropdown}
+            />
+          )}
 
         <CloseTicketCell
           ticket={template}
@@ -486,7 +494,7 @@ const useColumns = () => {
       cell: ({ row }) => {
         return (
           <span className="text-nowrap">
-            {formatDate(row.original.lastReceivedMessage.createdAt)}
+            {formatDate(row.original.lastReceivedMessage?.createdAt)}
           </span>
         );
       },

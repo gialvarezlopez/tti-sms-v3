@@ -6,6 +6,7 @@ import { useParams } from "next/navigation";
 import FormBuildMessage from "@/components/screens/templates/BuildTemplate/FormBuildMessage";
 import { dataTickets } from "@/app/(page)/home/mock/dataTickets";
 import { useSingleTemplate } from "@/hooks/useTemplates";
+import ErrorFetching from "@/components/ui/errorFetching";
 
 const Page = () => {
   const params = useParams();
@@ -13,11 +14,11 @@ const Page = () => {
 
   const {
     data: currentTemplate,
-    isLoading,
+    isFetching,
     error,
   } = useSingleTemplate(elementId as string);
 
-  if (isLoading) {
+  if (isFetching) {
     return <>Loading</>;
   }
 
@@ -36,6 +37,12 @@ const Page = () => {
           </Link>
         </div>
       </div>
+
+      {error && (
+        <ErrorFetching
+          message={error.message ?? "There was an error to get the data"}
+        />
+      )}
 
       {template && <FormBuildMessage isFromModal={false} template={template} />}
     </div>
