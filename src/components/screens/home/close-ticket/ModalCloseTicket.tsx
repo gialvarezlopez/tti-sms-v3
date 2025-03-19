@@ -46,7 +46,12 @@ const CloseTicket = ({ rowSelected, handleClearSelected }: Props) => {
         {`Close Selected Ticket(s)`}
       </Button>
       <Dialog open={isOpen} onOpenChange={closeModal}>
-        <DialogContent className="sm:max-w-md md:max-w-[559px] p-0">
+        <DialogContent
+          className="sm:max-w-md md:max-w-[559px] p-0"
+          onInteractOutside={(e) => {
+            e.preventDefault();
+          }}
+        >
           <DialogHeader>
             <DialogTitle className="flex gap-3 items-center px-6 pt-6 pb-3 text-2xl">
               <Image src={IconWarning} alt="Close Ticket" /> Close Ticket

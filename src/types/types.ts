@@ -34,13 +34,20 @@ export type ProvincesProps = {
   abbreviation?: string;
 };
 
+export type SendingNumberProps = {
+  id?: number;
+  createdAt?: string;
+  updatedAt?: string;
+  phoneNumber: string;
+};
+
 export type BranchProps = {
   id?: string;
   name?: string;
   address?: string;
   province?: ProvincesProps | string;
   phone_number?: string; //if the correct is sendingNumber, then remove phone_number
-  sendingNumber?: string;
+  sendingNumber?: SendingNumberProps;
   sending_number_id?: string;
   status?: string;
   distributionList?: string;
@@ -107,6 +114,12 @@ export type MessageProps = {
   updatedAt: string;
   sentByType: string;
   threadId: string;
+};
+
+export type ResendMessageProps = {
+  cliente?: string;
+  recipientNumber?: string;
+  content: MessageProps["content"];
 };
 
 /*

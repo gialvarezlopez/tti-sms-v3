@@ -3,14 +3,14 @@ import axiosInstance from "@/lib/axiosInstance";
 import { ticketsRoutes } from "@/config/apiRoutes";
 import { useRouter } from "next/navigation";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { PaginateParams, UserProps } from "@/types/types";
+import { PaginateParams, ResendMessageProps, UserProps } from "@/types/types";
 import { showToast } from "@/lib/toastUtil";
 
 interface TicketParams extends PaginateParams {
   status?: string[]; // It can be: 'in_progress', 'overdue', 'toBeOverdue', 'closed', 'error'
-  templates?: string[] | null; // Puede ser nulo
+  templates?: string[] | null;
   branches?: string[] | null;
-  types?: string[]; // Puede ser: 'oneway' o 'twoway'
+  types?: string[]; // It can be: 'oneway' o 'twoway'
   last_sent?: string[]; // Array con dos fechas [start, end]
   last_received?: string[]; // Array con dos fechas [start, end]
 }
@@ -136,16 +136,15 @@ const useCreateTicket = () => {
   });
 };
 
-/*
-const useUpdateTicket = (id: string) => {
-  const { push } = useRouter();
-
+const useResendLastThread = (id: string) => {
+  //const { push } = useRouter();
   const queryClient = useQueryClient();
   return useMutation({
-    mutationFn: async (payload: UserProps) => {
+    mutationFn: async (payload: ResendMessageProps) => {
       try {
-        const url = ticketsRoutes.single(id);
-        const { data } = await axiosInstance.put(url, payload);
+        const url = ticketsRoutes.resendLast(id);
+        const { data } = await axiosInstance.post(url, payload);
+
         return data;
       } catch (e) {
         if (isAxiosError(e) && e.response) {
@@ -157,13 +156,15 @@ const useUpdateTicket = (id: string) => {
         }
       }
     },
-    onSettled: () =>
-      queryClient.invalidateQueries({ queryKey: ["branch-list"] }),
+    onSettled: () => {
+      queryClient.invalidateQueries({ queryKey: ["message-list"] });
+      queryClient.invalidateQueries({ queryKey: ["ticket-list"] });
+    },
     onSuccess: (value) => {
       showToast(
         "success",
         "Success!",
-        `${value?.message ?? "Branch updated successfully"}`
+        `${value?.message ?? "Message sent successfully"}`
       );
     },
     onError: (error) => {
@@ -171,53 +172,12 @@ const useUpdateTicket = (id: string) => {
         error instanceof Error
           ? error.message
           : "An unexpected error has occurred.";
+
       showToast("destructive", "Error!", `${errorMessage}`);
     },
   });
 };
-*/
-/*
-const useCloseTicket = () => {
-  const { push } = useRouter();
 
-  const queryClient = useQueryClient();
-  return useMutation({
-    mutationFn: async (id: string) => {
-      try {
-        const url = ticketsRoutes.single(id);
-        const { data } = await axiosInstance.delete(url);
-        return data; // Asumiendo que `data` ya es el arreglo de clientes
-      } catch (e) {
-        if (isAxiosError(e) && e.response) {
-          // Verificar si el error tiene una respuesta con un mensaje
-
-          const errorMessage =
-            e.response.data.message || e.response.data.error || "Unknown error";
-          throw new Error(errorMessage);
-        } else {
-          throw new Error("Unknown error");
-        }
-      }
-    },
-    onSettled: () =>
-      queryClient.invalidateQueries({ queryKey: ["ticket-list"] }),
-    onSuccess: (value) => {
-      showToast(
-        "success",
-        "Success!",
-        `${value?.message ?? "Branch deleted successfully"}`
-      );
-    },
-    onError: (error) => {
-      const errorMessage =
-        error instanceof Error
-          ? error.message
-          : "An unexpected error has occurred.";
-      showToast("destructive", "Error!", `${errorMessage}`);
-    },
-  });
-};
-*/
 const useCloseMultiplesTickets = () => {
   const queryClient = useQueryClient();
   return useMutation({
@@ -271,7 +231,6 @@ const useCloseMultiplesTickets = () => {
 export {
   useGetTickets,
   useCreateTicket,
-  //useUpdateTicket,
-  //useCloseTicket,
   useCloseMultiplesTickets,
+  useResendLastThread,
 };

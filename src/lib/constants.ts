@@ -24,8 +24,8 @@ export const TYPE_OF_MESSAGE = {
 };
 
 export const WHO_SEND_MESSAGE = {
-  ADMIN: "admin",
-  CUSTOMER: "customer",
+  ADMIN: "system",
+  CUSTOMER: "user",
 };
 
 export const USER_ROLE = {

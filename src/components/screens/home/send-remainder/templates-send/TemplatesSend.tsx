@@ -1,27 +1,62 @@
-import React, { useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import TemplateSelection from "../../../templates/TemplateSelection";
 import { TemplateProps, TicketsProps } from "@/types/types";
 import { Separator } from "@/components/ui/separator";
 import { Button } from "@/components/ui/button";
 import FormBuildMessage from "../../../templates/BuildTemplate/FormBuildMessage";
+import { useSingleTemplate } from "@/hooks/useTemplates";
+import { showToast } from "@/lib/toastUtil";
 
 type Props = {
-  ticket: TemplateProps;
+  ticket: TicketsProps;
   onClose: () => void;
+  isFromModel?: true;
 };
 
-const TemplatesSend = ({ ticket, onClose }: Props) => {
+const TemplatesSend = ({ ticket, onClose, isFromModel }: Props) => {
   const [templateSelected, setTemplateSelected] = useState<string | undefined>(
     undefined
   );
 
+  const [doAutoClick, setDoAutoClick] = useState(false);
+  const autoClickRef = useRef<HTMLButtonElement | null>(null);
+
+  const {
+    data: currentTemplate,
+    isFetching,
+    error,
+  } = useSingleTemplate((templateSelected as string) ?? "");
+
   const [isNextStep, setIsNextStep] = useState(false);
 
   const handleNextStep = () => {
+    console.log("templateSelected", templateSelected);
     if (templateSelected) {
       setIsNextStep(true);
     }
   };
+
+  useEffect(() => {
+    if (error) {
+      showToast(
+        "destructive",
+        "Error!",
+        `${error.message ?? "There was an error to get the data"}`
+      );
+    }
+  }, [error]);
+
+  useEffect(() => {
+    if (doAutoClick) {
+      setTimeout(() => {
+        if (autoClickRef.current) {
+          autoClickRef.current.click();
+        }
+      }, 500);
+    }
+  }, [doAutoClick]);
+
+  const template = currentTemplate?.data || [];
   return (
     <>
       {!isNextStep && (
@@ -29,15 +64,18 @@ const TemplatesSend = ({ ticket, onClose }: Props) => {
           <TemplateSelection
             setTemplateSelected={setTemplateSelected}
             isLink={false}
+            isFromModel={isFromModel}
+            templateId={ticket?.template?.id ?? ""}
+            setDoAutoClick={setDoAutoClick}
           />
         </div>
       )}
-
       {isNextStep && (
         <FormBuildMessage
           onClose={onClose}
-          template={ticket}
+          template={template}
           isFromModal={true}
+          ticket={ticket}
         />
       )}
 
@@ -58,8 +96,10 @@ const TemplatesSend = ({ ticket, onClose }: Props) => {
               className="bg-customRed-v3 w-full md:w-[160px]"
               variant={"destructive"}
               onClick={handleNextStep}
+              disabled={isFetching || !templateSelected}
+              ref={doAutoClick ? autoClickRef : null}
             >
-              Next
+              {isFetching ? "Loading" : "Next"}
             </Button>
           </div>
         </div>

@@ -68,7 +68,7 @@ const useSingleTemplate = (id: string) => {
         }
       }
     },
-    staleTime: 10000,
+    //staleTime: 10000,
     enabled: !!id,
   });
 };

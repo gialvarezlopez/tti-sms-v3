@@ -38,7 +38,12 @@ const ModalPreviewTicket = ({
   return (
     <div>
       <Dialog open={isOpen} onOpenChange={onClose}>
-        <DialogContent className="sm:max-w-md md:max-w-[650px] p-0 max-h-[90vh]">
+        <DialogContent
+          className="sm:max-w-md md:max-w-[650px] p-0 max-h-[90vh]"
+          onInteractOutside={(e) => {
+            e.preventDefault();
+          }}
+        >
           <DialogHeader>
             <DialogTitle className="flex gap-3 items-center px-6 pt-6 pb-3 font-bold text-2xl">
               <Image src={IconTicketDetail} alt="Details" /> Ticket Details

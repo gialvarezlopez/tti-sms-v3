@@ -18,7 +18,6 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { Alert } from "@/components/ui/alert";
-import { Loader2 } from "lucide-react";
 import { MilwaukeeLogoV2 } from "@/assets/images";
 import Image from "next/image";
 import Fields from "./Fields";
@@ -108,15 +107,9 @@ const LoginPage = () => {
                 disabled={loading}
                 className="w-full text-center bg-customRed-v1 font-semibold text-base mb-2"
                 variant={"destructive"}
+                isLoading={loading}
               >
-                {loading ? (
-                  <div className="flex gap-3 items-center">
-                    Loading
-                    <Loader2 className="mr-2 spin" size={"14px"} />
-                  </div>
-                ) : (
-                  "Sign In"
-                )}
+                {loading ? "Loading" : "Sign In"}
               </Button>
             </CardFooter>
           </CardHeader>

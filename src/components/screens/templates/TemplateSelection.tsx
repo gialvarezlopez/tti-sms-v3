@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Image from "next/image";
 import { useRouter, useSearchParams } from "next/navigation";
 import TypeTemplateSection from "./TypeTemplateSection";
@@ -16,12 +16,18 @@ type Props = {
   >;
   className?: string;
   isLink: boolean;
+  isFromModel?: boolean;
+  templateId?: string;
+  setDoAutoClick?: React.Dispatch<React.SetStateAction<boolean>>;
 };
 
 const TemplateSelection = ({
   setTemplateSelected,
   className = "grid grid-cols-1 md:grid-cols-3 gap-6",
   isLink,
+  isFromModel,
+  templateId,
+  setDoAutoClick,
 }: Props) => {
   const searchParams = useSearchParams();
   const selectedSearch = searchParams?.get("q")?.toLowerCase() || "";
@@ -33,6 +39,7 @@ const TemplateSelection = ({
     error,
     isLoading,
     refetch,
+    isFetched,
   } = useGetTemplates({
     page: 1,
     limit: 100,
@@ -55,28 +62,45 @@ const TemplateSelection = ({
       setSelected(item);
     }
   };
+
+  useEffect(() => {
+    if (
+      dataTemplates &&
+      isFetched &&
+      twoWayItems.length === 0 &&
+      setDoAutoClick
+    ) {
+      setDoAutoClick(true);
+    }
+  }, [twoWayItems, dataTemplates, isFetched, setDoAutoClick]);
+
   return (
     <>
       <div className="space-y-6 w-full">
-        <div className="space-y-4">
-          <div className="flex gap-3 items-center text-base text-[#1D2433]/60 font-semibold ">
-            <Image src={IconKeyboardTab} alt="" /> One way Messages
-          </div>
-          {error && <ErrorFetching message={error.message} />}
-          <div className={className}>
-            {isLoading ? (
-              <TemplatesSkeleton number={3} />
-            ) : (
-              <TypeTemplateSection
-                dataTemplates={oneWayItems}
-                handleSelected={handleSelected}
-                selected={selected}
-                isLink={isLink}
-              />
-            )}
-          </div>
-        </div>
-        <Separator className="" />
+        {!isFromModel && (
+          <>
+            <div className="space-y-4">
+              <div className="flex gap-3 items-center text-base text-[#1D2433]/60 font-semibold ">
+                <Image src={IconKeyboardTab} alt="" /> One way Messages
+              </div>
+              {error && <ErrorFetching message={error.message} />}
+              <div className={className}>
+                {isLoading ? (
+                  <TemplatesSkeleton number={3} />
+                ) : (
+                  <TypeTemplateSection
+                    dataTemplates={oneWayItems}
+                    handleSelected={handleSelected}
+                    selected={selected}
+                    isLink={isLink}
+                  />
+                )}
+              </div>
+            </div>
+            <Separator className="" />
+          </>
+        )}
+
         <div className="space-y-4">
           <div className="flex gap-3 items-center text-base text-[#1D2433]/60 font-semibold ">
             <Image src={IconTwoWay} alt="" /> Two way Messages
@@ -91,6 +115,7 @@ const TemplateSelection = ({
                 handleSelected={handleSelected}
                 selected={selected ?? ""}
                 isLink={isLink}
+                templateId={templateId}
               />
             )}
           </div>
