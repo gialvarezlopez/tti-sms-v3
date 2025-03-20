@@ -33,7 +33,7 @@ const FieldsFilterBranch = ({
     () =>
       dataProvinces &&
       dataProvinces.map((item) => ({
-        id: `${item.id}`!, // El operador ! indica que sabemos que no es undefined
+        id: `${item.id}`!, // The operator! indicates that we know it is not undefined
         value: `${item?.name}`,
       })),
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -44,7 +44,7 @@ const FieldsFilterBranch = ({
     () =>
       dataStatus &&
       dataStatus.map((item) => ({
-        id: `${item.id}`!, // El operador ! indica que sabemos que no es undefined
+        id: `${item.id}`!,
         value: `${item?.value}`,
       })),
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -55,29 +55,17 @@ const FieldsFilterBranch = ({
     () =>
       dataRoles &&
       dataRoles.map((item) => ({
-        id: `${item.name}`!, // El operador ! indica que sabemos que no es undefined
+        id: `${item.name}`!,
         value: `${item?.description}`,
       })),
     // eslint-disable-next-line react-hooks/exhaustive-deps
     [dataRoles]
   );
-  /*
-  const simplifiedUserRoles = useMemo(
-    () =>
-      USER_ROLE &&
-      Object.entries(USER_ROLE).map(([key, value]) => ({
-        id: key, // El key será el id
-        value: value, // El value será el valor
-      })),
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    [USER_ROLE]
-  );
-  */
+
   const resetSection = (fields: string[]) => {
     if (fields.length > 0) {
       // Get the current values ​​of the form
       const currentValues = getValues();
-
       // Function to determine the default value for each field
       const getDefaultValue = (field: string) => {
         const fieldValue = currentValues[field];
@@ -91,7 +79,7 @@ const FieldsFilterBranch = ({
 
       // Create an object for the fields we want to reset, keeping the current values ​​for the others
       const resetFields = fields.reduce((acc, field) => {
-        acc[field] = getDefaultValue(field); // Establecemos el valor por defecto según el tipo
+        acc[field] = getDefaultValue(field); // We set the default value according to the type
         return acc;
       }, {} as { [key: string]: string | unknown[] });
 
@@ -106,7 +94,6 @@ const FieldsFilterBranch = ({
     }
   };
 
-  //const type = searchParams ? searchParams.get("type") : null;
   const type = searchParams?.get("type") || SETTINGS_PARAMETER_URL.USERS;
 
   useEffect(() => {

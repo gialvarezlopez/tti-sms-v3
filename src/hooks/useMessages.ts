@@ -95,32 +95,7 @@ const useCreateMessage = () => {
   });
 };
 
-/*
-const useSingleMessage = (id: string) => {
-  return useQuery({
-    queryKey: ["message-single", id],
-    queryFn: async () => {
-      try {
-        const url = messagesRoutes.single(id);
-        const { data } = await axiosInstance.get(url);
-        return data;
-      } catch (e) {
-        if (isAxiosError(e) && e.response) {
-          const errorMessage =
-            e.response.data.message || e.response.data.error || "Unknown error";
-          throw new Error(errorMessage);
-        } else {
-          throw new Error("Unknown error");
-        }
-      }
-    },
-    staleTime: 10000,
-    enabled: !!id,
-  });
-};
-*/
 const useResendMessage = (id: string) => {
-  const { push } = useRouter();
   const queryClient = useQueryClient();
   return useMutation({
     mutationFn: async (payload: ResendMessageProps) => {

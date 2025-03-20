@@ -3,9 +3,9 @@ import { useState } from "react";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
+import { useRouter, useSearchParams } from "next/navigation";
 import { Form } from "@/components/ui/form";
 import { Button } from "@/components/ui/button";
-import { showToast } from "@/lib/toastUtil";
 import {
   Card,
   CardContent,
@@ -19,10 +19,19 @@ import { Loader2 } from "lucide-react";
 import { MilwaukeeLogoV2 } from "@/assets/images";
 import Image from "next/image";
 import Fields from "./Fields";
+import { useSetResetPasswordUser } from "@/hooks/useUsers";
 
 const FormResetPassword = () => {
+  const { push } = useRouter();
+  const searchParams = useSearchParams();
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
+
+  const resetToken = searchParams?.get("token");
+
+  const { mutate: resetPasswordUser, isPending } = useSetResetPasswordUser(
+    (resetToken ?? "") as string
+  );
 
   const FormSchema = z
     .object({
@@ -45,7 +54,14 @@ const FormResetPassword = () => {
   });
 
   async function onSubmit(data: z.infer<typeof FormSchema>) {
-    showToast("success", "Success!", "Password updated successfully");
+    const dataForm = {
+      newPassword: data.password,
+    };
+    resetPasswordUser(dataForm, {
+      onSuccess() {
+        push("/login");
+      },
+    });
   }
 
   return (
@@ -72,7 +88,7 @@ const FormResetPassword = () => {
             <CardFooter className="px-1">
               <Button
                 type="submit"
-                disabled={loading}
+                disabled={loading || !resetToken}
                 className="w-full text-center bg-customRed-v1 font-semibold text-base mb-2"
                 variant={"destructive"}
               >

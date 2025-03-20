@@ -22,9 +22,10 @@ import { renderIcon } from "@/lib/utils/utils";
 type Props = {
   fields: KeywordProps[];
   remove: UseFieldArrayRemove;
+  maxWidthMainDiv: number;
 };
 
-const InputTypeKeyword = ({ fields, remove }: Props) => {
+const InputTypeKeyword = ({ fields, remove, maxWidthMainDiv }: Props) => {
   const { control, setValue, watch } = useFormContext();
 
   const keywordValues = useWatch({
@@ -65,8 +66,11 @@ const InputTypeKeyword = ({ fields, remove }: Props) => {
   }, [fields, setValue]);
 
   return (
-    <div className="grid  grid-cols-1 md:grid-cols-2 gap-4 items-end">
-      {/*JSON.stringify(fields)*/}
+    <div
+      className={`grid ${
+        maxWidthMainDiv <= 768 ? "grid-cols-1" : "md:grid-cols-2"
+      } gap-4 items-end`}
+    >
       {fields.map((item, index) => (
         <div key={item.id} className="w-full bg-red">
           {
@@ -92,7 +96,7 @@ const InputTypeKeyword = ({ fields, remove }: Props) => {
                       <Button
                         variant="link"
                         type="button"
-                        onClick={() => handleRemoveKeyword(index, item.keyword)} // Elimina el campo cuando se hace clic
+                        onClick={() => handleRemoveKeyword(index, item.keyword)}
                         className="text-customRed-v1"
                       >
                         Remove

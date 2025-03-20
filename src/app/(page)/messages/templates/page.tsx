@@ -1,4 +1,3 @@
-//message/template/page.tsx
 "use client";
 import React, { Suspense, useEffect, useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";

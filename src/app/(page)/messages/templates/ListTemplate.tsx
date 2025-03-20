@@ -30,13 +30,13 @@ import {
 } from "@/components/ui/pagination";
 import { removeAllParamsFromUrl } from "@/lib/utils/urlUtils";
 import NoRecordFound from "@/components/ui/NoRecordFound";
+
 const paramsToIgnore = [""];
 type Props = {
   dataTemplates: TemplateProps[];
   isLoading: boolean;
   isDataLoaded: boolean;
   pagination: {
-    //pageIndex: number;
     currentPage: number;
     totalPages: number;
   };
@@ -316,7 +316,7 @@ const ListTemplate = ({
       </div>
       {!isLoading && filteredTemplates.length > 0 && (
         <>
-          {/* Controles de paginación */}
+          {/* Pagination controls */}
           <div className="flex items-center justify-end mt-6">
             <div className="flex-1 flex justify-between sm:hidden">
               <PaginationPrevious

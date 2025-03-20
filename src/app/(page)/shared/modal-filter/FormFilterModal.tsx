@@ -59,7 +59,7 @@ const FormFilterModal = ({ fromPage }: Props) => {
     })
     .refine(
       (data) => {
-        // Si lastSentFrom tiene un valor, entonces lastSentTo debe ser requerido
+        // If lastSentFrom has a value, then lastSentTo must be required
         if (data.lastSentFrom && !data.lastSentTo) {
           return false;
         }
@@ -67,12 +67,12 @@ const FormFilterModal = ({ fromPage }: Props) => {
       },
       {
         message: "This is required when Last Sent From is selected",
-        path: ["lastSentTo"], // Indica que el error se debe mostrar en lastSentTo
+        path: ["lastSentTo"],
       }
     )
     .refine(
       (data) => {
-        // Si lastReceivedFrom tiene un valor, entonces lastReceivedTo debe ser requerido
+        // If lastReceivedFrom has a value, then lastReceivedTo must be required
         if (data.lastReceivedFrom && !data.lastReceivedTo) {
           return false;
         }
@@ -80,12 +80,12 @@ const FormFilterModal = ({ fromPage }: Props) => {
       },
       {
         message: "This is required when Last Received From is selected",
-        path: ["lastReceivedTo"], // Indica que el error se debe mostrar en lastReceivedTo
+        path: ["lastReceivedTo"],
       }
     )
     .refine(
       (data) => {
-        // Si lastReceivedFrom tiene un valor, entonces lastReceivedTo debe ser requerido
+        // If lastReceivedFrom has a value, then lastReceivedTo must be required
         if (data.closeDateFrom && !data.closeDateTo) {
           return false;
         }
@@ -93,7 +93,7 @@ const FormFilterModal = ({ fromPage }: Props) => {
       },
       {
         message: "This is required when Close Date From is selected",
-        path: ["closeDateTo"], // Indica que el error se debe mostrar en lastReceivedTo
+        path: ["closeDateTo"],
       }
     );
 

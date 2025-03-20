@@ -1,11 +1,6 @@
 import React from "react";
-import { TYPE_OF_MESSAGE } from "@/lib/constants";
-import { convertToSnakeCase, templateType } from "@/lib/utils/utils";
-import {
-  FormReviewMessageProps,
-  TemplateProps,
-  TicketsProps,
-} from "@/types/types";
+import { templateType } from "@/lib/utils/utils";
+import { FormReviewMessageProps, TemplateProps } from "@/types/types";
 import OneAndTwoWay from "./OneAndTwoWay";
 
 type Props = {
@@ -14,8 +9,6 @@ type Props = {
 };
 
 const DetailConfirm = ({ template, formState }: Props) => {
-  // Function to render the dynamic message
-
   return (
     <>
       <div className="grid grid-cols-1 md:grid-cols-2 gap-3 border-b border-[#d5d8df]  px-6 py-2">
@@ -39,9 +32,6 @@ const DetailConfirm = ({ template, formState }: Props) => {
       </div>
 
       <OneAndTwoWay formState={formState} />
-
-      {/*convertToSnakeCase(templateType(template.isTwoWay ?? false)) ===
-        TYPE_OF_MESSAGE.ONE_WAY && <OneWay formState={formState} />*/}
     </>
   );
 };

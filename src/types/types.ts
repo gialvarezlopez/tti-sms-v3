@@ -10,11 +10,16 @@ export type UserProps = {
   id?: string;
   name?: string;
   email?: string;
+  password?: string;
   username?: string;
   primary_role?: RoleProps;
   branch?: BranchProps;
   created_at?: string;
   updated_at?: string;
+};
+
+export type ResetPassword = {
+  newPassword: string;
 };
 
 export type LoginProps = {

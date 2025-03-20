@@ -57,7 +57,7 @@ const DeleteCell = ({
   branch: BranchProps;
   setIsOpenDropdown: Dispatch<SetStateAction<boolean>>;
 }) => {
-  const { setBranches } = useBranchesStore(); // Accedes a los usuarios
+  const { setBranches } = useBranchesStore();
   const [, setIsOpen] = useState(false);
 
   const handleClose = () => {
@@ -138,11 +138,9 @@ export const columns: ColumnDef<BranchProps>[] = [
     ),
     enableSorting: false,
   },
-  // Condicional para mostrar la columna 'Branch' solo si el rol es 'admin'
 
   {
     accessorKey: "name",
-    //id: "user.first_name",
     header: () => {
       return (
         <Button variant="ghost" className="px-0">
@@ -173,13 +171,12 @@ export const columns: ColumnDef<BranchProps>[] = [
             ? row.original?.province
             : row.original?.province?.name}
         </span>
-      ); //capitalizeFirstLetter(row.original.tipoCliente);
+      );
     },
   },
 
   {
     accessorKey: "number",
-    //id: "user.role",
     header: () => {
       return (
         <Button variant="ghost" className="px-0">
@@ -199,7 +196,6 @@ export const columns: ColumnDef<BranchProps>[] = [
 
   {
     accessorKey: "status",
-    //id: "user.branch.name",
     header: ({}: { column: ColumnDef<BranchProps> }) => {
       return (
         <Button variant="ghost" className="px-0">

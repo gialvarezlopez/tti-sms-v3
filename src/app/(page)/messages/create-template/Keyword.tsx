@@ -9,9 +9,10 @@ import { Separator } from "@/components/ui/separator";
 type Props = {
   setOpenKeyword: React.Dispatch<React.SetStateAction<boolean>>;
   keywordOption: KeywordProps;
+  maxWidthMainDiv: number;
 };
 
-const Keyword = ({ setOpenKeyword, keywordOption }: Props) => {
+const Keyword = ({ setOpenKeyword, keywordOption, maxWidthMainDiv }: Props) => {
   const { control } = useFormContext();
 
   const { fields, append, remove } = useFieldArray({
@@ -57,9 +58,8 @@ const Keyword = ({ setOpenKeyword, keywordOption }: Props) => {
         >
           <InputTypeKeyword
             fields={fields as KeywordProps[]}
-            //setMessage={setMessage}
-            //message={message}
             remove={remove}
+            maxWidthMainDiv={maxWidthMainDiv}
           />
         </div>
       </div>

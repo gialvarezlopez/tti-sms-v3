@@ -1,6 +1,5 @@
 "use client";
 import React, { useEffect, useState } from "react";
-import { useRouter } from "next/navigation";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { useParams } from "next/navigation";
@@ -12,7 +11,6 @@ import Link from "next/link";
 import FieldsTemplate from "./FieldsTemplate";
 import ModalKeyword from "@/components/screens/add-keyword/ModalKeyword";
 import { KeywordProps, ResponseProps } from "@/types/types";
-import { showToast } from "@/lib/toastUtil";
 import ModalResponse from "@/components/screens/add-response/ModalResponse";
 import {
   cleanOnlyWhiteSpace,
@@ -20,7 +18,6 @@ import {
   templateType,
 } from "@/lib/utils/utils";
 import { ArrowLeft } from "lucide-react";
-import { dataTemplates } from "@/components/screens/templates/dataMock";
 import { MESSAGE_EXCHANGE } from "@/lib/constants";
 import {
   useCreateTemplate,
@@ -28,12 +25,9 @@ import {
   useUpdateTemplate,
 } from "@/hooks/useTemplates";
 import { useGetBranches } from "@/hooks/useBranches";
-import { dataBranches } from "../../admin/settings/mock/dataBranch";
 import CustomFormMessage from "@/components/ui/CustomFormMessage";
-import { da } from "date-fns/locale";
 
 const FormCreateTemplate = () => {
-  const router = useRouter();
   const params = useParams();
   const elementId = params?.id;
 
@@ -51,11 +45,7 @@ const FormCreateTemplate = () => {
     automaticReply: "",
   });
 
-  const {
-    data: currentTemplate,
-    isLoading,
-    error,
-  } = useSingleTemplate(elementId as string);
+  const { data: currentTemplate } = useSingleTemplate(elementId as string);
 
   const { mutate: updateTemplate, isPending: isUpdatingTemplate } =
     useUpdateTemplate(elementId as string);
@@ -63,16 +53,12 @@ const FormCreateTemplate = () => {
   const { mutate: createTemplate, isPending: isCreatingTemplate } =
     useCreateTemplate();
 
-  const {
-    data: responseBranches,
-    error: errorBranches,
-    isLoading: isLoadingBranches,
-    refetch,
-  } = useGetBranches({
-    page: 1,
-    limit: 50,
-    query: "",
-  });
+  const { data: responseBranches, isLoading: isLoadingBranches } =
+    useGetBranches({
+      page: 1,
+      limit: 50,
+      query: "",
+    });
 
   const FormSchema = z
     .object({
@@ -141,7 +127,7 @@ const FormCreateTemplate = () => {
         )
         .optional(),
       invalidReply: z.string().optional(),
-      timeToRespond: z.number().optional(),
+      daysToLive: z.number().optional(),
     })
     .superRefine((data, ctx) => {
       const { content, keywords, responses } = data;
@@ -192,9 +178,9 @@ const FormCreateTemplate = () => {
           });
         }
 
-        if (data.timeToRespond === undefined || isNaN(data.timeToRespond)) {
+        if (data.daysToLive === undefined || isNaN(data.daysToLive)) {
           ctx.addIssue({
-            path: ["timeToRespond"],
+            path: ["daysToLive"],
             message:
               "Maximum time to respond is required for two-way message exchange",
             code: "custom",
@@ -215,7 +201,7 @@ const FormCreateTemplate = () => {
       isReminder: false,
       messageExchangeType: undefined,
       invalidReply: "",
-      timeToRespond: 35,
+      daysToLive: 35,
     },
   });
 
@@ -270,6 +256,7 @@ const FormCreateTemplate = () => {
         branch,
         content,
         keywords,
+        daysToLive,
         responses,
         isTwoWay,
         invalidReply,
@@ -288,6 +275,7 @@ const FormCreateTemplate = () => {
         branches: [branch?.id],
         description,
         content,
+        daysToLive,
         keywords,
         responses,
         messageExchangeType,

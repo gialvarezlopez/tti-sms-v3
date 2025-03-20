@@ -12,22 +12,31 @@ import { UserProps } from "@/types/types";
 import FormReset from "./FormReset";
 
 type Props = {
-  user: UserProps;
+  user?: UserProps;
   modalOpen: boolean;
   onClose: () => void;
+  overlayColor?: string;
+  description?: string;
 };
 
-const ModalResetPassword = ({ user, modalOpen, onClose }: Props) => {
+const ModalResetPassword = ({
+  user,
+  modalOpen,
+  onClose,
+  overlayColor,
+  description,
+}: Props) => {
   const [isOpen] = useState(modalOpen);
 
   return (
     <div>
       <Dialog open={isOpen} onOpenChange={onClose}>
         <DialogContent
-          className="sm:max-w-md md:max-w-[493px] p-0 max-h-[90vh]"
+          className="sm:max-w-md md:max-w-[493px] p-0 max-h-[90vh"
           onInteractOutside={(e) => {
             e.preventDefault();
           }}
+          {...(overlayColor && overlayColor !== "" ? { overlayColor } : {})}
         >
           <DialogHeader>
             <DialogTitle className="flex gap-3 items-center px-6 pt-6 pb-3 font-bold text-2xl">
@@ -36,10 +45,11 @@ const ModalResetPassword = ({ user, modalOpen, onClose }: Props) => {
             <Separator className="my-2" />
           </DialogHeader>
           <DialogDescription className="px-6  pt-3 text-base text-[#1D2433]/80">
-            An email will be sent to help the user reset their password.
+            {description
+              ? description
+              : "An email will be sent to help the user reset their password."}
           </DialogDescription>
           <FormReset user={user} onClose={onClose} />
-          {/*<TemplatesSend ticket={ticket} onClose={onClose} />*/}
         </DialogContent>
       </Dialog>
     </div>

@@ -23,18 +23,6 @@ const dataTypeOfMessage = [
   },
 ];
 
-/*
-const dataStatus = [
-  {
-    id: "error",
-    value: "Error",
-  },
-  {
-    id: "in_progress",
-    value: "In Progress",
-  },
-];
-*/
 type FormValues = {
   branch?: string[];
   status?: string[];
@@ -43,7 +31,7 @@ type FormValues = {
   lastSentTo?: string | Date;
   lastReceivedFrom?: string | Date;
   lastReceivedTo?: string | Date;
-  [key: string]: any; // Firma de índice para permitir el acceso con cualquier string
+  [key: string]: any; // Index signature to allow access with any string
 };
 
 type Props = {
@@ -83,7 +71,7 @@ const FieldsFilterModal = ({ fromPage }: Props) => {
     () =>
       dataTypeOfMessage &&
       dataTypeOfMessage.map((item) => ({
-        id: `${item.id}`!, // El operador ! indica que sabemos que no es undefined
+        id: `${item.id}`!,
         value: `${item?.value}`,
       })),
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -96,15 +84,14 @@ const FieldsFilterModal = ({ fromPage }: Props) => {
   // Usar statusArray en lugar de dataStatus dentro de useMemo
   const simplifiedStatus: TypeComboBoxProps[] = useMemo(() => {
     if (!statusArray || !Array.isArray(statusArray)) {
-      // Si statusArray no está definido o no es un arreglo, devolvemos un arreglo vacío
       return [];
     }
 
     return statusArray.map((status) => ({
-      id: status, // Usamos directamente el valor de status
-      value: status, // El valor es el mismo en este caso, puedes cambiar esto si es necesario
+      id: status,
+      value: status,
     }));
-  }, [statusArray]); // Dependencia de statusArray
+  }, [statusArray]);
 
   const simplifiedBranches: TypeComboBoxProps[] = useMemo(
     () =>

@@ -6,34 +6,30 @@ export default function DashboardLayout({
 }: {
   children: React.ReactNode;
 }) {
-  // Estado para determinar si el contenedor está visible en la pantalla
   const [isInView, setIsInView] = useState(false);
 
-  // Usamos Intersection Observer para detectar cuando el contenedor entra en la vista
   useEffect(() => {
     const observer = new IntersectionObserver(
       (entries) => {
         entries.forEach((entry) => {
           if (entry.isIntersecting) {
-            setIsInView(true); // Si es visible, cargamos la imagen
+            setIsInView(true);
           }
         });
       },
       {
-        threshold: 0.5, // Configura que el contenedor se considera visible cuando el 50% está en la pantalla
+        threshold: 0.5,
       }
     );
 
-    // Seleccionamos el contenedor
     const element = document.querySelector(".container-login");
     if (element) {
-      observer.observe(element); // Empezamos a observar el contenedor
+      observer.observe(element);
     }
 
-    // Limpieza del observer cuando el componente se desmonte
     return () => {
       if (element) {
-        observer.unobserve(element); // Dejamos de observar al desmontarse
+        observer.unobserve(element);
       }
     };
   }, []);

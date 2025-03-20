@@ -1,7 +1,6 @@
 import { isAxiosError } from "axios";
 import axiosInstance from "@/lib/axiosInstance";
 import { ticketsRoutes } from "@/config/apiRoutes";
-import { useRouter } from "next/navigation";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { PaginateParams, ResendMessageProps, UserProps } from "@/types/types";
 import { showToast } from "@/lib/toastUtil";
@@ -99,7 +98,6 @@ const useGetTickets = ({
 };
 
 const useCreateTicket = () => {
-  const { push } = useRouter();
   const queryClient = useQueryClient();
   return useMutation({
     mutationFn: async (payload: UserProps) => {
@@ -137,7 +135,6 @@ const useCreateTicket = () => {
 };
 
 const useResendLastThread = (id: string) => {
-  //const { push } = useRouter();
   const queryClient = useQueryClient();
   return useMutation({
     mutationFn: async (payload: ResendMessageProps) => {

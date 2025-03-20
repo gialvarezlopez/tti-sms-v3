@@ -20,6 +20,7 @@ type Props = {
     }[];
     branch?: string[] | undefined;
   }>;
+  maxWidthMainDiv: number;
 };
 
 const Response = ({
@@ -27,6 +28,7 @@ const Response = ({
   responseOption,
   setResponseOption,
   errors,
+  maxWidthMainDiv,
 }: Props) => {
   const { control } = useFormContext<FormValues>();
   const { fields, append, remove } = useFieldArray<FormValues>({
@@ -84,8 +86,7 @@ const Response = ({
           <InputTypeResponse
             fields={fields as unknown as AutomaticResponsesTemplates[]}
             remove={remove}
-            //setMessage={setMessage}
-            //message={message}
+            maxWidthMainDiv={maxWidthMainDiv}
           />
         </div>
       </div>

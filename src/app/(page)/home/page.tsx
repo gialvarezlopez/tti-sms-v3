@@ -3,6 +3,7 @@ import React, { useEffect, useState } from "react";
 import { useSession } from "next-auth/react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { ColumnDef } from "@tanstack/react-table";
+import useResizeObserver from "use-resize-observer";
 import DataTable from "@/components/ui/DataTable";
 import useColumns from "./Columns";
 import Actions from "./Actions";
@@ -17,7 +18,6 @@ import { convertDateYYYYMMDD } from "@/lib/utils/dateUtils";
 import { TICKETS_STATUS, USER_ROLE } from "@/lib/constants";
 import { removeAllParamsFromUrl } from "../../../lib/utils/urlUtils";
 import { capitalizeFirstLetterOfEveryWord } from "@/lib/utils/utils";
-import useResizeObserver from "use-resize-observer";
 
 type IsColumnSelectedFn<T> = (column: ColumnDef<T>, action?: string) => void;
 

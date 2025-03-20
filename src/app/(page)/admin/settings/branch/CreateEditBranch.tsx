@@ -2,7 +2,6 @@ import React, { useEffect, useState } from "react";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { FormProvider, useForm } from "react-hook-form";
 import { z } from "zod";
-import { showToast } from "@/lib/toastUtil"; // Make sure to import toastUtil
 import { Separator } from "@/components/ui/separator";
 import { Button } from "@/components/ui/button";
 import StepOneFieldsBranch from "./StepOneFieldsBranch";
@@ -34,7 +33,7 @@ const CreateEditBranch = ({ setIsOpen, branch }: Props) => {
         .string()
         .email({ message: "Invalid email address" })
         .optional()
-        .or(z.literal("")), // Permite un string vacío
+        .or(z.literal("")),
       address: z.string().min(3, { message: "Enter the address" }),
       city: z.string().min(1, { message: "Enter the city" }),
       province: z.string().min(1, { message: "Select an province" }),
@@ -95,13 +94,6 @@ const CreateEditBranch = ({ setIsOpen, branch }: Props) => {
   } = form;
 
   function onSubmit(data: z.infer<typeof FormSchema>) {
-    /*
-    const formData = {
-      ...data,
-      phone_number: data.phoneNumber,
-    } as Partial<BranchProps> & { phone_number?: string };
-    */
-
     if (branch) {
       updateBranch(data, {
         onSuccess(data) {
@@ -193,14 +185,14 @@ const CreateEditBranch = ({ setIsOpen, branch }: Props) => {
                 dataProvinces={dataProvinces}
                 currentProvince={
                   typeof branch?.province === "string"
-                    ? branch.province // Si province es un string, usamos el string directamente
-                    : branch?.province?.id ?? "" // Si province es un objeto ProvincesProps, usamos su id
+                    ? branch.province
+                    : branch?.province?.id ?? ""
                 }
               />
             )}
             {currentStep === 2 && <StepTwoFieldsBranch />}
           </div>
-          {/*<pre>{JSON.stringify(errors, null, 2)}</pre>*/}
+
           <div className="pb-3 pt-2">
             <Separator className="my-2" />
             <div className="flex gap-3 justify-end px-6 pt-2">

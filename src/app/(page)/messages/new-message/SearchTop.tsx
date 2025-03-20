@@ -4,11 +4,6 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { useRouter, useSearchParams } from "next/navigation";
-//import { useRouter } from "next/navigation";
-//import { useSearchParams } from "next/navigation";
-
-import { toast } from "@/hooks/use-toast";
-//import { Button } from "@/components/ui/button";
 import {
   Form,
   FormControl,
@@ -24,8 +19,6 @@ import Image from "next/image";
 const FilterTop = () => {
   const router = useRouter();
   const searchParams = useSearchParams(); // Using the searchParams hook here.
-  const selectedSearch = searchParams?.get("q")?.toLowerCase() || "";
-
   const FormSchema = z.object({
     search: z.string().optional(),
   });

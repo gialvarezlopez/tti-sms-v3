@@ -60,7 +60,6 @@ const UsersList = ({
   const rolesParams = searchParams?.get("roles");
   const roleTypes =
     rolesParams && rolesParams !== "all" ? rolesParams.split(",") : [];
-  //const roleTypes = searchParams?.get("roles") ?? "";
 
   const {
     data: response,
@@ -84,7 +83,6 @@ const UsersList = ({
 
   const fetchData = (page: number, pageSize: number) => {
     setPagination({ pageIndex: page - 1, pageSize });
-    //setSearch(search);
   };
 
   const selected: IsColumnSelectedFn<UserProps> = (

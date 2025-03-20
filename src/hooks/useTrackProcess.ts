@@ -42,7 +42,6 @@ const useGetStats = ({ branches, status }: FilterParams) => {
         }
       }
     },
-    //retry: false,
   });
 };
 
