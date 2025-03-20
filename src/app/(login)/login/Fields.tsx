@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { Dispatch, SetStateAction, useState } from "react";
 import { useFormContext } from "react-hook-form";
 import {
   FormControl,
@@ -11,7 +11,11 @@ import CustomFormMessage from "@/components/ui/CustomFormMessage";
 import { Eye, EyeOff } from "lucide-react";
 import { Checkbox } from "@/components/ui/checkbox";
 
-const Fields = () => {
+type Props = {
+  setIsOpenModal: Dispatch<SetStateAction<boolean>>;
+};
+
+const Fields = ({ setIsOpenModal }: Props) => {
   const { control } = useFormContext();
 
   const [showCurrentPassword, setShowCurrentPassword] = useState(false);
@@ -96,7 +100,10 @@ const Fields = () => {
             )}
           />
         </div>
-        <div className="text-customRed-v1 font-semibold text-xs md:text-sm">
+        <div
+          className="text-customRed-v1 font-semibold text-xs md:text-sm cursor-pointer"
+          onClick={() => setIsOpenModal(true)}
+        >
           Forgot password
         </div>
       </div>

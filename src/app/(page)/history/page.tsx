@@ -35,7 +35,6 @@ const Home = () => {
       ).length > 0
     : false;
 
-  //const columns = useColumns();
   const [sortBy, setSortBy] = useState<string>(""); // Status for the sort field
   const [sortOrder, setSortOrder] = useState<"asc" | "desc">("asc"); // State for ascending or descending order
   const [data, setData] = useState<TicketsProps[]>([]);

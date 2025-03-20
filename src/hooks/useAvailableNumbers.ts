@@ -42,7 +42,6 @@ const useGetAvailableNumbersBranches = ({ province }: NumbersParams) => {
         }
       }
     },
-    //retry: false,
   });
 };
 

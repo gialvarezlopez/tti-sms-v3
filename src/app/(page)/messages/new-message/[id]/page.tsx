@@ -4,7 +4,6 @@ import Link from "next/link";
 import { ArrowLeft } from "lucide-react";
 import { useParams } from "next/navigation";
 import FormBuildMessage from "@/components/screens/templates/BuildTemplate/FormBuildMessage";
-import { dataTickets } from "@/app/(page)/home/mock/dataTickets";
 import { useSingleTemplate } from "@/hooks/useTemplates";
 import ErrorFetching from "@/components/ui/errorFetching";
 
@@ -22,7 +21,6 @@ const Page = () => {
     return <>Loading</>;
   }
 
-  //const ticket = dataTickets.filter((item) => item.id === +elementId)[0] ?? 1;
   const template = currentTemplate.data || [];
   return (
     <div>

@@ -46,7 +46,6 @@ const useGetTemplates = ({ page, limit, query }: PaginateParams) => {
         }
       }
     },
-    //retry: false,
   });
 };
 
@@ -68,13 +67,11 @@ const useSingleTemplate = (id: string) => {
         }
       }
     },
-    //staleTime: 10000,
     enabled: !!id,
   });
 };
 
 const useCreateTemplate = () => {
-  const { push } = useRouter();
   const queryClient = useQueryClient();
   return useMutation({
     mutationFn: async (payload: UserProps) => {
@@ -154,7 +151,6 @@ const useUpdateTemplate = (id: string) => {
 };
 
 const useDeleteTemplate = () => {
-  const { push } = useRouter();
   const queryClient = useQueryClient();
   return useMutation({
     mutationFn: async (id: string) => {

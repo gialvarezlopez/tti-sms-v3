@@ -42,7 +42,6 @@ const useGetRoles = ({ page, limit, query }: PaginateParams) => {
         }
       }
     },
-    //retry: false,
   });
 };
 

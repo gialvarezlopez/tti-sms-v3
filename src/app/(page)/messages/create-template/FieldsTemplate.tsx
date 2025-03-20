@@ -18,12 +18,11 @@ import {
 } from "@/types/types";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Textarea } from "@/components/ui/textarea";
-//import { dataBranches } from "@/app/(page)/admin/settings/mock/dataBranch";
 import Keyword from "./Keyword";
 import Response from "./Response";
 import { MESSAGE_EXCHANGE } from "@/lib/constants";
 import { Checkbox } from "@/components/ui/checkbox";
-import { highlightKeyword, lineReplaceWithBreaks } from "@/lib/utils/utils";
+import { highlightKeyword } from "@/lib/utils/utils";
 
 type Props = {
   setOpenKeyword: React.Dispatch<React.SetStateAction<boolean>>;
@@ -321,18 +320,6 @@ const FieldsTemplate = ({
                   <div>
                     {!isEditing ? (
                       <div>
-                        {/*
-                        <div
-                          onClick={handleStartEditing}
-                          className="min-h-[103px] rounded-md border border-[#ccc] whitespace-pre-wrap px-3 py-2 text-sm"
-                          dangerouslySetInnerHTML={{
-                            __html: renderMessageWithHTML(
-                              field.value
-                              //keywordOption.name
-                            ),
-                          }}
-                        />
-                        */}
                         <div
                           onClick={handleStartEditing}
                           className="min-h-[103px] rounded-md border border-[#ccc] whitespace-pre-wrap px-3 py-2 text-sm"
@@ -411,7 +398,11 @@ const FieldsTemplate = ({
         </div>
       )}
 
-      <Keyword setOpenKeyword={setOpenKeyword} keywordOption={keywordOption} />
+      <Keyword
+        setOpenKeyword={setOpenKeyword}
+        keywordOption={keywordOption}
+        maxWidthMainDiv={width}
+      />
       {errors && errors.keywords?.message && (
         <div className="mt-3 font-medium bg-customRed-v4 text-[#1D2433] formMessageError rounded relative text-xs inline-block showIconError w-full">
           {errors.keywords?.message}
@@ -424,6 +415,7 @@ const FieldsTemplate = ({
             responseOption={responseOption}
             errors={errors}
             setResponseOption={setResponseOption}
+            maxWidthMainDiv={width}
           />
 
           <div className="mt-6 md:mt-0">

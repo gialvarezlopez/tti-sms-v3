@@ -1,8 +1,9 @@
 "use client";
+import { useEffect } from "react";
+import Image from "next/image";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
-import { toast } from "@/hooks/use-toast";
 import { useRouter, useSearchParams } from "next/navigation";
 import {
   Form,
@@ -13,11 +14,9 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { IconSearch } from "../../../assets/images";
-import Image from "next/image";
 import FormFilterHome from "../shared/modal-filter/FormFilterModal";
 import ModalCloseTicket from "../../../components/screens/home/close-ticket/ModalCloseTicket";
 import { TicketsProps } from "@/types/types";
-import { useEffect } from "react";
 
 type Props = {
   rowSelected: TicketsProps[];
@@ -27,8 +26,6 @@ type Props = {
 const Actions = ({ rowSelected, handleClearSelected }: Props) => {
   const router = useRouter();
   const searchParams = useSearchParams();
-  //const searchParam = searchParams?.get("search") ?? "";
-
   const FormSchema = z.object({
     search: z.string().optional(),
   });

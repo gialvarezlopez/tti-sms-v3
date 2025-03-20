@@ -9,7 +9,7 @@ import { Loader2 } from "lucide-react";
 
 const checkSessionCookie = () => {
   const sessionToken = Cookies.get("session-token");
-  return !!sessionToken; // Convertir a booleano
+  return !!sessionToken; // Convert to boolean
 };
 
 export default function PageLayout({
@@ -19,24 +19,20 @@ export default function PageLayout({
 }) {
   const router = useRouter();
   const { data: session, status } = useSession();
-  const [isSessionValid, setIsSessionValid] = useState<boolean>(true); // Estado inicial
+  const [isSessionValid, setIsSessionValid] = useState<boolean>(true);
   const [isSidebarOpen, setIsSidebarOpen] = useState(true);
 
   useEffect(() => {
     const checkAndSetSession = () => {
       const sessionValid = checkSessionCookie();
-      setIsSessionValid(sessionValid); // Actualizar estado basado en la cookie
+      setIsSessionValid(sessionValid);
       if (!sessionValid) {
         redirect("/login");
       }
     };
-
-    checkAndSetSession(); // Llamar la función inicialmente
-
-    // Suscribirse a cambios en la cookie o a eventos relevantes
-    const interval = setInterval(checkAndSetSession, 9000); // Verificar cada 9 segundos
-
-    return () => clearInterval(interval); // Limpiar el intervalo al desmontar el componente
+    checkAndSetSession();
+    const interval = setInterval(checkAndSetSession, 9000);
+    return () => clearInterval(interval);
   }, [router]);
 
   if (status === "loading") {
@@ -44,7 +40,7 @@ export default function PageLayout({
       <p className="text-center py-6 flex gap-2 justify-center items-center">
         Loading <Loader2 className="spin" size={"14px"} />
       </p>
-    ); // Muestra un mensaje de carga
+    );
   }
 
   if (!session) {

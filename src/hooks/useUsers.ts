@@ -1,9 +1,8 @@
 import { isAxiosError } from "axios";
 import axiosInstance from "@/lib/axiosInstance";
 import { usersRoutes } from "@/config/apiRoutes";
-import { useRouter } from "next/navigation";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { PaginateParams, UserProps } from "@/types/types";
+import { PaginateParams, ResetPassword, UserProps } from "@/types/types";
 import { showToast } from "@/lib/toastUtil";
 
 interface UserParams extends PaginateParams {
@@ -24,7 +23,7 @@ const useGetUsers = ({ page, limit, roles, query }: UserParams) => {
 
         const url = usersRoutes.list;
         const { data } = await axiosInstance.get(url, {
-          params, //: { page, limit, search },
+          params,
         });
         return data;
       } catch (e) {
@@ -54,18 +53,15 @@ const useGetUsers = ({ page, limit, roles, query }: UserParams) => {
 };
 
 const useCreateUser = () => {
-  const { push } = useRouter();
   const queryClient = useQueryClient();
   return useMutation({
     mutationFn: async (payload: UserProps) => {
       try {
         const url = usersRoutes.new;
         const { data } = await axiosInstance.post(url, payload);
-        return data; // Asumiendo que `data` ya es el arreglo de clientes
+        return data;
       } catch (e) {
         if (isAxiosError(e) && e.response) {
-          // Verificar si el error tiene una respuesta con un mensaje
-
           const errorMessage =
             e.response.data.message || e.response.data.error || "Unknown error";
           throw new Error(errorMessage);
@@ -93,7 +89,6 @@ const useCreateUser = () => {
 };
 
 const useUpdateUser = (id: string) => {
-  const { push } = useRouter();
   const queryClient = useQueryClient();
   return useMutation({
     mutationFn: async (payload: UserProps) => {
@@ -130,8 +125,6 @@ const useUpdateUser = (id: string) => {
 };
 
 const useDeleteUser = () => {
-  const { push } = useRouter();
-
   const queryClient = useQueryClient();
   return useMutation({
     mutationFn: async (id: string) => {
@@ -173,7 +166,7 @@ const useDeleteMultiplesUsers = () => {
     mutationFn: async (payload: { ids: string[]; operation: string }) => {
       try {
         const url = usersRoutes.multiOption;
-        //const { data } = await axiosInstance.delete(url, payload);
+
         const { data } = await axiosInstance.patch(url, {
           operation: payload.operation,
           ids: payload.ids,
@@ -212,10 +205,92 @@ const useDeleteMultiplesUsers = () => {
   });
 };
 
+const useForgotPasswordUser = () => {
+  return useMutation({
+    mutationFn: async (payload: UserProps) => {
+      try {
+        const url = usersRoutes.forgotPassword;
+        const { data } = await axiosInstance.post(url, payload);
+        return data; //
+      } catch (e) {
+        if (isAxiosError(e) && e.response) {
+          const errorMessage =
+            e.response.data.message || e.response.data.error || "Unknown error";
+          throw new Error(errorMessage);
+        } else {
+          throw new Error("Unknown error");
+        }
+      }
+    },
+
+    onSuccess: (value) => {
+      console.log("value.success", value.success);
+      let defaultMessage = "Link has been emailed to user";
+      let defaultOperation: "success" | "destructive" | "default" = "success";
+      let defaultTitle = "Success";
+
+      if (!value.success) {
+        defaultOperation = "destructive";
+        defaultTitle = "Error!";
+        defaultMessage = "Email not found";
+      }
+      showToast(
+        defaultOperation,
+        defaultTitle,
+        `${value?.message ?? defaultMessage}`
+      );
+    },
+    onError: (error) => {
+      const errorMessage =
+        error instanceof Error
+          ? error.message
+          : "An unexpected error has occurred.";
+      showToast("destructive", "Error!", `${errorMessage}`);
+    },
+  });
+};
+
+const useSetResetPasswordUser = (token: string) => {
+  return useMutation({
+    mutationFn: async (payload: ResetPassword) => {
+      try {
+        const url = usersRoutes.resetPassword(token);
+        const { data } = await axiosInstance.post(url, payload);
+        return data; //
+      } catch (e) {
+        if (isAxiosError(e) && e.response) {
+          const errorMessage =
+            e.response.data.message || e.response.data.error || "Unknown error";
+          throw new Error(errorMessage);
+        } else {
+          throw new Error("Unknown error");
+        }
+      }
+    },
+
+    onSuccess: (value) => {
+      showToast(
+        "success",
+        "Success!",
+        `${value?.message ?? "There was an problem to reset the password"}`
+      );
+    },
+    onError: (error) => {
+      const errorMessage =
+        error instanceof Error
+          ? error.message
+          : "An unexpected error has occurred.";
+      showToast("destructive", "Error!", `${errorMessage}`);
+    },
+  });
+};
+
 export {
   useGetUsers,
   useCreateUser,
   useUpdateUser,
   useDeleteUser,
   useDeleteMultiplesUsers,
+  useForgotPasswordUser,
+  useSetResetPasswordUser,
 };

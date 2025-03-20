@@ -1,5 +1,4 @@
 import { ColumnDef } from "@tanstack/react-table";
-//import { Checkbox } from "@/components/ui/checkbox";
 import { TicketsProps } from "@/types/types";
 import { Button } from "@/components/ui/button";
 import {
@@ -76,29 +75,7 @@ const Cell = ({ row }: { row: TicketsProps }) => {
   );
 };
 
-//const role = "admin"; // o role = "user" según el contexto o estado
 export const columns: ColumnDef<TicketsProps>[] = [
-  /*
-  {
-    accessorKey: "id",
-    header: ({ table }) => (
-      <Checkbox
-        checked={table.getIsAllPageRowsSelected()}
-        onCheckedChange={(value: never) =>
-          table.toggleAllPageRowsSelected(value)
-        }
-      />
-    ),
-    cell: ({ row }) => (
-      <Checkbox
-        checked={row.getIsSelected()}
-        onCheckedChange={(value: never) => row.toggleSelected(value)}
-        className="!hover:bg-gray-600"
-      />
-    ),
-    enableSorting: false,
-  },
-  */
   {
     accessorKey: "client",
     header: () => {

@@ -155,8 +155,6 @@ const FormFilterBranch = ({ dataRoles, errorRoles, isLoadingRoles }: Props) => {
     if (param && isArray) {
       const value = decodeURIComponent(param).split(",");
       setValue(field, value, { shouldDirty: true });
-    } else {
-      //setValue(field, isArray ? [] : "", { shouldDirty: true });
     }
   };
 
@@ -208,9 +206,6 @@ const FormFilterBranch = ({ dataRoles, errorRoles, isLoadingRoles }: Props) => {
       if (param !== null) {
         // Ensures that 'field' is one of the values ​​of type 'FormField'
         updateFormField(param, field as FormField, isArray);
-      } else {
-        // If null, the default value is used
-        //setValue(field as FormField, isArray ? [] : "", { shouldDirty: true });
       }
     });
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -249,9 +244,7 @@ const FormFilterBranch = ({ dataRoles, errorRoles, isLoadingRoles }: Props) => {
               : ""
           }`}
           style={{
-            //top: windowWidth > 768 ? buttonPosition.top + 5 : undefined,
             top: windowWidth > 768 ? 40 : undefined,
-            //left: windowWidth > 768 ? buttonPosition.left - 600 : undefined,
             left: windowWidth > 768 ? -335 : undefined,
           }}
         >

@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import Image from "next/image";
 import { IconPlus } from "@/assets/images";
 import { Button } from "@/components/ui/button";
 import {
@@ -17,7 +18,6 @@ import {
 } from "@/components/ui/select";
 import { Separator } from "@/components/ui/separator";
 import { SETTING_OPTIONS } from "@/lib/constants";
-import Image from "next/image";
 
 type Props = {
   setIsNext: React.Dispatch<React.SetStateAction<boolean>>;

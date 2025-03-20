@@ -8,10 +8,7 @@ import CreateEditBranch from "./CreateEditBranch";
 
 type Props = {
   branch?: BranchProps;
-  //setIsNext: React.Dispatch<React.SetStateAction<boolean>>;
   setIsOpen: React.Dispatch<React.SetStateAction<boolean>>;
-  //setFormSelected: React.Dispatch<React.SetStateAction<string>>;
-  //selectedValue: string;
 };
 const ModalBranch = ({ setIsOpen, branch }: Props) => {
   return (
@@ -27,11 +24,6 @@ const ModalBranch = ({ setIsOpen, branch }: Props) => {
           )}
         </DialogTitle>
         <Separator className="my-2" />
-        {/*
-        <DialogDescription className="px-6  pt-3 text-base text-[#1D2433]/80">
-          Add a branch filling the information bellow.
-        </DialogDescription>
-        */}
       </DialogHeader>
       <div>
         <CreateEditBranch setIsOpen={setIsOpen} branch={branch} />

@@ -107,7 +107,7 @@ const StepOneFieldsBranch = ({
                     {...field}
                     onChange={(e) => {
                       field.onChange(e);
-                      handleChange("address"); // Llamas a handleChange cuando el valor cambia
+                      handleChange("address");
                     }}
                   />
                 </FormControl>
@@ -130,7 +130,7 @@ const StepOneFieldsBranch = ({
                   {...field}
                   onChange={(e) => {
                     field.onChange(e);
-                    handleChange("city"); // Llamas a handleChange cuando el valor cambia
+                    handleChange("city");
                   }}
                 />
               </FormControl>
@@ -148,12 +148,10 @@ const StepOneFieldsBranch = ({
               <FormLabel>Province </FormLabel>
               <Select
                 onValueChange={(value) => {
-                  field.onChange(value); // Esto mantiene el comportamiento actual
-                  handleChange("province"); // Limpia el error del campo cuando cambia el valor
+                  field.onChange(value);
+                  handleChange("province");
                 }}
-                //onValueChange={field.onChange}
                 defaultValue={field.value || currentProvince}
-                //value={field.value || ""}
               >
                 <FormControl>
                   <SelectTrigger>
@@ -181,24 +179,14 @@ const StepOneFieldsBranch = ({
           control={control}
           name="country"
           render={({ field }) => {
-            // Si solo hay un país, seleccionamos automáticamente el primer país
-            /*
-            useEffect(() => {
-              if (dataCountry.length === 1 && !field.value) {
-                field.onChange(String(dataCountry[0].id)); // Setea el valor automáticamente si solo hay un país
-              }
-              // eslint-disable-next-line react-hooks/exhaustive-deps
-            }, [dataCountry, field]);
-            */
-
             return (
               <FormItem>
                 <FormLabel>Country</FormLabel>
                 <Select
-                  value={field.value} // Esto lo hace controlado
+                  value={field.value}
                   onValueChange={(value) => {
-                    field.onChange(value); // Mantener el comportamiento actual
-                    handleChange("country"); // Limpia el error del campo cuando cambia el valor
+                    field.onChange(value);
+                    handleChange("country");
                   }}
                 >
                   <FormControl>
@@ -210,7 +198,7 @@ const StepOneFieldsBranch = ({
                     {dataCountry.map((country) => (
                       <SelectItem
                         key={country.id}
-                        value={String(country.id)} // Establecemos el valor de cada opción
+                        value={String(country.id)}
                         bg="custom"
                       >
                         {country.name}
@@ -239,7 +227,7 @@ const StepOneFieldsBranch = ({
                   upperCase={true}
                   onChange={(e) => {
                     field.onChange(e);
-                    handleChange("postalCode"); // Llamas a handleChange cuando el valor cambia
+                    handleChange("postalCode");
                   }}
                 />
               </FormControl>

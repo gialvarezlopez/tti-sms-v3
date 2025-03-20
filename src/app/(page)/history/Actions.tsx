@@ -1,6 +1,8 @@
 "use client";
+import { useEffect } from "react";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
+import Image from "next/image";
 import { useRouter, useSearchParams } from "next/navigation";
 import { z } from "zod";
 import {
@@ -12,9 +14,7 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { IconSearch } from "../../../assets/images";
-import Image from "next/image";
 import FormFilterHome from "../shared/modal-filter/FormFilterModal";
-import { useEffect } from "react";
 
 const Actions = () => {
   const router = useRouter();
@@ -74,14 +74,6 @@ const Actions = () => {
       </Form>
       <div className="flex gap-3 w-full md:w-auto">
         <FormFilterHome fromPage="history" />
-
-        {/* No option to delete for the moment */}
-        {/*    
-        <AlertDeleteTickets
-          rowSelected={rowSelected}
-          handleClearSelected={handleClearSelected}
-        />
-        */}
       </div>
     </div>
   );

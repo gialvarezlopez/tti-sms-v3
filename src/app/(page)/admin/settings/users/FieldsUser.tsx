@@ -1,3 +1,6 @@
+import React, { useState } from "react";
+import { useFormContext } from "react-hook-form";
+import { Eye, EyeOff } from "lucide-react";
 import {
   FormControl,
   FormField,
@@ -5,8 +8,6 @@ import {
   FormLabel,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import React, { useState } from "react";
-import { useFormContext } from "react-hook-form";
 import CustomFormMessage from "@/components/ui/CustomFormMessage";
 import {
   Select,
@@ -15,9 +16,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { Eye, EyeOff } from "lucide-react";
-import { BranchProps, UserProps } from "@/types/types";
-import { RoleProps } from "../../../../../types/types";
+import { BranchProps, UserProps, RoleProps } from "@/types/types";
 
 type Props = {
   user?: UserProps;

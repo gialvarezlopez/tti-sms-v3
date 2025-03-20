@@ -2,7 +2,6 @@ import React, { useEffect } from "react";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
-import { showToast } from "@/lib/toastUtil";
 import { Form } from "@/components/ui/form";
 import { Separator } from "@/components/ui/separator";
 import { Button } from "@/components/ui/button";
@@ -11,7 +10,6 @@ import { UserProps } from "@/types/types";
 import { useCreateUser, useUpdateUser } from "@/hooks/useUsers";
 import { useGetBranches } from "@/hooks/useBranches";
 import { useGetRoles } from "@/hooks/useRoles";
-//import { dataBranches } from "../mock/dataBranch";
 
 type Props = {
   setIsOpen: (value: React.SetStateAction<boolean>) => void;
@@ -77,10 +75,7 @@ const CreateEditUser = ({ setIsOpen, user }: Props) => {
     },
   });
 
-  const {
-    reset,
-    //formState: { errors },
-  } = form;
+  const { reset } = form;
 
   function onSubmit(data: z.infer<typeof FormSchema>) {
     const formattedData: Partial<typeof data> = {
@@ -146,7 +141,7 @@ const CreateEditUser = ({ setIsOpen, user }: Props) => {
           </div>
           <div className="pb-3 pt-2">
             <Separator className="my-2" />
-            {/*JSON.stringify(errors)*/}
+
             <div className="flex gap-3 justify-end px-6 pt-2">
               <Button
                 type="reset"

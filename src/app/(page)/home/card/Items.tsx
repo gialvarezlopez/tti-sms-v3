@@ -2,7 +2,6 @@ import React from "react";
 import {
   IconErrorFound,
   IconOverdue,
-  IconUnansweredTickets,
   IconClosed,
 } from "../../../../assets/images";
 import { StatsProps } from "@/types/types";

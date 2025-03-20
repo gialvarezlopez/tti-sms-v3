@@ -1,3 +1,5 @@
+import React, { useEffect } from "react";
+import { UseFieldArrayRemove, useFormContext } from "react-hook-form";
 import { Button } from "@/components/ui/button";
 import CustomFormMessage from "@/components/ui/CustomFormMessage";
 import {
@@ -6,19 +8,16 @@ import {
   FormItem,
   FormLabel,
 } from "@/components/ui/form";
-import { Input } from "@/components/ui/input";
-
 import { Textarea } from "@/components/ui/textarea";
 import { AutomaticResponsesTemplates } from "@/types/types";
-import React, { useEffect } from "react";
-import { UseFieldArrayRemove, useFormContext } from "react-hook-form";
 
 type Props = {
   fields: AutomaticResponsesTemplates[];
   remove: UseFieldArrayRemove;
+  maxWidthMainDiv: number;
 };
 
-const InputTypeResponse = ({ fields, remove }: Props) => {
+const InputTypeResponse = ({ fields, remove, maxWidthMainDiv }: Props) => {
   const { control, setValue, watch } = useFormContext();
 
   const handleRemoveResponse = (index: number, keywordName: string) => {
@@ -52,7 +51,11 @@ const InputTypeResponse = ({ fields, remove }: Props) => {
   }, [fields, setValue]);
 
   return (
-    <div className="mb-4  grid grid-cols-1 md:grid-cols-2 gap-2 md:gap-4 h-full items-end">
+    <div
+      className={`mb-4 grid ${
+        maxWidthMainDiv <= 768 ? " grid-cols-1" : "md:grid-cols-2"
+      }  gap-2 md:gap-4 h-full items-end`}
+    >
       {fields.map((item, index) => (
         <div
           key={item.id}

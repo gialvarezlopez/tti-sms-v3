@@ -56,7 +56,6 @@ const useGetBranches = ({
         }
       }
     },
-    //retry: false,
   });
 };
 

@@ -12,8 +12,6 @@ import { X } from "lucide-react";
 import { IconWarning } from "@/assets/images";
 import Image from "next/image";
 import { Separator } from "@/components/ui/separator";
-import { showToast } from "@/lib/toastUtil";
-//import { BranchProps, UserProps } from "@/types/types";
 import useUsersStore from "@/store/useUsers";
 import useBranchesStore from "@/store/useBranches";
 import { useDeleteMultiplesUsers, useDeleteUser } from "@/hooks/useUsers";
@@ -73,7 +71,7 @@ const AlertDelete = ({ setClearRowsSelected }: Props) => {
       deleteMultipleUsers(
         { ids, operation: "delete" },
         {
-          onSuccess(data) {
+          onSuccess() {
             successSubmission();
           },
         }
@@ -83,7 +81,7 @@ const AlertDelete = ({ setClearRowsSelected }: Props) => {
     //Delete single branch
     if (branches && branches.length === 1 && branches[0]?.id) {
       deleteBranch(branches[0].id, {
-        onSuccess(data) {
+        onSuccess() {
           successSubmission();
         },
       });
@@ -96,7 +94,7 @@ const AlertDelete = ({ setClearRowsSelected }: Props) => {
       deleteMultipleBranches(
         { ids, operation: "delete" },
         {
-          onSuccess(data) {
+          onSuccess() {
             successSubmission();
           },
         }
