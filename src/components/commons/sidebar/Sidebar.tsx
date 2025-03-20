@@ -11,6 +11,7 @@ import Image from "next/image";
 import {
   ArrowLeftToLine,
   ArrowRightToLine,
+  CircleUser,
   History,
   House,
   MessageSquare,
@@ -255,10 +256,7 @@ const SideBar = ({ setIsSidebarOpen }: Props) => {
             }`}
           >
             <div>
-              <Avatar>
-                <AvatarImage src="https://github.com/shadcn.png" />
-                <AvatarFallback>CN</AvatarFallback>
-              </Avatar>
+              <CircleUser />
             </div>
             {isOpen && (
               <div className="space-y-2">

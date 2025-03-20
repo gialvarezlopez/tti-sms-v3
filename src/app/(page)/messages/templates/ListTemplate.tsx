@@ -131,7 +131,7 @@ const Cell = ({ row }: { row: TemplateProps }) => {
   );
 };
 
-const setMaxWidth = 720;
+const setMaxWidth = 850;
 
 const ListTemplate = ({
   dataTemplates,
@@ -285,7 +285,7 @@ const ListTemplate = ({
                         {item.name}
                       </span>
                       <div className="flex gap-2 items-center">
-                        <span className="bg-[#CCCCCC] text-white rounded-full px-2 py-1 font-normal text-xs tracking-[2%] text-center">
+                        <span className="bg-[#CCCCCC] text-white rounded-full px-2 py-1 font-normal text-xs tracking-[2%] text-center w-[75px]  h-[24px]">
                           {templateType(item?.isTwoWay ?? false)}
                         </span>
                         <Cell row={item} />

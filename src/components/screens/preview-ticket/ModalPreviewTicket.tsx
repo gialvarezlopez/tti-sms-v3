@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { Dispatch, SetStateAction, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { showToast } from "@/lib/toastUtil";
 import {
@@ -21,6 +21,7 @@ type Props = {
   modalOpen: boolean;
   onClose: () => void;
   hideButtonsActions?: boolean;
+  setResendMessageOrReminder?: Dispatch<SetStateAction<string>>;
 };
 
 const ModalPreviewTicket = ({
@@ -28,12 +29,14 @@ const ModalPreviewTicket = ({
   modalOpen,
   onClose,
   hideButtonsActions,
+  setResendMessageOrReminder,
 }: Props) => {
   const [isOpen] = useState(modalOpen);
 
-  const handleResendMessage = () => {
-    showToast("success", "Success!", "Message sent successfully.");
-    onClose();
+  const handleResendMessage = (resendType: string) => {
+    if (resendType && setResendMessageOrReminder) {
+      setResendMessageOrReminder(resendType);
+    }
   };
   return (
     <div>
@@ -81,7 +84,13 @@ const ModalPreviewTicket = ({
                     type="submit"
                     className="bg-customRed-v3 w-full md:w-[33%]"
                     variant={"destructive"}
-                    onClick={handleResendMessage}
+                    onClick={() =>
+                      handleResendMessage(
+                        ticket.template?.isTwoWay ?? false
+                          ? "reminder"
+                          : "message"
+                      )
+                    }
                   >
                     {generateSlug(
                       templateType(ticket.template?.isTwoWay ?? false)

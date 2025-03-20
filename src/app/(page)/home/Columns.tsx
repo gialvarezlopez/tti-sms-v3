@@ -32,6 +32,7 @@ const PreviewCell = ({
   setIsOpenDropdown: Dispatch<SetStateAction<boolean>>;
 }) => {
   const [isOpen, setIsOpen] = useState(false);
+  const [resendMessageOrReminder, setResendMessageOrReminder] = useState("");
 
   const handleOpen = () => {
     setIsOpen(true);
@@ -50,11 +51,28 @@ const PreviewCell = ({
         Preview
       </span>
 
-      {isOpen && (
+      {isOpen && !resendMessageOrReminder && (
         <ModalPreviewTicket
           ticket={ticket}
           modalOpen={isOpen}
           onClose={handleClose}
+          setResendMessageOrReminder={setResendMessageOrReminder}
+        />
+      )}
+
+      {resendMessageOrReminder && resendMessageOrReminder === "reminder" && (
+        <ModalSendRemainder
+          ticket={ticket}
+          modalOpen={isOpen}
+          onClose={handleClose}
+        />
+      )}
+
+      {resendMessageOrReminder && resendMessageOrReminder === "message" && (
+        <ModalResendTicket
+          modalOpen={isOpen}
+          onClose={handleClose}
+          ticket={ticket}
         />
       )}
     </div>

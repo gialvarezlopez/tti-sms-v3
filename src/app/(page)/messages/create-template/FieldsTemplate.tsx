@@ -373,7 +373,7 @@ const FieldsTemplate = ({
         <div className="mt-3 grid grid-cols-1 md:grid-cols-2">
           <FormField
             control={control}
-            name="timeToRespond"
+            name="daysToLive"
             render={({ field }) => (
               <FormItem>
                 <FormLabel className="text-base font-semibold">

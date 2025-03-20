@@ -14,7 +14,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { dataCountry } from "../mock/dataCountry";
+import { dataCountry } from "../dataStatic/dataCountry";
 import { useGetAvailableNumbersBranches } from "@/hooks/useAvailableNumbers";
 import { Skeleton } from "@/components/ui/skeleton";
 import ErrorFetching from "@/components/ui/errorFetching";

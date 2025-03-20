@@ -282,6 +282,8 @@ const FormCreateTemplate = () => {
         invalidReply,
         isReminder: type ? true : false,
       };
+
+      console.log("data", data);
       reset(data);
     }
 
