@@ -142,16 +142,19 @@ const FieldsResendMessage = ({ template, isFromModal, ticket }: Props) => {
             <FormItem>
               <FormLabel>Telephone number</FormLabel>
               <FormControl>
-                <CustomInputMask
-                  mask="(999) 999-9999"
-                  placeholder={"Telephone number"}
-                  type="text"
-                  {...field}
-                  upperCase={true}
-                  value={field.value} // Asegurar que toma el valor actualizado
-                  onChange={(e) => field.onChange(e.target.value)} // Actualizar estado
-                  //readOnly={isFromModal}
-                />
+                <div className="flex items-center gap-2">
+                  +1
+                  <CustomInputMask
+                    mask="(999) 999-9999"
+                    placeholder={"Telephone number"}
+                    type="text"
+                    {...field}
+                    upperCase={true}
+                    value={field.value} // Asegurar que toma el valor actualizado
+                    onChange={(e) => field.onChange(e.target.value)} // Actualizar estado
+                    //readOnly={isFromModal}
+                  />
+                </div>
               </FormControl>
               <CustomFormMessage className="w-full" />
             </FormItem>

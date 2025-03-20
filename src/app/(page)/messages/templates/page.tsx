@@ -14,7 +14,6 @@ const Page = () => {
   const router = useRouter();
   const searchParams = useSearchParams();
   const selectedPage = searchParams?.get("page");
-  const selectedType = searchParams?.get("type");
   const selectedSearch = searchParams?.get("q")?.toLowerCase() || "";
 
   const [data, setData] = useState<TemplateProps[]>([]);

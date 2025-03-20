@@ -15,7 +15,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { dataCountry } from "../mock/dataCountry";
+import { dataCountry } from "../dataStatic/dataCountry";
 import { FormFields } from "./FormFieldType";
 import CustomInputMask from "@/components/ui/customInputMask";
 import { ProvincesProps } from "@/types/types";

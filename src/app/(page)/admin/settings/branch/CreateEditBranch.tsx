@@ -8,7 +8,7 @@ import StepOneFieldsBranch from "./StepOneFieldsBranch";
 import StepTwoFieldsBranch from "./StepTwoFieldsBranch";
 import { FormFields } from "./FormFieldType";
 import { BranchProps } from "@/types/types";
-import { dataProvinces } from "../mock/provinces";
+import { dataProvinces } from "../dataStatic/provinces";
 import { useCreateBranch, useUpdateBranch } from "@/hooks/useBranches";
 
 type Props = {

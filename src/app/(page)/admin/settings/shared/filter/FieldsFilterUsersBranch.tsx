@@ -4,7 +4,7 @@ import { Controller, useFormContext } from "react-hook-form";
 import { Separator } from "@/components/ui/separator";
 import CustomMultiSelect from "@/components/ui/CustomMultiSelect";
 import { RoleProps, TypeComboBoxProps } from "@/types/types";
-import { dataProvinces } from "../../mock/provinces";
+import { dataProvinces } from "../../dataStatic/provinces";
 import { SETTINGS_PARAMETER_URL, USER_ROLE } from "@/lib/constants";
 
 const dataStatus = [
