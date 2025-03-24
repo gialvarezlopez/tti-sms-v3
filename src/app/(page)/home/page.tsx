@@ -110,6 +110,13 @@ const Home = () => {
     //search,
   });
 
+  useEffect(() => {
+    // If there is no `page` parameter in the URL, reset to page 1
+    if (!searchParams?.get("page")) {
+      setPagination((prev) => ({ ...prev, pageIndex: 0 }));
+    }
+  }, [searchParams]);
+
   const {
     data: dataTickets,
     error: errorTickets,

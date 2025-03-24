@@ -7,41 +7,38 @@ type Props = {
   ticket: TicketsProps;
 };
 const TwoWay = ({ ticket }: Props) => {
-  const renderPreFix = (user: string, index: number, total: number) => {
-    let word = "";
+  const renderPreFix = (
+    user: string,
+    index: number,
+    total: number,
+    date: string
+  ) => {
+    console.log("user", user);
+    let word = "Message";
     if (user === WHO_SEND_MESSAGE.ADMIN && index === 0) {
-      word = "First";
+      word = "First Message";
+    } else if (
+      /*user === WHO_SEND_MESSAGE.ADMIN &&*/ total > 1 &&
+      index + 1 === total
+    ) {
+      word = "Last Message";
+    } else if (user === WHO_SEND_MESSAGE.CUSTOMER) {
+      word = "Customer Message";
     }
 
-    if (user === WHO_SEND_MESSAGE.ADMIN && index + 1 === total) {
-      word = "Last";
-    }
-
-    if (user === WHO_SEND_MESSAGE.CUSTOMER) {
-      word = "Customer";
-    }
-
-    return `${word} `;
+    return `${word} - ${formatDate(date)}`;
   };
+
   return (
     <>
       <div>
+        {/*
+          <pre className="text-wrap">
+            {JSON.stringify(ticket?.messages, null, 2)}
+          </pre>
+        */}
         {ticket?.messages?.map((item, index) => (
           <div key={index} className={`border-b border-[#CCD1DC]  px-6  `}>
-            <div className="text-[#1D2433]/60 pt-3">
-              {index === 0 ? (
-                <>{` First Message - ${formatDate(item.createdAt)} `}</>
-              ) : (
-                ""
-              )}
-
-              {ticket?.messages?.length === index + 1 ? (
-                <>{` Last Message - ${formatDate(item.createdAt)} `}</>
-              ) : (
-                ""
-              )}
-            </div>
-
             <div
               className={`py-2  ${
                 item?.sentByType === WHO_SEND_MESSAGE.CUSTOMER
@@ -49,7 +46,13 @@ const TwoWay = ({ ticket }: Props) => {
                   : ""
               } `}
             >
-              <div className="flex justify-end">
+              <div
+                className={`flex  ${
+                  item?.sentByType === WHO_SEND_MESSAGE.CUSTOMER
+                    ? "justify-end"
+                    : ""
+                }`}
+              >
                 <div className="">
                   <div className="flex gap-3 w-auto">
                     <span className="font-normal text-[#1D2433]/60">
@@ -57,12 +60,9 @@ const TwoWay = ({ ticket }: Props) => {
                         renderPreFix(
                           item?.sentByType as string,
                           index,
-                          ticket?.messages?.length
+                          ticket?.messages?.length,
+                          item.createdAt
                         )}
-                      Message:{" "}
-                    </span>
-                    <span className="font-bold text-base text-customBlack-v1">
-                      {ticket.date}
                     </span>
                   </div>
 

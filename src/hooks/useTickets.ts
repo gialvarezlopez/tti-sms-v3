@@ -202,8 +202,10 @@ const useCloseMultiplesTickets = () => {
         }
       }
     },
-    onSettled: () =>
-      queryClient.invalidateQueries({ queryKey: ["ticket-list"] }),
+    onSettled: () => {
+      queryClient.invalidateQueries({ queryKey: ["ticket-list"] });
+      queryClient.invalidateQueries({ queryKey: ["stats-list"] });
+    },
     onSuccess: (value, variables) => {
       const { ids } = variables;
       showToast(

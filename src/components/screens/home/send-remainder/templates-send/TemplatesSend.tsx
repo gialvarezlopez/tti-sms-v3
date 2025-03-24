@@ -11,9 +11,15 @@ type Props = {
   ticket: TicketsProps;
   onClose: () => void;
   isFromModel?: true;
+  typeOperation: string;
 };
 
-const TemplatesSend = ({ ticket, onClose, isFromModel }: Props) => {
+const TemplatesSend = ({
+  ticket,
+  onClose,
+  isFromModel,
+  typeOperation,
+}: Props) => {
   const [templateSelected, setTemplateSelected] = useState<string | undefined>(
     undefined
   );
@@ -76,6 +82,7 @@ const TemplatesSend = ({ ticket, onClose, isFromModel }: Props) => {
           template={template}
           isFromModal={true}
           ticket={ticket}
+          typeOperation={typeOperation}
         />
       )}
 

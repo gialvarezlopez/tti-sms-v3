@@ -127,18 +127,6 @@ export type ResendMessageProps = {
   content: MessageProps["content"];
 };
 
-/*
-export type lastReceivedMessageProps = {
-  id?: string;
-  content: string;
-  created_at: string;
-  created_by: string;
-  sent_by: string;
-  status: string;
-  thread_id: string;
-  updated_at: string;
-};
-*/
 export type KeywordTemplates = {
   id?: string | number;
   keyword: string;
@@ -164,9 +152,11 @@ export type TemplateProps = {
   name?: string;
   slug?: string;
   isTwoWay?: boolean;
+  branch?: BranchProps;
   branches?: string[];
   description?: string;
   isReminder?: boolean;
+  type?: string;
   content?: string;
   keywords?: KeywordTemplates[];
   responses?: AutomaticResponsesTemplates[];

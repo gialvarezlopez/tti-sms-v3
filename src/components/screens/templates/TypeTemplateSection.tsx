@@ -9,6 +9,7 @@ type Props = {
   selected?: string;
   isLink?: boolean; // Nueva propiedad isLink
   templateId?: string;
+  addAutoSelect?: boolean;
 };
 
 const TypeTemplateSection = ({
@@ -17,9 +18,10 @@ const TypeTemplateSection = ({
   selected,
   isLink = false, // Valor por defecto en false
   templateId,
+  addAutoSelect,
 }: Props) => {
   const autoClickRef = useRef<HTMLDivElement | null>(null);
-  //const AUTO_CLICK_ID = templateId; // ID objetivo
+  //const AUTO_CLICK_ID = templateId; // ID objetive
   useEffect(() => {
     if (autoClickRef.current) {
       setTimeout(() => {
@@ -30,7 +32,8 @@ const TypeTemplateSection = ({
   return (
     <>
       {dataTemplates?.map((item, index) => {
-        const isAutoClickItem = templateId && item.id === templateId;
+        const isAutoClickItem =
+          (templateId && item.id === templateId) || (addAutoSelect && !isLink);
         const content = (
           <div
             ref={isAutoClickItem ? autoClickRef : null}
@@ -42,7 +45,7 @@ const TypeTemplateSection = ({
             <div className="flex gap-3 justify-between bg-[#F9F9F9] p-4 rounded-tl-lg rounded-tr-lg">
               <div className="text-base font-semibold">{item.name}</div>
 
-              <div className="bg-[#CCCCCC] text-white rounded-full px-2 py-1 font-normal text-xs tracking-[2%] text-center w-[70px] h-[25px]">
+              <div className="bg-[#CCCCCC] text-white rounded-full px-2 py-1 font-normal text-xs tracking-[2%] text-center w-[70px] h-[25px] text-nowrap">
                 {templateType(item?.isTwoWay ?? false)}
               </div>
             </div>

@@ -32,6 +32,7 @@ type Props = {
   onClose?: () => void;
   isFromModal: boolean;
   ticket?: TicketsProps;
+  typeOperation?: string;
 };
 
 const KeywordSchema = z
@@ -96,11 +97,13 @@ const ResponseSchema = z.object({
   reply: z.string().optional(),
 });
 
+//Note: here we use template and tickets, for send reminder and resend message its send both properties, meanwhile template is used only to send new message
 const FormBuildMessage = ({
   onClose,
   template,
   isFromModal = true,
   ticket,
+  typeOperation,
 }: Props) => {
   const [openConfirm, setOpenConfirm] = useState(false);
 
@@ -193,7 +196,7 @@ const FormBuildMessage = ({
         });
       }
     } else {
-      //Crea new message
+      //Crea new message ist come template inste of ticket
       setOpenConfirm(true);
     }
 
@@ -230,6 +233,8 @@ const FormBuildMessage = ({
     }
   }, [template, isFromModal, setValue, ticket, trigger]);
 
+  //console.log("ticket", ticket);
+
   return (
     <div className="w-full">
       <div className={`${isFromModal ? "px-6" : ""}`}>
@@ -256,11 +261,23 @@ const FormBuildMessage = ({
                   : ""
               }`}
             >
-              {/*<pre>{JSON.stringify(ticket, null, 2)}</pre>*/}
+              {/*
+                <pre className="text-wrap">
+                  {JSON.stringify(ticket, null, 2)}
+                </pre>
+              }
+              <hr></hr>
+              {
+                <pre className="text-wrap">
+                  {JSON.stringify(template, null, 2)}
+                </pre>
+              */}
+
               <FieldsResendMessage
                 template={template}
                 isFromModal={isFromModal}
                 ticket={ticket}
+                typeOperation={typeOperation}
               />
             </div>
           </div>
@@ -310,7 +327,6 @@ const FormBuildMessage = ({
           </div>
         </form>
       </Form>
-
       {!isFromModal && openConfirm && (
         <MessageReviewConfirm
           template={template}

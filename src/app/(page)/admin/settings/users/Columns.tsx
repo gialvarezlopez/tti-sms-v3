@@ -333,11 +333,18 @@ const useColumns = () => {
           User Type
         </Button>
       ),
-      cell: ({ row }) => (
-        <span className="text-nowrap">
-          {row.original.primary_role?.name ?? "No user type assigned"}
-        </span>
-      ),
+      cell: ({ row }) => {
+        const role =
+          row.original.primary_role?.name === "ce"
+            ? "Customer Experience"
+            : row.original.primary_role?.name;
+
+        return (
+          <span className="text-nowrap first-letter:uppercase block">
+            {role ?? "No user type assigned"}
+          </span>
+        );
+      },
     },
     {
       accessorKey: "createdAt",
