@@ -70,6 +70,7 @@ const Filter = ({ usersSelected, branchesSelected }: Props) => {
   function onSubmit(data: z.infer<typeof FormSchema>) {
     const params = new URLSearchParams(searchParams || "");
     params.set("search", data.search ?? "");
+    params.delete("page");
     router.push(`?${params.toString()}`);
   }
 
@@ -78,7 +79,6 @@ const Filter = ({ usersSelected, branchesSelected }: Props) => {
     const params = new URLSearchParams(searchParams || "");
     params.set("type", typeValue);
     params.delete("filterBy"); // Make sure to remove 'filterBy' when changing 'type'
-
     params.set("page", "1");
     params.delete("sortBy");
     params.delete("sortOrder");
@@ -86,6 +86,7 @@ const Filter = ({ usersSelected, branchesSelected }: Props) => {
     params.delete("provinces");
     params.delete("status");
     params.delete("roles");
+    params.delete("search");
 
     router.push(`?${params.toString()}`);
   };

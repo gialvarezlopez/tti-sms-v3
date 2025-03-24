@@ -66,6 +66,7 @@ const FieldsTemplate = ({
 
   const itemKeywords = watch("keywords");
   const itemResponses = watch("responses");
+  const fieldResponses = watch("responses");
 
   const simplifiedBranches: TypeComboBoxProps[] = useMemo(
     () =>
@@ -254,7 +255,10 @@ const FieldsTemplate = ({
                   >
                     <FormItem className="flex items-center space-x-1 space-y-0">
                       <FormControl>
-                        <RadioGroupItem value={MESSAGE_EXCHANGE.ONE_WAY} />
+                        <RadioGroupItem
+                          value={MESSAGE_EXCHANGE.ONE_WAY}
+                          disabled={fieldResponses.length > 0}
+                        />
                       </FormControl>
                       <FormLabel className="font-normal">One-way</FormLabel>
                     </FormItem>

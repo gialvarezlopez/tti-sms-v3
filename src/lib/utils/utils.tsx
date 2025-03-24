@@ -177,7 +177,7 @@ export const highlightKeyword = (
   // We replace each [keyword] tag with its corresponding value
   keywords?.forEach(({ keyword, value }) => {
     const regex = new RegExp(`\\[${keyword}\\]`, "g"); // Create a regex to find [keyword]
-    updatedStr = updatedStr.replace(
+    updatedStr = updatedStr?.replace(
       regex,
       `<span style="color: ${color}; font-weight: bold;">${value}</span>`
     );

@@ -35,7 +35,12 @@ const ModalSendRemainder = ({ ticket, modalOpen, onClose }: Props) => {
             <Separator className="my-2" />
           </DialogHeader>
 
-          <TemplatesSend ticket={ticket} onClose={onClose} isFromModel={true} />
+          <TemplatesSend
+            ticket={ticket}
+            onClose={onClose}
+            isFromModel={true}
+            typeOperation={"resend-reminder"}
+          />
         </DialogContent>
       </Dialog>
     </div>

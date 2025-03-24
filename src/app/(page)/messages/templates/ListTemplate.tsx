@@ -280,16 +280,23 @@ const ListTemplate = ({
                     className={`border-2 rounded-lg   h-full`}
                     onClick={() => handleSelected((item?.id ?? "") as string)}
                   >
-                    <div className="flex gap-3 justify-between bg-[#F9F9F9] p-4 rounded-tl-lg rounded-tr-lg">
-                      <span className="text-base font-semibold">
-                        {item.name}
-                      </span>
-                      <div className="flex gap-2 items-center">
-                        <span className="bg-[#CCCCCC] text-white rounded-full px-2 py-1 font-normal text-xs tracking-[2%] text-center w-[75px]  h-[24px]">
-                          {templateType(item?.isTwoWay ?? false)}
+                    <div className="flex flex-col gap-2 justify-between bg-[#F9F9F9] p-4 rounded-tl-lg rounded-tr-lg items-start w-full">
+                      <div className="flex gap-3 justify-between w-full">
+                        <span className="text-base font-semibold flex-1">
+                          <p>{item.name}</p>
                         </span>
-                        <Cell row={item} />
+                        <div className="flex gap-2 items-center">
+                          <span className="bg-[#CCCCCC] text-white rounded-full px-2 py-1 font-normal text-xs tracking-[2%] text-center w-[75px]  h-[24px]">
+                            {templateType(item?.isTwoWay ?? false)}
+                          </span>
+                          <Cell row={item} />
+                        </div>
                       </div>
+                      <p className="flex justify-end col-span-2">
+                        <small className="text-gray-500">
+                          {item?.branch?.name}
+                        </small>
+                      </p>
                     </div>
 
                     <div className="p-4 text-[#1D2433]/60 text-sm">

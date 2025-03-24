@@ -47,12 +47,59 @@ const TemplateSelection = ({
   });
 
   // Filter objects by type
+  /*
   const oneWayItems = dataTemplates?.data?.filter(
     (item: TemplateProps) => item.isTwoWay === false
   );
   const twoWayItems = dataTemplates?.data?.filter(
     (item: TemplateProps) => item.isTwoWay === true
   );
+  */
+  /*
+  const oneWayItems = dataTemplates?.data?.filter(
+    (item: TemplateProps) =>
+      item.isTwoWay === false && (!isFromModel || item.type === "reminder")
+  );
+
+  const twoWayItems = dataTemplates?.data?.filter(
+    (item: TemplateProps) =>
+      item.isTwoWay === true && (!isFromModel || item.type === "reminder")
+  );
+  */
+  //let dataOneWayItems = "";
+  //let dataTwoWayOtems = "";
+  const itemsTemplates = () => {
+    let oneWayItems = dataTemplates?.data?.filter(
+      (item: TemplateProps) => item.isTwoWay === false
+    );
+
+    let twoWayItems = dataTemplates?.data?.filter(
+      (item: TemplateProps) => item.isTwoWay === true
+    );
+
+    if (isFromModel) {
+      console.log("dentro del reminder");
+      oneWayItems = dataTemplates?.data?.filter(
+        (item: TemplateProps) =>
+          item.isTwoWay === false && item.type === "reminder"
+      );
+
+      twoWayItems = dataTemplates?.data?.filter(
+        (item: TemplateProps) =>
+          item.isTwoWay === true && item.type === "reminder"
+      );
+    }
+
+    console.log("oneWayItems", oneWayItems);
+    console.log("twoWayItems", twoWayItems);
+
+    return {
+      oneWayItems,
+      twoWayItems,
+    };
+  };
+
+  const { oneWayItems, twoWayItems } = itemsTemplates();
 
   const handleSelected = (item?: string) => {
     if (item) {
@@ -67,39 +114,38 @@ const TemplateSelection = ({
     if (
       dataTemplates &&
       isFetched &&
-      twoWayItems.length === 0 &&
+      twoWayItems.length + oneWayItems.length === 1 &&
       setDoAutoClick
     ) {
       setDoAutoClick(true);
     }
-  }, [twoWayItems, dataTemplates, isFetched, setDoAutoClick]);
+  }, [twoWayItems, oneWayItems, dataTemplates, isFetched, setDoAutoClick]);
 
   return (
     <>
       <div className="space-y-6 w-full">
-        {!isFromModel && (
-          <>
-            <div className="space-y-4">
-              <div className="flex gap-3 items-center text-base text-[#1D2433]/60 font-semibold ">
-                <Image src={IconKeyboardTab} alt="" /> One way Messages
-              </div>
-              {error && <ErrorFetching message={error.message} />}
-              <div className={className}>
-                {isLoading ? (
-                  <TemplatesSkeleton number={3} />
-                ) : (
-                  <TypeTemplateSection
-                    dataTemplates={oneWayItems}
-                    handleSelected={handleSelected}
-                    selected={selected}
-                    isLink={isLink}
-                  />
-                )}
-              </div>
+        <>
+          <div className="space-y-4">
+            <div className="flex gap-3 items-center text-base text-[#1D2433]/60 font-semibold ">
+              <Image src={IconKeyboardTab} alt="" /> One way Messages
             </div>
-            <Separator className="" />
-          </>
-        )}
+            {error && <ErrorFetching message={error.message} />}
+            <div className={className}>
+              {isLoading ? (
+                <TemplatesSkeleton number={3} />
+              ) : (
+                <TypeTemplateSection
+                  dataTemplates={oneWayItems}
+                  handleSelected={handleSelected}
+                  selected={selected}
+                  isLink={isLink}
+                  addAutoSelect={twoWayItems.length + oneWayItems.length === 1}
+                />
+              )}
+            </div>
+          </div>
+          <Separator className="" />
+        </>
 
         <div className="space-y-4">
           <div className="flex gap-3 items-center text-base text-[#1D2433]/60 font-semibold ">
@@ -116,6 +162,7 @@ const TemplateSelection = ({
                 selected={selected ?? ""}
                 isLink={isLink}
                 templateId={templateId}
+                addAutoSelect={twoWayItems.length + oneWayItems.length === 1}
               />
             )}
           </div>

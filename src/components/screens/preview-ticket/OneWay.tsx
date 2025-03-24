@@ -18,8 +18,6 @@ const OneWay = ({ ticket }: Props) => {
         </div>
         <div>
           <span className="font-normal text-[#1D2433]/60">Description: </span>
-          {/*<span className="">{ticket?.chat[0]?.message}</span>*/}
-
           <div
             dangerouslySetInnerHTML={{
               __html: highlightKeyword(

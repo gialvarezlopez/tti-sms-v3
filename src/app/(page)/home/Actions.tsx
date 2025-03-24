@@ -42,6 +42,7 @@ const Actions = ({ rowSelected, handleClearSelected }: Props) => {
   function onSubmit(data: z.infer<typeof FormSchema>) {
     const params = new URLSearchParams(searchParams || "");
     params.set("search", data.search ?? "");
+    params.delete("page");
     router.push(`?${params.toString()}`);
   }
 

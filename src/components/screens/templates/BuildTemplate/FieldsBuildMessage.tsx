@@ -30,6 +30,7 @@ type Props = {
   template: TemplateProps;
   isFromModal: boolean;
   ticket?: TicketsProps;
+  typeOperation?: string;
 };
 
 interface Keyword {
@@ -39,7 +40,12 @@ interface Keyword {
   type: string;
 }
 
-const FieldsResendMessage = ({ template, isFromModal, ticket }: Props) => {
+const FieldsResendMessage = ({
+  template,
+  isFromModal,
+  ticket,
+  typeOperation,
+}: Props) => {
   const { control, setValue, watch, getValues } = useFormContext();
 
   const [isPopoverOpen, setIsPopoverOpen] = useState(false);
@@ -112,9 +118,21 @@ const FieldsResendMessage = ({ template, isFromModal, ticket }: Props) => {
     return false;
   }
 
+  const lastMessageContent = Array.isArray(ticket?.messages)
+    ? ticket?.messages.at(-1)?.content
+    : undefined;
+
+  const dataContent =
+    isFromModal && template
+      ? template.isTwoWay
+        ? template?.content
+        : typeOperation !== "resend-reminder"
+        ? lastMessageContent //Its resend message, no data edit
+        : template?.content //Its resend reminder show the template data to fill out the information
+      : template?.content; //show the default content to build the template in message/template/edit
+
   return (
     <div className="pb-2">
-      {/*<pre>{JSON.stringify(template, null, 2)}</pre>*/}
       <div className="w-full grid grid-cols-1 md:grid-cols-2 gap-3">
         <FormField
           control={control}
@@ -162,18 +180,24 @@ const FieldsResendMessage = ({ template, isFromModal, ticket }: Props) => {
         />
       </div>
       <div className="space-y-2">
+        Ticket
+        {<pre className="text-wrap">{JSON.stringify(ticket, null, 2)}</pre>}
+        <hr></hr>
+        Template
+        {<pre className="text-wrap">{JSON.stringify(template, null, 2)}</pre>}
         <div>
           <Separator className="my-6" />
           <h6 className="font-semibold text-base">Message</h6>
 
           <div className="pl-2">
+            {/*<pre>{JSON.stringify(template, null, 2)}</pre>*/}
             <div
               dangerouslySetInnerHTML={{
                 __html: highlightKeyword(
-                  watch("content") ||
-                    (template?.isTwoWay
+                  watch("content") || dataContent,
+                  /*(template?.isTwoWay
                       ? template?.content
-                      : ticket?.messages?.at(-1)?.content),
+                      : ticket?.messages?.at(-1)?.content),*/
                   /*
                   (isFromModal
                     ? template?.keywords

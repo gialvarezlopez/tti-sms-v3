@@ -207,6 +207,7 @@ const FormCreateTemplate = () => {
 
   const {
     reset,
+
     formState: { errors },
   } = form;
 
@@ -289,6 +290,14 @@ const FormCreateTemplate = () => {
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [elementId, currentTemplate]);
+
+  /*
+  useEffect(() => {
+    if (fieldResponses) {
+      console.log("responses", fieldResponses.length);
+    }
+  }, [fieldResponses]);
+  */
 
   const hasErrors = Object.keys(errors).length > 0;
   return (
