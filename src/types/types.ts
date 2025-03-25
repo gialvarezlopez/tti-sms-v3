@@ -98,7 +98,7 @@ export type TicketsProps = FormReviewMessagePropsWithoutKeywordsAndResponses & {
   recipientNumber?: string;
   firstMessage?: SendMessageProps;
   lastMessage?: SendMessageProps;
-  lastReceivedMessage: SendMessageProps; //lastReceivedMessageProps
+  lastReceivedMessage: SendMessageProps;
   template?: TemplateProps;
   created_at?: string;
   status: string;
@@ -138,6 +138,7 @@ export type AutomaticResponsesTemplates = {
   id?: string | number;
   response: string;
   reply: string;
+  is_default?: boolean;
 };
 
 export type ChatMessage = {

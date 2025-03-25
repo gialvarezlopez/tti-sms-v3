@@ -13,7 +13,6 @@ const TwoWay = ({ ticket }: Props) => {
     total: number,
     date: string
   ) => {
-    console.log("user", user);
     let word = "Message";
     if (user === WHO_SEND_MESSAGE.ADMIN && index === 0) {
       word = "First Message";
@@ -32,11 +31,6 @@ const TwoWay = ({ ticket }: Props) => {
   return (
     <>
       <div>
-        {/*
-          <pre className="text-wrap">
-            {JSON.stringify(ticket?.messages, null, 2)}
-          </pre>
-        */}
         {ticket?.messages?.map((item, index) => (
           <div key={index} className={`border-b border-[#CCD1DC]  px-6  `}>
             <div

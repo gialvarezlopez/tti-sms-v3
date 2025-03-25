@@ -1,13 +1,12 @@
 import React, { useEffect, useState } from "react";
 import Image from "next/image";
-import { useRouter, useSearchParams } from "next/navigation";
+import { useSearchParams } from "next/navigation";
 import TypeTemplateSection from "./TypeTemplateSection";
 import { Separator } from "@/components/ui/separator";
 import { IconKeyboardTab, IconTwoWay } from "@/assets/images";
 import { useGetTemplates } from "@/hooks/useTemplates";
 import { TemplateProps } from "@/types/types";
 import TemplatesSkeleton from "@/components/skeletons/TemplatesSkeleton";
-import CustomFormMessage from "@/components/ui/CustomFormMessage";
 import ErrorFetching from "@/components/ui/errorFetching";
 
 type Props = {
@@ -46,28 +45,6 @@ const TemplateSelection = ({
     query: selectedSearch,
   });
 
-  // Filter objects by type
-  /*
-  const oneWayItems = dataTemplates?.data?.filter(
-    (item: TemplateProps) => item.isTwoWay === false
-  );
-  const twoWayItems = dataTemplates?.data?.filter(
-    (item: TemplateProps) => item.isTwoWay === true
-  );
-  */
-  /*
-  const oneWayItems = dataTemplates?.data?.filter(
-    (item: TemplateProps) =>
-      item.isTwoWay === false && (!isFromModel || item.type === "reminder")
-  );
-
-  const twoWayItems = dataTemplates?.data?.filter(
-    (item: TemplateProps) =>
-      item.isTwoWay === true && (!isFromModel || item.type === "reminder")
-  );
-  */
-  //let dataOneWayItems = "";
-  //let dataTwoWayOtems = "";
   const itemsTemplates = () => {
     let oneWayItems = dataTemplates?.data?.filter(
       (item: TemplateProps) => item.isTwoWay === false
@@ -78,7 +55,6 @@ const TemplateSelection = ({
     );
 
     if (isFromModel) {
-      console.log("dentro del reminder");
       oneWayItems = dataTemplates?.data?.filter(
         (item: TemplateProps) =>
           item.isTwoWay === false && item.type === "reminder"
@@ -89,9 +65,6 @@ const TemplateSelection = ({
           item.isTwoWay === true && item.type === "reminder"
       );
     }
-
-    console.log("oneWayItems", oneWayItems);
-    console.log("twoWayItems", twoWayItems);
 
     return {
       oneWayItems,
