@@ -216,6 +216,10 @@ const FormCreateTemplate = () => {
       ...data,
       content: cleanOnlyWhiteSpace(data.content),
       ...(data.isReminder ? { type: "reminder" } : { type: "" }), //we do this because the endpoints is receiving type inste of isReminder
+      branches:
+        data?.branches?.length === 1 && data.branches[0] === "all"
+          ? []
+          : data.branches,
     };
 
     //Remove isReminder to only send type
@@ -225,7 +229,9 @@ const FormCreateTemplate = () => {
     if (elementId) {
       delete formData.branches;
     }
-
+    //console.log(data.branches);
+    //console.log(formData);
+    //return false;
     if (elementId) {
       updateTemplate(formData);
     } else {

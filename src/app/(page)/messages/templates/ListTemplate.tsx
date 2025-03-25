@@ -292,10 +292,15 @@ const ListTemplate = ({
                           <Cell row={item} />
                         </div>
                       </div>
-                      <p className="flex justify-end col-span-2">
-                        <small className="text-gray-500">
-                          {item?.branch?.name}
-                        </small>
+                      <p className="col-span-2 flex-1 w-full">
+                        <div className="flex justify-between gap-3">
+                          <small className="text-gray-500">
+                            {item?.branch?.name}
+                          </small>
+                          <small className="text-gray-500">
+                            {item?.type ? `Is Reminder` : ""}
+                          </small>
+                        </div>
                       </p>
                     </div>
 

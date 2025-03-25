@@ -180,11 +180,6 @@ const FieldsResendMessage = ({
         />
       </div>
       <div className="space-y-2">
-        Ticket
-        {<pre className="text-wrap">{JSON.stringify(ticket, null, 2)}</pre>}
-        <hr></hr>
-        Template
-        {<pre className="text-wrap">{JSON.stringify(template, null, 2)}</pre>}
         <div>
           <Separator className="my-6" />
           <h6 className="font-semibold text-base">Message</h6>
@@ -279,7 +274,6 @@ const FieldsResendMessage = ({
                                   "w-full pl-3 text-left font-normal justify-between",
                                   !field.value && "text-muted-foreground"
                                 )}
-                                //disabled={isFromModal}
                               >
                                 {isValidDate(field.value) ? (
                                   format(new Date(field.value), "MM/dd/yyyy")
@@ -299,16 +293,11 @@ const FieldsResendMessage = ({
                                 if (date) {
                                   const usDate = format(date, "MM/dd/yyyy");
                                   field.onChange(usDate);
-                                  handleKeywordChange(
-                                    index,
-                                    usDate
-                                    //(item as Keyword).type
-                                  );
+                                  handleKeywordChange(index, usDate);
                                   setIsPopoverOpen(false);
                                 }
                               }}
                               initialFocus
-                              //disabled={isFromModal}
                               className="w-full"
                             />
                           </PopoverContent>
@@ -332,14 +321,9 @@ const FieldsResendMessage = ({
                             placeholder={(item as Keyword).keyword}
                             {...field}
                             autoComplete="off"
-                            //readOnly={isFromModal}
                             onChange={(e) => {
                               field.onChange(e);
-                              handleKeywordChange(
-                                index,
-                                e.target.value
-                                //(item as Keyword).type
-                              );
+                              handleKeywordChange(index, e.target.value);
                             }}
                           />
                         </div>
