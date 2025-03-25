@@ -303,7 +303,10 @@ const FormCreateTemplate = () => {
         keywords,
         responses: filteredDataResponses,
         messageExchangeType,
-        invalidReply: isTwoWay && filteredDataInvalidReply[0]?.reply,
+        ...(isTwoWay &&
+          filteredDataInvalidReply[0]?.reply && {
+            invalidReply: filteredDataInvalidReply[0]?.reply,
+          }),
         isReminder: type ? true : false,
       };
       reset(data);
