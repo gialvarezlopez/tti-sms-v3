@@ -34,6 +34,7 @@ const ticketsRoutes = {
   single: (id: string) => `/api/v1/threads/${id}`, //View, Delete, Update
   multiOption: `/api/v1/threads/multi-op`, //Delete multi options
   resendLast: (id: string) => `/api/v1/threads/${id}/resend_last`,
+  reminder: (id: string) => `/api/v1/threads/${id}/reminder`,
 };
 
 const templatesRoutes = {

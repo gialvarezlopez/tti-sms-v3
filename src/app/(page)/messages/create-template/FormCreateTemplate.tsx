@@ -212,6 +212,17 @@ const FormCreateTemplate = () => {
   } = form;
 
   function onSubmit(data: z.infer<typeof FormSchema>) {
+    const isTwoway = data.messageExchangeType === "two-way";
+    const invalidReplyDefault = {
+      response: "",
+      reply: data.invalidReply || "",
+      is_default: true,
+    };
+
+    if (isTwoway && data && data?.responses) {
+      data?.responses.push(invalidReplyDefault);
+    }
+
     const formData: Partial<typeof data> = {
       ...data,
       content: cleanOnlyWhiteSpace(data.content),
@@ -222,15 +233,14 @@ const FormCreateTemplate = () => {
           : data.branches,
     };
 
-    //Remove isReminder to only send type
+    //Remove isReminder to only send the property called type
     delete formData.isReminder;
     delete formData.messageExchangeType;
 
     if (elementId) {
       delete formData.branches;
     }
-    //console.log(data.branches);
-    //console.log(formData);
+
     //return false;
     if (elementId) {
       updateTemplate(formData);
@@ -270,6 +280,13 @@ const FormCreateTemplate = () => {
         type,
       } = currentTemplate.data;
 
+      const filteredDataInvalidReply = responses?.filter(
+        (item: { is_default: number }) => item.is_default === 1
+      );
+      const filteredDataResponses = responses?.filter(
+        (item: { is_default: number }) => item.is_default !== 1
+      );
+
       const slugType = generateSlug(templateType(isTwoWay ?? false));
       const messageExchangeType: "one-way" | "two-way" | undefined =
         slugType === MESSAGE_EXCHANGE.ONE_WAY ||
@@ -284,26 +301,16 @@ const FormCreateTemplate = () => {
         content,
         daysToLive,
         keywords,
-        responses,
+        responses: filteredDataResponses,
         messageExchangeType,
-        invalidReply,
+        invalidReply: isTwoWay && filteredDataInvalidReply[0]?.reply,
         isReminder: type ? true : false,
       };
-
-      console.log("data", data);
       reset(data);
     }
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [elementId, currentTemplate]);
-
-  /*
-  useEffect(() => {
-    if (fieldResponses) {
-      console.log("responses", fieldResponses.length);
-    }
-  }, [fieldResponses]);
-  */
 
   const hasErrors = Object.keys(errors).length > 0;
   return (

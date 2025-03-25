@@ -2,7 +2,6 @@ import React, { useEffect, useState } from "react";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
-import { showToast } from "@/lib/toastUtil";
 import { Form } from "@/components/ui/form";
 import { Separator } from "@/components/ui/separator";
 import { Button } from "@/components/ui/button";
@@ -17,15 +16,13 @@ import Link from "next/link";
 import MessageReviewConfirm from "@/app/(page)/messages/new-message/confirm-message/MessageReviewConfirm";
 import {
   addFormatPhoneNumberMask,
-  formatPhoneNumber,
   formatPhoneNumberWithoutAreCode,
   removeBrackets,
   removeHtmlTags,
   templateType,
 } from "@/lib/utils/utils";
-import { useResendLastThread } from "@/hooks/useTickets";
+import { useResendReminderThread } from "@/hooks/useTickets";
 import { useResendMessage } from "@/hooks/useMessages";
-import { ReceiptCent } from "lucide-react";
 
 type Props = {
   template: TemplateProps;
@@ -109,7 +106,7 @@ const FormBuildMessage = ({
 
   //For two way
   const { mutate: resendReminder, isPending: isSendingReminder } =
-    useResendLastThread((ticket?.id as string) ?? "");
+    useResendReminderThread((ticket?.id as string) ?? "");
 
   //For one way
   const { mutate: resendMessage, isPending: isSendingMessage } =
@@ -165,8 +162,6 @@ const FormBuildMessage = ({
   const { setValue, watch, trigger } = form;
 
   function onSubmit(data: z.infer<typeof FormSchema>) {
-    console.log("data", data);
-
     if (isFromModal) {
       //Its two way
       if (template?.isTwoWay) {
@@ -218,9 +213,6 @@ const FormBuildMessage = ({
       const formattedNumber = formatPhoneNumberWithoutAreCode(
         ticket.recipientNumber
       );
-
-      //console.log("Formatted Number:", formattedNumber); // Debug
-
       setValue("recipient_number", addFormatPhoneNumberMask(formattedNumber), {
         shouldDirty: true,
         shouldValidate: true,
@@ -232,8 +224,6 @@ const FormBuildMessage = ({
       trigger("recipient_number");
     }
   }, [template, isFromModal, setValue, ticket, trigger]);
-
-  //console.log("ticket", ticket);
 
   return (
     <div className="w-full">

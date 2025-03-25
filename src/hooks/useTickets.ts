@@ -134,12 +134,12 @@ const useCreateTicket = () => {
   });
 };
 
-const useResendLastThread = (id: string) => {
+const useResendReminderThread = (id: string) => {
   const queryClient = useQueryClient();
   return useMutation({
     mutationFn: async (payload: ResendMessageProps) => {
       try {
-        const url = ticketsRoutes.resendLast(id);
+        const url = ticketsRoutes.reminder(id);
         const { data } = await axiosInstance.post(url, payload);
 
         return data;
@@ -231,5 +231,5 @@ export {
   useGetTickets,
   useCreateTicket,
   useCloseMultiplesTickets,
-  useResendLastThread,
+  useResendReminderThread,
 };

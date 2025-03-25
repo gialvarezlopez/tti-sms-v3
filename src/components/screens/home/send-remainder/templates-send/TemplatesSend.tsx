@@ -36,7 +36,6 @@ const TemplatesSend = ({
   const [isNextStep, setIsNextStep] = useState(false);
 
   const handleNextStep = () => {
-    console.log("templateSelected", templateSelected);
     if (templateSelected) {
       setIsNextStep(true);
     }
