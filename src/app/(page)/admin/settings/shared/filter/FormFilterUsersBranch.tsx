@@ -100,7 +100,8 @@ const FormFilterBranch = ({ dataRoles, errorRoles, isLoadingRoles }: Props) => {
         params.delete(key);
       }
     };
-
+    //params.set("page", "1");
+    setParamIfValid("page", "1");
     setParamIfValid("roles", data?.roles);
     setParamIfValid("status", data?.status);
     setParamIfValid("provinces", data?.provinces);

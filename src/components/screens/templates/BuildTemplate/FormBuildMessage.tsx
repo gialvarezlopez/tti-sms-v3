@@ -261,18 +261,6 @@ const FormBuildMessage = ({
                   : ""
               }`}
             >
-              {/*
-                <pre className="text-wrap">
-                  {JSON.stringify(ticket, null, 2)}
-                </pre>
-              }
-              <hr></hr>
-              {
-                <pre className="text-wrap">
-                  {JSON.stringify(template, null, 2)}
-                </pre>
-              */}
-
               <FieldsResendMessage
                 template={template}
                 isFromModal={isFromModal}

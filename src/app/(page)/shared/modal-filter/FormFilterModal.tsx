@@ -132,6 +132,7 @@ const FormFilterModal = ({ fromPage }: Props) => {
       }
     };
 
+    setParamIfValid("page", "1");
     setParamIfValid("templates", data?.template);
     setParamIfValid("branches", data?.branch);
     setParamIfValid("status", data?.status);

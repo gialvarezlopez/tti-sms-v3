@@ -109,12 +109,23 @@ const Home = () => {
     status: "error",
     //search,
   });
-
+  /*
   useEffect(() => {
     // If there is no `page` parameter in the URL, reset to page 1
     if (!searchParams?.get("page")) {
       setPagination((prev) => ({ ...prev, pageIndex: 0 }));
     }
+  }, [searchParams]);
+  */
+  useEffect(() => {
+    const newPage = searchParams?.get("page")
+      ? Number(searchParams.get("page")) - 1
+      : 0;
+
+    setPagination((prev) => ({
+      ...prev,
+      pageIndex: newPage,
+    }));
   }, [searchParams]);
 
   const {
