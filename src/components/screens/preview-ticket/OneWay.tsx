@@ -12,8 +12,7 @@ const OneWay = ({ ticket }: Props) => {
         <div className="flex gap-3">
           <span className="font-normal text-[#1D2433]/60">Message: </span>
           <span className="font-bold text-base text-customBlack-v1">
-            {ticket?.firstMessage &&
-              formatDate(ticket?.firstMessage?.createdAt)}
+            {ticket?.createdAt && formatDate(ticket?.createdAt)}
           </span>
         </div>
         <div>

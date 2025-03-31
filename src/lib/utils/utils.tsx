@@ -21,6 +21,10 @@ const getStatusName = (ticketStatus: string): string => {
       return "In Progress";
     case TICKETS_STATUS.CLOSED:
       return "Closed";
+    case TICKETS_STATUS.OVERDUE:
+      return "Overdue";
+    case TICKETS_STATUS.TO_BE_OVERDUE:
+      return "To be Overdue";
     default:
       return "None";
   }
@@ -50,6 +54,14 @@ export const statusType = (status: string, withCircle: boolean = true) => {
     [TICKETS_STATUS.OVERDUE]: {
       bg: "bg-customRed-v4 text-customRed-v3",
       circle: "bg-customRed-v3",
+    },
+    [TICKETS_STATUS.TO_BE_OVERDUE]: {
+      bg: "bg-[#FFF8EB] text-[#B25E09]",
+      circle: "bg-[#B25E09]",
+    },
+    [TICKETS_STATUS.OVERDUE]: {
+      bg: "bg-[#FFF8EB] text-[#B25E09]",
+      circle: "bg-[#B25E09]",
     },
     [TICKETS_STATUS.TO_BE_OVERDUE]: {
       bg: "bg-[#FFF8EB] text-[#B25E09]",
