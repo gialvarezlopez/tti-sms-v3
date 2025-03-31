@@ -13,6 +13,10 @@ const getStatusName = (ticketStatus: string): string => {
       return "Error";
     //case TICKETS_STATUS.RESPONSE_TO_THE_CLIENT:
     //return "Response to client Due";
+    case TICKETS_STATUS.TO_BE_OVERDUE:
+      return "To Be Overdue";
+    case TICKETS_STATUS.OVERDUE:
+      return "Overdue";
     case TICKETS_STATUS.IN_PROGRESS:
       return "In Progress";
     case TICKETS_STATUS.CLOSED:
@@ -21,6 +25,7 @@ const getStatusName = (ticketStatus: string): string => {
       return "None";
   }
 };
+/// #E1E1E1;
 
 export const statusType = (status: string, withCircle: boolean = true) => {
   let setBgColor = "";
@@ -39,6 +44,14 @@ export const statusType = (status: string, withCircle: boolean = true) => {
     },
     */
     [TICKETS_STATUS.IN_PROGRESS]: {
+      bg: "bg-[#EDFDF8] text-[#16A37A]",
+      circle: "bg-[#16A37A]",
+    },
+    [TICKETS_STATUS.OVERDUE]: {
+      bg: "bg-[#E1E1E1] text-[#1D2433]/80",
+      circle: "bg-[#1D2433]/80",
+    },
+    [TICKETS_STATUS.TO_BE_OVERDUE]: {
       bg: "bg-[#FFF8EB] text-[#B25E09]",
       circle: "bg-[#B25E09]",
     },
@@ -257,7 +270,7 @@ export const generateSlug = (text: string): string => {
 };
 
 export const templateType = (isTwoWay: boolean) => {
-  return isTwoWay ? "Two Way" : "One Way";
+  return isTwoWay ? "Two-Way" : "One-Way";
 };
 
 export const isMobile = () => {
