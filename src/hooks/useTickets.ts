@@ -25,6 +25,7 @@ const useGetTickets = ({
   last_sent,
   last_received,
 }: TicketParams) => {
+  //const queryClient = useQueryClient();
   return useQuery({
     queryKey: [
       "ticket-list",
@@ -65,6 +66,11 @@ const useGetTickets = ({
         if (isFilter) {
           const url = ticketsRoutes.filter;
           const { data } = await axiosInstance.post(url, params);
+          /*
+          queryClient.invalidateQueries({
+            queryKey: ["stats-list", branches, status],
+          });
+          */
           return data;
         } else {
           const url = ticketsRoutes.list;

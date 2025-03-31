@@ -158,13 +158,13 @@ const FieldsResendMessage = ({
           name="recipient_number"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Telephone number</FormLabel>
+              <FormLabel>Telephone Number</FormLabel>
               <FormControl>
                 <div className="flex items-center gap-2">
                   +1
                   <CustomInputMask
                     mask="(999) 999-9999"
-                    placeholder={"Telephone number"}
+                    placeholder={"Telephone Number"}
                     type="text"
                     {...field}
                     upperCase={true}

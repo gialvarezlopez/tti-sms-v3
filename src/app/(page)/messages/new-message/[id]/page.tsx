@@ -31,7 +31,7 @@ const Page = () => {
             href="/messages/new-message"
             className=" flex gap-2 items-center"
           >
-            <ArrowLeft /> Go back to templates
+            <ArrowLeft /> Go Back to Templates
           </Link>
         </div>
       </div>

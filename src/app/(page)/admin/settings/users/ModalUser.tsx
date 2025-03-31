@@ -31,7 +31,7 @@ const ModalUser = ({ setIsOpen, user }: Props) => {
         <DialogDescription className="px-6  pt-3 text-base text-[#1D2433]/80">
           {user
             ? "Please fill the information. "
-            : "Add a user filling the information bellow."}
+            : "Add a user by filling in the information below."}
         </DialogDescription>
       </DialogHeader>
       <div>

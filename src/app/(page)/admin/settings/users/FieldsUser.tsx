@@ -73,7 +73,7 @@ const FieldsUser = ({
         name="role"
         render={({ field }) => (
           <FormItem>
-            <FormLabel>User type</FormLabel>
+            <FormLabel>User Type</FormLabel>
             {errorRoles instanceof Error ? (
               errorRoles?.message
             ) : (

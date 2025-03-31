@@ -55,7 +55,7 @@ const Add = ({
         </DialogDescription>
       </DialogHeader>
       <div className=" px-6">
-        <span className="text-base font-semibold pb-1 block">Add A</span>
+        <span className="text-base font-semibold pb-1 block">Add a</span>
         <Select value={selectedOption} onValueChange={handleSelectChange}>
           <SelectTrigger className="w-full">
             <SelectValue placeholder="Select an option" />

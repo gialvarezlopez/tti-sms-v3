@@ -48,7 +48,7 @@ const StepOneFieldsBranch = ({
   return (
     <>
       <div className="text-base text-[#1D2433]/80 mb-4">
-        Add a branch filling the information bellow.
+        Add a branch by filling in the information below.
       </div>
       <div className="grid grid-cols-2 gap-3">
         <FormField
@@ -155,7 +155,7 @@ const StepOneFieldsBranch = ({
               >
                 <FormControl>
                   <SelectTrigger>
-                    <SelectValue placeholder="Select an province" />
+                    <SelectValue placeholder="Select a province" />
                   </SelectTrigger>
                 </FormControl>
                 <SelectContent>

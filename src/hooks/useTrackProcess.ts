@@ -5,7 +5,7 @@ import { useQuery } from "@tanstack/react-query";
 
 interface FilterParams {
   branches: string[];
-  status: string;
+  status: string[];
 }
 
 const useGetStats = ({ branches, status }: FilterParams) => {

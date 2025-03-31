@@ -100,13 +100,14 @@ const Home = () => {
       ? typeOfMessageParams.split(",")
       : [];
 
+  console.log("statusTickets", statusTickets);
   const {
     data: dataStats,
     error: errorStats,
     isLoading: isLoadingStats,
   } = useGetStats({
     branches,
-    status: "error",
+    status: statusTickets,
     //search,
   });
   /*
@@ -266,7 +267,7 @@ const Home = () => {
         </h1>
       </div>
       <p className="py-2">
-        Do a follow up of your messages and track their process.
+        Follow up on your messages and track their progress.
       </p>
 
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-3 mt-4">

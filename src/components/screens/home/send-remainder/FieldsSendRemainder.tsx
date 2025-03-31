@@ -53,11 +53,11 @@ const FieldsBuildRemainder = ({ ticket }: Props) => {
           name="phoneNumber"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Telephone number</FormLabel>
+              <FormLabel>Telephone Number</FormLabel>
               <FormControl>
                 <CustomInputMask
                   mask="(999) 999-9999"
-                  placeholder={"Telephone number"}
+                  placeholder={"Telephone Number"}
                   type="text"
                   {...field}
                   upperCase={true}
