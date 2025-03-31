@@ -48,8 +48,8 @@ export const statusType = (status: string, withCircle: boolean = true) => {
       circle: "bg-[#16A37A]",
     },
     [TICKETS_STATUS.OVERDUE]: {
-      bg: "bg-[#E1E1E1] text-[#1D2433]/80",
-      circle: "bg-[#1D2433]/80",
+      bg: "bg-customRed-v4 text-customRed-v3",
+      circle: "bg-customRed-v3",
     },
     [TICKETS_STATUS.TO_BE_OVERDUE]: {
       bg: "bg-[#FFF8EB] text-[#B25E09]",

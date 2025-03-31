@@ -19,8 +19,8 @@ export const TOAST_STATUS = {
 } as const;
 
 export const TYPE_OF_MESSAGE = {
-  ONE_WAY: "one_way",
-  TWO_WAY: "two_way",
+  ONE_WAY: "one-way",
+  TWO_WAY: "two-way",
 };
 
 export const WHO_SEND_MESSAGE = {

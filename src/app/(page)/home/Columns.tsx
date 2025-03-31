@@ -391,7 +391,7 @@ const useColumns = () => {
       cell: ({ row }) => {
         return (
           <span className="text-nowrap">
-            {formatDate(row.original.firstMessage?.createdAt ?? "")}
+            {formatDate(row.original?.createdAt ?? "")}
           </span>
         );
       },
