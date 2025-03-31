@@ -108,6 +108,9 @@ const Home = () => {
   } = useGetStats({
     branches,
     status: statusTickets,
+    last_sent,
+    last_received,
+    types: typeTicket,
     //search,
   });
   /*
