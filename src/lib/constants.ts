@@ -3,7 +3,7 @@ export const TICKETS_STATUS = {
   CLOSED: "closed",
   IN_PROGRESS: "in_progress",
   OVERDUE: "overdue",
-  TO_BE_OVERDUE: "toBeOverdue",
+  TO_BE_OVERDUE: "to_be_overdue",
 };
 
 export const USER_STATUS = {
