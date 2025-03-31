@@ -15,11 +15,11 @@ import { useGetTemplates } from "@/hooks/useTemplates";
 const dataTypeOfMessage = [
   {
     id: "oneway",
-    value: "One way",
+    value: "One-Way",
   },
   {
     id: "twoway",
-    value: "Two way",
+    value: "Two-Way",
   },
 ];
 
@@ -257,7 +257,7 @@ const FieldsFilterModal = ({ fromPage }: Props) => {
         <Separator />
         <div className="px-4 py-2">
           <div className="flex gap-3 justify-between  mb-2">
-            <div className="text-sm font-semibold">Type of message</div>
+            <div className="text-sm font-semibold">Type of Message</div>
             <span
               className="text-customRed-v1 cursor-pointer text-sm"
               onClick={() => resetSection(["typeOfMessage"])}

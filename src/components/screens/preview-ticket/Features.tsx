@@ -26,7 +26,7 @@ const Features = ({ ticket }: Props) => {
         </div>
         <div className="flex gap-1">
           <span className="font-normal text-[#1D2433]/60 text-nowrap">
-            Telephone number:{" "}
+            Telephone Number:{" "}
           </span>
           <span className="font-bold text-base text-customBlack-v1 ">
             {formatPhoneNumber(ticket.recipientNumber ?? "", true)}
@@ -42,7 +42,7 @@ const Features = ({ ticket }: Props) => {
         </div>
         <div className="flex gap-1">
           <span className="font-normal text-[#1D2433]/60">
-            Type of message:{" "}
+            Type of Message:{" "}
           </span>
           <span className="font-bold text-base text-customBlack-v1">
             {templateType(ticket.template?.isTwoWay ?? false)}

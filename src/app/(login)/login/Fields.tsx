@@ -104,7 +104,7 @@ const Fields = ({ setIsOpenModal }: Props) => {
           className="text-customRed-v1 font-semibold text-xs md:text-sm cursor-pointer"
           onClick={() => setIsOpenModal(true)}
         >
-          Forgot password
+          Forgot Password
         </div>
       </div>
     </>

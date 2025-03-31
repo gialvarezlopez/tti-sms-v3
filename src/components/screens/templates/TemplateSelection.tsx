@@ -100,7 +100,7 @@ const TemplateSelection = ({
         <>
           <div className="space-y-4">
             <div className="flex gap-3 items-center text-base text-[#1D2433]/60 font-semibold ">
-              <Image src={IconKeyboardTab} alt="" /> One way Messages
+              <Image src={IconKeyboardTab} alt="" /> One-Way Messages
             </div>
             {error && <ErrorFetching message={error.message} />}
             <div className={className}>
@@ -122,7 +122,7 @@ const TemplateSelection = ({
 
         <div className="space-y-4">
           <div className="flex gap-3 items-center text-base text-[#1D2433]/60 font-semibold ">
-            <Image src={IconTwoWay} alt="" /> Two way Messages
+            <Image src={IconTwoWay} alt="" /> Two-Way Messages
           </div>
           {error && <ErrorFetching message={error.message} />}
           <div className={className}>

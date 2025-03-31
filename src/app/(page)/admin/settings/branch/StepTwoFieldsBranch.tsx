@@ -77,7 +77,7 @@ const StepTwoFieldsBranch = () => {
                   name="phone_number"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel>Select Available number</FormLabel>
+                      <FormLabel>Select Available Number</FormLabel>
                       <Select
                         onValueChange={field.onChange}
                         defaultValue={field.value}

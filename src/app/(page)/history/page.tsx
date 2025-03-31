@@ -253,7 +253,7 @@ const Home = () => {
           <h1 className="font-bold text-2xl md:text-4xl">History</h1>
         </div>
         <p className="py-2">
-          All your closed tickets are here for consultation.
+          All your closed tickets are available for consultation.
         </p>
       </div>
       <div className="rounded-lg bg-white my-6 p-4">

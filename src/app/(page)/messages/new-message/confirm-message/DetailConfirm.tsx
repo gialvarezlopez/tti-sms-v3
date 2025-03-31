@@ -14,7 +14,7 @@ const DetailConfirm = ({ template, formState }: Props) => {
       <div className="grid grid-cols-1 md:grid-cols-2 gap-3 border-b border-[#d5d8df]  px-6 py-2">
         <div className="flex gap-1">
           <span className="font-normal text-[#1D2433]/60 text-nowrap">
-            Telephone number:{" "}
+            Telephone Number:{" "}
           </span>
           <span className="font-bold text-base text-customBlack-v1 ">
             {formState.recipient_number}
@@ -23,7 +23,7 @@ const DetailConfirm = ({ template, formState }: Props) => {
 
         <div className="flex gap-1">
           <span className="font-normal text-[#1D2433]/60">
-            Type of message:{" "}
+            Type of Message:{" "}
           </span>
           <span className="font-bold text-base text-customBlack-v1">
             {templateType(template.isTwoWay ?? false)}

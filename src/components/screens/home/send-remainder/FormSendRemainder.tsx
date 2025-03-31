@@ -16,7 +16,7 @@ type Props = {
 };
 const FormBuildRemainder = ({ onClose, ticket }: Props) => {
   const FormSchema = z.object({
-    phoneNumber: z.string().min(1, "Telephone number is required"),
+    phoneNumber: z.string().min(1, "Telephone Number is required"),
     modelNumber: z.string().min(1, "SV or Model Number is required"),
   });
 
