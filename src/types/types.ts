@@ -109,6 +109,7 @@ export type TicketsProps = FormReviewMessagePropsWithoutKeywordsAndResponses & {
   reason?: string;
   closedBy?: ClosedByUserProps;
   closed?: string;
+  createdAt?: string;
 };
 
 export type MessageProps = {
