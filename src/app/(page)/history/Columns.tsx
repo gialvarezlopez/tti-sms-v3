@@ -172,7 +172,7 @@ export const columns: ColumnDef<TicketsProps>[] = [
     cell: ({ row }) => {
       return (
         <span className="text-nowrap">
-          {row.original.closedBy?.user?.name ?? "Undefined"}
+          {row.original.closedBy?.user?.name ?? ""}
         </span>
       );
     },
@@ -191,7 +191,7 @@ export const columns: ColumnDef<TicketsProps>[] = [
     cell: ({ row }) => {
       return (
         <>
-          <div>{row.original.closedBy?.closedReason ?? "Undefined"}</div>
+          <div>{row.original.closedBy?.closedReason ?? ""}</div>
         </>
       );
     },

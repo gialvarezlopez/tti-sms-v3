@@ -421,7 +421,7 @@ const FieldsTemplate = ({
             setResponseOption={setResponseOption}
             maxWidthMainDiv={width}
           />
-
+          {/*
           <div className="mt-6 md:mt-0">
             <FormField
               control={control}
@@ -443,6 +443,7 @@ const FieldsTemplate = ({
               )}
             />
           </div>
+          */}
         </>
       )}
     </div>

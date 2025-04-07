@@ -87,9 +87,18 @@ const FieldsFilterModal = ({ fromPage }: Props) => {
       return [];
     }
 
+    // Diccionario de traducciones
+    const statusLabels: Record<string, string> = {
+      in_progress: "In Progress",
+      to_be_overdue: "To be Overdue",
+      overdue: "Overdue",
+      error: "Error",
+      // Agrega más traducciones según lo necesites
+    };
+
     return statusArray.map((status) => ({
       id: status,
-      value: status,
+      value: statusLabels[status] || status,
     }));
   }, [statusArray]);
 

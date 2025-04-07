@@ -43,6 +43,7 @@ const FormCreateTemplate = () => {
   const [responseOption, setResponseOption] = useState<ResponseProps>({
     response: "",
     automaticReply: "",
+    isInvalidReply: false,
   });
 
   const { data: currentTemplate } = useSingleTemplate(elementId as string);
@@ -114,7 +115,8 @@ const FormCreateTemplate = () => {
       responses: z
         .array(
           z.object({
-            response: z.string().min(1, "Please enter the value"),
+            //response: z.string().min(1, "Please enter the value"),
+            response: z.string().optional(),
             reply: z
               .string()
               .min(2, {
@@ -126,7 +128,7 @@ const FormCreateTemplate = () => {
           })
         )
         .optional(),
-      invalidReply: z.string().optional(),
+      //invalidReply: z.string().optional(),
       daysToLive: z.number().optional(),
     })
     .superRefine((data, ctx) => {
@@ -148,9 +150,10 @@ const FormCreateTemplate = () => {
       });
 
       // Validate that each response.value is in message between brackets
+
       if (responses) {
         responses.forEach((response, index) => {
-          if (!findPattern(response.response)) {
+          if (response.response && !findPattern(response.response)) {
             ctx.addIssue({
               path: ["responses", index, "response"],
               message: `The response value '[${response.response}]' does not exist in the message.`,
@@ -169,7 +172,7 @@ const FormCreateTemplate = () => {
             code: "custom",
           });
         }
-
+        /*
         if (!data.invalidReply || data.invalidReply.trim().length === 0) {
           ctx.addIssue({
             path: ["invalidReply"],
@@ -177,6 +180,7 @@ const FormCreateTemplate = () => {
             code: "custom",
           });
         }
+        */
 
         if (data.daysToLive === undefined || isNaN(data.daysToLive)) {
           ctx.addIssue({
@@ -200,7 +204,7 @@ const FormCreateTemplate = () => {
       responses: [],
       isReminder: false,
       messageExchangeType: undefined,
-      invalidReply: "",
+      //invalidReply: "",
       daysToLive: 35,
     },
   });
@@ -213,15 +217,21 @@ const FormCreateTemplate = () => {
 
   function onSubmit(data: z.infer<typeof FormSchema>) {
     const isTwoway = data.messageExchangeType === "two-way";
+    /*
     const invalidReplyDefault = {
       response: "",
-      reply: data.invalidReply || "",
+      //reply: data.invalidReply || "",
       is_default: true,
     };
 
     if (isTwoway && data && data?.responses) {
-      data?.responses.push(invalidReplyDefault);
+      //data?.responses.push(invalidReplyDefault);
     }
+    */
+
+    const modifiedResponses = data.responses?.map((r) =>
+      r.response === "" ? { ...r, is_default: true } : r
+    );
 
     const formData: Partial<typeof data> = {
       ...data,
@@ -231,6 +241,7 @@ const FormCreateTemplate = () => {
         data?.branches?.length === 1 && data.branches[0] === "all"
           ? []
           : data.branches,
+      responses: modifiedResponses,
     };
 
     //Remove isReminder to only send the property called type
@@ -240,7 +251,7 @@ const FormCreateTemplate = () => {
     if (elementId) {
       delete formData.branches;
     }
-
+    //console.log("formData", formData);
     //return false;
     if (elementId) {
       updateTemplate(formData);
@@ -251,13 +262,14 @@ const FormCreateTemplate = () => {
             messageExchangeType: undefined,
             responses: [],
             keywords: [],
-            invalidReply: "",
+            //invalidReply: "",
             content: "",
             description: "",
           });
           setResponseOption({
             response: "",
             automaticReply: "",
+            isInvalidReply: false,
           });
           setClearMessage(true);
         },
@@ -283,9 +295,11 @@ const FormCreateTemplate = () => {
       const filteredDataInvalidReply = responses?.filter(
         (item: { is_default: number }) => item.is_default === 1
       );
+      /*
       const filteredDataResponses = responses?.filter(
         (item: { is_default: number }) => item.is_default !== 1
       );
+      */
 
       const slugType = generateSlug(templateType(isTwoWay ?? false));
       const messageExchangeType: "one-way" | "two-way" | undefined =
@@ -301,7 +315,7 @@ const FormCreateTemplate = () => {
         content,
         daysToLive,
         keywords,
-        responses: filteredDataResponses,
+        responses: responses,
         messageExchangeType,
         ...(isTwoWay &&
           filteredDataInvalidReply[0]?.reply && {

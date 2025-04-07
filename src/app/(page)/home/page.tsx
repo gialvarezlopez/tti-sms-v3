@@ -64,10 +64,18 @@ const Home = () => {
   const lastReceivedToParams = searchParams?.get("lastReceivedTo");
   const typeOfMessageParams = searchParams?.get("typeOfMessage");
 
+  /*
   const branches =
     branchesParam &&
     branchesParam !== "all" &&
     session?.user?.primaryRole !== USER_ROLE.USER // user
+      ? branchesParam.split(",")
+      : [];
+  */
+  const branches =
+    session?.user?.primaryRole === USER_ROLE.USER
+      ? [session?.user?.branch.id]
+      : branchesParam && branchesParam !== "all"
       ? branchesParam.split(",")
       : [];
 

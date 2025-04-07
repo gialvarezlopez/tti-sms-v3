@@ -39,7 +39,7 @@ const Response = ({
   useEffect(() => {
     if (
       responseOption &&
-      responseOption.response &&
+      /*responseOption.response &&*/
       responseOption.automaticReply
     ) {
       const exists = fields.some(
@@ -51,11 +51,16 @@ const Response = ({
           id: String(Date.now()),
           response: responseOption.response,
           reply: responseOption.automaticReply,
+          isInvalidReply: responseOption.isInvalidReply,
         });
       }
 
       if (fields.length === 0) {
-        setResponseOption({ response: "", automaticReply: "" });
+        setResponseOption({
+          response: "",
+          automaticReply: "",
+          isInvalidReply: false,
+        });
       }
     }
   }, [fields, responseOption, append, setResponseOption]);
