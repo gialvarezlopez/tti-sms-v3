@@ -47,7 +47,10 @@ const InputTypeResponse = ({ fields, remove, maxWidthMainDiv }: Props) => {
     fields.forEach((item, index) => {
       setValue(`responses[${index}].response`, item.response);
       setValue(`responses[${index}].reply`, item.reply);
+      setValue(`responses[${index}].isInvalidReply`, item.isInvalidReply);
     });
+
+    console.log("fields", fields);
   }, [fields, setValue]);
 
   return (
@@ -97,7 +100,7 @@ const InputTypeResponse = ({ fields, remove, maxWidthMainDiv }: Props) => {
               render={({ field }) => (
                 <FormItem>
                   <FormLabel className="text-base font-semibold flex gap-3 justify-between items-center">
-                    Automatic Reply
+                    {item.isInvalidReply ? "Invalid Reply" : "Automatic Reply"}
                   </FormLabel>
                   <FormControl>
                     <Textarea

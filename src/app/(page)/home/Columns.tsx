@@ -376,7 +376,13 @@ const useColumns = () => {
         );
       },
       cell: ({ row }) => {
-        return <>{statusType(row.original.status, true)}</>;
+        return (
+          <>
+            <span className="text-nowrap">
+              {statusType(row.original.status, true)}
+            </span>
+          </>
+        );
       },
     },
     {

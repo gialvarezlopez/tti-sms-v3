@@ -59,14 +59,18 @@ export const statusType = (status: string, withCircle: boolean = true) => {
       bg: "bg-[#FFF8EB] text-[#B25E09]",
       circle: "bg-[#B25E09]",
     },
+    /*
     [TICKETS_STATUS.OVERDUE]: {
       bg: "bg-[#FFF8EB] text-[#B25E09]",
       circle: "bg-[#B25E09]",
     },
+    */
+    /*
     [TICKETS_STATUS.TO_BE_OVERDUE]: {
       bg: "bg-[#FFF8EB] text-[#B25E09]",
       circle: "bg-[#B25E09]",
     },
+    */
     [TICKETS_STATUS.CLOSED]: {
       bg: "bg-[#EDFDF8] text-[#16A37A]",
       circle: "bg-[#16A37A]",

@@ -138,8 +138,9 @@ export type KeywordTemplates = {
 export type AutomaticResponsesTemplates = {
   id?: string | number;
   response: string;
-  reply: string;
+  reply?: string;
   is_default?: boolean;
+  isInvalidReply?: boolean;
 };
 
 export type ChatMessage = {
@@ -192,6 +193,7 @@ export type ResponseProps = {
   response: string;
   value?: string;
   automaticReply: string;
+  isInvalidReply?: boolean;
 };
 
 export type PhoneNumberProps = {
