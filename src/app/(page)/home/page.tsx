@@ -49,7 +49,7 @@ const Home = () => {
 
   const [pagination, setPagination] = useState({
     pageIndex: selectedPage ? +selectedPage - 1 : 0,
-    pageSize: 10,
+    pageSize: 50,
   });
 
   const { ref: refMainDiv, width: widthMainDiv = 0 } =
@@ -155,6 +155,18 @@ const Home = () => {
     last_received,
     types: typeTicket,
   });
+
+  // Cálculo de los registros mostrados y el rango
+  const currentPage = pagination.pageIndex + 1; // la página actual (1-indexed)
+  const perPage = pagination.pageSize; // elementos por página
+  const total = dataTickets?.meta.pagination.count || 0; // total de registros
+
+  // Calculamos el rango de registros que se están mostrando
+  const startRecord = (currentPage - 1) * perPage + 1;
+  const endRecord = Math.min(currentPage * perPage, total);
+
+  // Mostrar el rango y el total de elementos
+  const displayText = `Showing ${startRecord}-${endRecord} of ${total} items`;
 
   useEffect(() => {
     if (dataTickets) {
@@ -347,6 +359,7 @@ const Home = () => {
                   : ""
               }
               scrollBody={maxHeightScrollTable()}
+              displayText={displayText}
             />
           )}
         </div>

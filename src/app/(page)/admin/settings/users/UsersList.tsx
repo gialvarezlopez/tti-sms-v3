@@ -53,7 +53,7 @@ const UsersList = ({
 
   const [pagination, setPagination] = useState({
     pageIndex: selectedPage ? +selectedPage - 1 : 0,
-    pageSize: 10,
+    pageSize: 50,
   });
 
   const searchParam = searchParams?.get("search") ?? "";
@@ -90,6 +90,18 @@ const UsersList = ({
     query: searchParam,
     roles: roleTypes,
   });
+
+  // Cálculo de los registros mostrados y el rango
+  const currentPage = pagination.pageIndex + 1; // la página actual (1-indexed)
+  const perPage = pagination.pageSize; // elementos por página
+  const total = response?.meta.pagination.count || 0; // total de registros
+
+  // Calculamos el rango de registros que se están mostrando
+  const startRecord = (currentPage - 1) * perPage + 1;
+  const endRecord = Math.min(currentPage * perPage, total);
+
+  // Mostrar el rango y el total de elementos
+  const displayText = `Showing ${startRecord}-${endRecord} of ${total} items`;
 
   useEffect(() => {
     if (response) {
@@ -252,6 +264,7 @@ const UsersList = ({
                     : ""
                 }
                 scrollBody={maxHeightScrollTable()}
+                displayText={displayText}
               />
             )}
           </>

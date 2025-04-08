@@ -98,6 +98,7 @@ export type TicketsProps = FormReviewMessagePropsWithoutKeywordsAndResponses & {
   recipientNumber?: string;
   firstMessage?: SendMessageProps;
   lastMessage?: SendMessageProps;
+  lastSentMessage?: SendMessageProps;
   lastReceivedMessage: SendMessageProps;
   template?: TemplateProps;
   created_at?: string;

@@ -55,6 +55,7 @@ export type DataTableProps<T> = {
     ) => void;
   }; // Definir el tipo del objeto
   scrollBody?: string;
+  displayText?: string;
 };
 
 // Use the generic type in the component definition
@@ -76,6 +77,7 @@ const DataTable = <T extends Record<string, any>>({
   messageNoRecord,
   paramsUrl,
   scrollBody,
+  displayText,
 }: DataTableProps<T>) => {
   const router = useRouter();
 
@@ -315,7 +317,10 @@ const DataTable = <T extends Record<string, any>>({
                 </TableBody>
               </Table>
             </div>
-            <div className="flex items-center justify-end mt-4">
+            <div className="flex flex-col md:flex-row items-center justify-end mt-4 gap-3">
+              <div className="text-[#1D2433]/80 text-xs font-normal">
+                {displayText}
+              </div>
               <div className="flex-1 flex justify-between sm:hidden">
                 <PaginationPrevious
                   onClick={() => table.previousPage()}
