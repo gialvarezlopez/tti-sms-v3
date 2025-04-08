@@ -323,7 +323,7 @@ const useColumns = () => {
       cell: ({ row }) => {
         return (
           <span className="text-nowrap">
-            {formatDate(row.original.lastMessage?.createdAt ?? "")}
+            {formatDate(row.original.lastSentMessage?.createdAt ?? "")}
           </span>
         );
       },

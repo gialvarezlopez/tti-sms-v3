@@ -177,3 +177,8 @@ body {
     animation: spin 1s linear infinite;
   }
 }
+
+.page-active-datable a:hover {
+  background-color: #dc2f2f !important;
+  color: #fff !important;
+}

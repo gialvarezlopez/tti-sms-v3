@@ -32,7 +32,9 @@ const PaginationItem = React.forwardRef<
   <li
     ref={ref}
     className={cn(
-      active ? "font-bold bg-accent rounded-md cursor-text" : "cursor-pointer",
+      active
+        ? "rounded-md cursor-text page-active-datable bg-[#DC2F2F] text-white hover:bg-[#DC2F2F]"
+        : "cursor-pointer ",
       className
     )}
     {...props}
@@ -59,10 +61,11 @@ const PaginationLink = ({
     aria-current={isActive ? "page" : undefined}
     className={cn(
       buttonVariants({
-        variant: isActive ? "outline" : "ghost",
+        variant: isActive ? "default" : "ghost",
         size,
       }),
-      disabled ? "opacity-50 pointer-events-none" : "",
+      //isActive ? "!bg-red-500 text-white cursor-text !hover:bg-red-500" : "", //
+      disabled ? "opacity-50 pointer-events-none " : "",
       className
     )}
     {...props}
