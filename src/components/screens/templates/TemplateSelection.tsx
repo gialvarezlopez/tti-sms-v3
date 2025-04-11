@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import Image from "next/image";
 import { useSearchParams } from "next/navigation";
+import { useSession } from "next-auth/react";
 import TypeTemplateSection from "./TypeTemplateSection";
 import { Separator } from "@/components/ui/separator";
 import { IconKeyboardTab, IconTwoWay } from "@/assets/images";
@@ -8,6 +9,7 @@ import { useGetTemplates } from "@/hooks/useTemplates";
 import { TemplateProps } from "@/types/types";
 import TemplatesSkeleton from "@/components/skeletons/TemplatesSkeleton";
 import ErrorFetching from "@/components/ui/errorFetching";
+import { USER_ROLE } from "@/lib/constants";
 
 type Props = {
   setTemplateSelected?: React.Dispatch<
@@ -28,6 +30,7 @@ const TemplateSelection = ({
   templateId,
   setDoAutoClick,
 }: Props) => {
+  const { data: session } = useSession();
   const searchParams = useSearchParams();
   const selectedSearch = searchParams?.get("q")?.toLowerCase() || "";
 
@@ -43,16 +46,27 @@ const TemplateSelection = ({
     page: 1,
     limit: 100,
     query: selectedSearch,
+    branch:
+      (session && session?.user?.primaryRole === USER_ROLE.USER
+        ? session?.user.branch.id
+        : "") ?? "",
   });
 
   const itemsTemplates = () => {
-    let oneWayItems = dataTemplates?.data?.filter(
-      (item: TemplateProps) => item.isTwoWay === false
-    );
+    const isUser = session?.user?.primaryRole === USER_ROLE.USER;
+    const userBranchId = session?.user?.branch?.id;
 
-    let twoWayItems = dataTemplates?.data?.filter(
-      (item: TemplateProps) => item.isTwoWay === true
-    );
+    let oneWayItems = dataTemplates?.data?.filter((item: TemplateProps) => {
+      const isOneWay = item.isTwoWay === false;
+      const matchesBranch = !isUser || item.branch?.id === userBranchId;
+      return isOneWay && matchesBranch;
+    });
+
+    let twoWayItems = dataTemplates?.data?.filter((item: TemplateProps) => {
+      const isTwoWay = item.isTwoWay === true;
+      const matchesBranch = !isUser || item.branch?.id === userBranchId;
+      return isTwoWay && matchesBranch;
+    });
 
     if (isFromModel) {
       oneWayItems = dataTemplates?.data?.filter(

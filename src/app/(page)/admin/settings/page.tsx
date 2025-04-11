@@ -1,6 +1,6 @@
 "use client";
 import React, { Suspense, useState } from "react";
-import { useRouter, useSearchParams } from "next/navigation";
+import { useSearchParams } from "next/navigation";
 import UsersList from "./users/UsersList";
 import BranchesList from "./branch/BranchesList";
 import { BranchProps, UserProps } from "@/types/types";
@@ -13,7 +13,6 @@ const Filter = dynamic(() => import("./Filters"), {
 });
 
 const Setting = () => {
-  const router = useRouter();
   const searchParams = useSearchParams();
 
   const [clearRowsSelected, setClearRowsSelected] = useState(false);

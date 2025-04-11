@@ -7,6 +7,7 @@ import React, {
   useState,
 } from "react";
 import Link from "next/link";
+import { useSession } from "next-auth/react";
 import { useSearchParams } from "next/navigation";
 import { MoreVertical } from "lucide-react";
 import TemplatesSkeleton from "@/components/skeletons/TemplatesSkeleton";
@@ -30,6 +31,8 @@ import {
 } from "@/components/ui/pagination";
 import { removeAllParamsFromUrl } from "@/lib/utils/urlUtils";
 import NoRecordFound from "@/components/ui/NoRecordFound";
+import { USER_ROLE } from "@/lib/constants";
+import withAdminProtection from "@/components/hoc/withAdminProtection";
 
 const paramsToIgnore = [""];
 type Props = {
@@ -110,6 +113,7 @@ const DeleteCell = ({
 };
 
 const Cell = ({ row }: { row: TemplateProps }) => {
+  const { data: session } = useSession();
   const [isOpenDropdown, setIsOpenDropdown] = useState(false);
   return (
     <DropdownMenu open={isOpenDropdown} onOpenChange={setIsOpenDropdown}>
@@ -124,8 +128,12 @@ const Cell = ({ row }: { row: TemplateProps }) => {
       </DropdownMenuTrigger>
       <DropdownMenuContent align="end">
         <PreviewCell template={row} setIsOpenDropdown={setIsOpenDropdown} />
-        <EditCell template={row} />
-        <DeleteCell template={row} setIsOpenDropdown={setIsOpenDropdown} />
+        {session && session?.user?.primaryRole === USER_ROLE.ADMIN && (
+          <>
+            <EditCell template={row} />
+            <DeleteCell template={row} setIsOpenDropdown={setIsOpenDropdown} />
+          </>
+        )}
       </DropdownMenuContent>
     </DropdownMenu>
   );
@@ -369,4 +377,4 @@ const ListTemplate = ({
   );
 };
 
-export default ListTemplate;
+export default withAdminProtection(ListTemplate);
