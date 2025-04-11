@@ -8,15 +8,20 @@ import { showToast } from "@/lib/toastUtil";
 
 const returnAfterSubmit = "/messages/templates";
 
-const useGetTemplates = ({ page, limit, query }: PaginateParams) => {
+interface TemplateParams extends PaginateParams {
+  branch?: string; //string[];
+}
+
+const useGetTemplates = ({ page, limit, query, branch }: TemplateParams) => {
   return useQuery({
-    queryKey: ["template-list", page, limit, query],
+    queryKey: ["template-list", page, limit, query, branch],
     queryFn: async () => {
       try {
         const params = {
           page,
           limit,
           query,
+          ...(branch && { branch }),
         };
 
         const url = templatesRoutes.list;

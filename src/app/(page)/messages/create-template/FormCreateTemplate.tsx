@@ -128,7 +128,7 @@ const FormCreateTemplate = () => {
           })
         )
         .optional(),
-      //invalidReply: z.string().optional(),
+
       daysToLive: z.number().optional(),
     })
     .superRefine((data, ctx) => {
@@ -217,17 +217,6 @@ const FormCreateTemplate = () => {
 
   function onSubmit(data: z.infer<typeof FormSchema>) {
     const isTwoway = data.messageExchangeType === "two-way";
-    /*
-    const invalidReplyDefault = {
-      response: "",
-      //reply: data.invalidReply || "",
-      is_default: true,
-    };
-
-    if (isTwoway && data && data?.responses) {
-      //data?.responses.push(invalidReplyDefault);
-    }
-    */
 
     const modifiedResponses = data.responses?.map((r) =>
       r.response === "" ? { ...r, is_default: true } : r
@@ -251,8 +240,7 @@ const FormCreateTemplate = () => {
     if (elementId) {
       delete formData.branches;
     }
-    //console.log("formData", formData);
-    //return false;
+
     if (elementId) {
       updateTemplate(formData);
     } else {
@@ -262,7 +250,6 @@ const FormCreateTemplate = () => {
             messageExchangeType: undefined,
             responses: [],
             keywords: [],
-            //invalidReply: "",
             content: "",
             description: "",
           });
@@ -295,11 +282,6 @@ const FormCreateTemplate = () => {
       const filteredDataInvalidReply = responses?.filter(
         (item: { is_default: number }) => item.is_default === 1
       );
-      /*
-      const filteredDataResponses = responses?.filter(
-        (item: { is_default: number }) => item.is_default !== 1
-      );
-      */
 
       const slugType = generateSlug(templateType(isTwoWay ?? false));
       const messageExchangeType: "one-way" | "two-way" | undefined =

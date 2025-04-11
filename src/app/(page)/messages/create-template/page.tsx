@@ -1,7 +1,9 @@
+"use client";
 import React from "react";
 import FormCreateTemplate from "./FormCreateTemplate";
+import withAdminProtection from "@/components/hoc/withAdminProtection";
 
-const page = () => {
+const Page = () => {
   return (
     <div>
       <FormCreateTemplate />
@@ -9,4 +11,4 @@ const page = () => {
   );
 };
 
-export default page;
+export default withAdminProtection(Page);
