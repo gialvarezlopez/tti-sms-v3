@@ -108,7 +108,7 @@ const Home = () => {
       ? typeOfMessageParams.split(",")
       : [];
 
-  console.log("statusTickets", statusTickets);
+  //console.log("statusTickets", statusTickets);
   const {
     data: dataStats,
     error: errorStats,
