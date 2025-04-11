@@ -1,10 +1,11 @@
 "use client";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import { useSession } from "next-auth/react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { ColumnDef } from "@tanstack/react-table";
 import DataTable from "@/components/ui/DataTable";
-import { columns } from "./Columns";
+//import { columns } from "./Columns";
+import useColumns from "./Columns";
 import { RefetchOptions, TicketsProps } from "@/types/types";
 import TableSkeleton from "@/components/skeletons/TableSkeleton";
 import ErrorFetching from "@/components/ui/errorFetching";
@@ -27,6 +28,7 @@ const Home = () => {
   const { data: session, status } = useSession();
   const router = useRouter(); // Acceder al router
   const searchParams = useSearchParams();
+  const columns = useColumns();
   const selectedPage = searchParams?.get("page");
   const hasParams = searchParams
     ? Array.from(searchParams.entries()).filter(
@@ -61,10 +63,19 @@ const Home = () => {
   const lastReceivedToParams = searchParams?.get("lastReceivedTo");
   const typeOfMessageParams = searchParams?.get("typeOfMessage");
 
+  /*
   const branches =
     branchesParam &&
     branchesParam !== "all" &&
     session?.user?.primaryRole !== USER_ROLE.USER // user
+      ? branchesParam.split(",")
+      : [];
+  */
+
+  const branches =
+    session?.user?.primaryRole === USER_ROLE.USER
+      ? [session?.user?.branch.id]
+      : branchesParam && branchesParam !== "all"
       ? branchesParam.split(",")
       : [];
 
@@ -99,14 +110,7 @@ const Home = () => {
     typeOfMessageParams && typeOfMessageParams !== "all"
       ? typeOfMessageParams.split(",")
       : [];
-  /*
-  useEffect(() => {
-    // If there is no `page` parameter in the URL, reset to page 1
-    if (!searchParams?.get("page")) {
-      setPagination((prev) => ({ ...prev, pageIndex: 0 }));
-    }
-  }, [searchParams]);
-  */
+
   useEffect(() => {
     const newPage = searchParams?.get("page")
       ? Number(searchParams.get("page")) - 1

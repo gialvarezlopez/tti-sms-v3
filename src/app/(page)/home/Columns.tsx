@@ -226,7 +226,9 @@ const Cell = ({ row }: { row: TicketsProps }) => {
 const useColumns = () => {
   const { data: session } = useSession();
 
-  const isAdmin = session?.user?.primaryRole === USER_ROLE.ADMIN;
+  const isAdmin =
+    session?.user?.primaryRole === USER_ROLE.ADMIN ||
+    session?.user?.primaryRole === USER_ROLE.CUSTOMER_EXPERIENCE;
 
   // Define the columns
   const columnDefs: ColumnDef<TicketsProps>[] = [
