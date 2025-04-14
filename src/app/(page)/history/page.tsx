@@ -54,23 +54,11 @@ const Home = () => {
     useResizeObserver<HTMLDivElement>();
 
   const searchParam = searchParams?.get("search") ?? "";
+  const typeOfMessageParams = searchParams?.get("typeOfMessage");
   const branchesParam = searchParams?.get("branches");
   const templatesParam = searchParams?.get("templates");
-  const statusTicketParams = searchParams?.get("status");
-  const lastSentFromParams = searchParams?.get("lastSentFrom");
-  const lastSentToParams = searchParams?.get("lastSentTo");
-  const lastReceivedFromParams = searchParams?.get("lastReceivedFrom");
-  const lastReceivedToParams = searchParams?.get("lastReceivedTo");
-  const typeOfMessageParams = searchParams?.get("typeOfMessage");
-
-  /*
-  const branches =
-    branchesParam &&
-    branchesParam !== "all" &&
-    session?.user?.primaryRole !== USER_ROLE.USER // user
-      ? branchesParam.split(",")
-      : [];
-  */
+  const closeDateFromParam = searchParams?.get("closeDateFrom");
+  const closeDateToParam = searchParams?.get("closeDateTo");
 
   const branches =
     session?.user?.primaryRole === USER_ROLE.USER
@@ -82,29 +70,17 @@ const Home = () => {
   const templates =
     templatesParam && templatesParam !== "all" ? templatesParam.split(",") : [];
 
+  const close_date =
+    closeDateFromParam && closeDateToParam
+      ? [
+          convertDateYYYYMMDD(closeDateFromParam),
+          convertDateYYYYMMDD(closeDateToParam),
+        ]
+      : [];
+
   const statusArray = Object.values(TICKETS_STATUS).filter(
     (status) => status === TICKETS_STATUS.CLOSED
   );
-  const statusTickets =
-    statusTicketParams && statusTicketParams !== "all"
-      ? statusTicketParams.split(",")
-      : statusArray;
-
-  const last_sent =
-    lastSentFromParams && lastSentToParams
-      ? [
-          convertDateYYYYMMDD(lastSentFromParams),
-          convertDateYYYYMMDD(lastSentToParams),
-        ]
-      : [];
-
-  const last_received =
-    lastReceivedFromParams && lastReceivedToParams
-      ? [
-          convertDateYYYYMMDD(lastReceivedFromParams),
-          convertDateYYYYMMDD(lastReceivedToParams),
-        ]
-      : [];
 
   const typeTicket =
     typeOfMessageParams && typeOfMessageParams !== "all"
@@ -131,11 +107,9 @@ const Home = () => {
     page: pagination.pageIndex + 1,
     limit: pagination.pageSize,
     query: searchParam,
-    status: statusTickets,
+    close_date,
     branches,
     templates,
-    last_sent,
-    last_received,
     types: typeTicket,
   });
 

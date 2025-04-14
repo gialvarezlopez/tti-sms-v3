@@ -303,7 +303,7 @@ const ListTemplate = ({
                       <p className="col-span-2 flex-1 w-full">
                         <div className="flex justify-between gap-3">
                           <small className="text-gray-500">
-                            {item?.branch?.name}
+                            {item?.branch?.name ?? "All Branches"}
                           </small>
                           <small className="text-gray-500">
                             {item?.type ? `Is Reminder` : ""}
