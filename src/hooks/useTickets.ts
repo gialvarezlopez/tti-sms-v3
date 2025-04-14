@@ -12,6 +12,7 @@ interface TicketParams extends PaginateParams {
   types?: string[]; // It can be: 'oneway' o 'twoway'
   last_sent?: string[]; // Array con dos fechas [start, end]
   last_received?: string[]; // Array con dos fechas [start, end]
+  close_date?: string[]; // Array con dos fechas [start, end]
 }
 
 const useGetTickets = ({
@@ -24,6 +25,7 @@ const useGetTickets = ({
   branches,
   last_sent,
   last_received,
+  close_date,
 }: TicketParams) => {
   //const queryClient = useQueryClient();
   return useQuery({
@@ -37,6 +39,7 @@ const useGetTickets = ({
       branches,
       last_sent,
       last_received,
+      close_date,
       types,
     ],
     queryFn: async () => {
@@ -48,6 +51,7 @@ const useGetTickets = ({
           branches?.length ||
           last_sent?.length ||
           last_received?.length ||
+          close_date?.length ||
           types?.length;
 
         // Filters - Only added if they exist
@@ -60,6 +64,7 @@ const useGetTickets = ({
           ...(branches?.length && { branches }),
           ...(last_sent?.length && { last_sent }),
           ...(last_received?.length && { last_received }),
+          ...(close_date?.length && { close_date }),
           ...(types?.length && { types }),
         };
 

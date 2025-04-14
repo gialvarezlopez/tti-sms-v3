@@ -56,34 +56,26 @@ const TemplateSelection = ({
     const isUser = session?.user?.primaryRole === USER_ROLE.USER;
     const userBranchId = session?.user?.branch?.id;
 
-    let oneWayItems = dataTemplates?.data?.filter((item: TemplateProps) => {
-      const isOneWay = item.isTwoWay === false;
-      const matchesBranch = !isUser || item.branch?.id === userBranchId;
-      return isOneWay && matchesBranch;
+    const matchesBranch = (item: TemplateProps) =>
+      !isUser || item.branch?.id === userBranchId || !item.branch?.id;
+
+    const oneWayItems: TemplateProps[] = [];
+    const twoWayItems: TemplateProps[] = [];
+
+    dataTemplates?.data?.forEach((item: TemplateProps) => {
+      const isReminder = item.type === "reminder";
+
+      if (isFromModel && !isReminder) return;
+      if (!matchesBranch(item)) return;
+
+      if (item.isTwoWay === false) {
+        oneWayItems.push(item);
+      } else if (item.isTwoWay === true) {
+        twoWayItems.push(item);
+      }
     });
 
-    let twoWayItems = dataTemplates?.data?.filter((item: TemplateProps) => {
-      const isTwoWay = item.isTwoWay === true;
-      const matchesBranch = !isUser || item.branch?.id === userBranchId;
-      return isTwoWay && matchesBranch;
-    });
-
-    if (isFromModel) {
-      oneWayItems = dataTemplates?.data?.filter(
-        (item: TemplateProps) =>
-          item.isTwoWay === false && item.type === "reminder"
-      );
-
-      twoWayItems = dataTemplates?.data?.filter(
-        (item: TemplateProps) =>
-          item.isTwoWay === true && item.type === "reminder"
-      );
-    }
-
-    return {
-      oneWayItems,
-      twoWayItems,
-    };
+    return { oneWayItems, twoWayItems };
   };
 
   const { oneWayItems, twoWayItems } = itemsTemplates();

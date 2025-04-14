@@ -292,7 +292,9 @@ const FormCreateTemplate = () => {
 
       const data = {
         name,
-        branches: [branch?.id],
+        ...(branch && branch?.id
+          ? { branches: [branch?.id] }
+          : { branches: ["all"] }),
         description,
         content,
         daysToLive,
