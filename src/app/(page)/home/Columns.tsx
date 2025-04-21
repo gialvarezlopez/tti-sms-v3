@@ -253,22 +253,23 @@ const useColumns = () => {
     },
 
     {
-      accessorKey: "client",
+      accessorKey: "service_order",
       header: () => {
         return (
           <Button variant="ghost" className="px-0">
-            Client
+            Service Order
           </Button>
         );
       },
       cell: ({ row }) => {
         return (
           <span className="text-nowrap">
-            {capitalizeFirstLetterOfEveryWord(row.original.client)}
+            {row.original.service_order ?? ""}
           </span>
         );
       },
     },
+
     {
       accessorKey: "recipientNumber",
       header: () => {
@@ -282,6 +283,24 @@ const useColumns = () => {
         return (
           <span className="text-nowrap">
             {formatPhoneNumber(row.original.recipientNumber ?? "", true)}
+          </span>
+        );
+      },
+    },
+
+    {
+      accessorKey: "client",
+      header: () => {
+        return (
+          <Button variant="ghost" className="px-0">
+            Client
+          </Button>
+        );
+      },
+      cell: ({ row }) => {
+        return (
+          <span className="text-nowrap">
+            {capitalizeFirstLetterOfEveryWord(row.original.client ?? "")}
           </span>
         );
       },

@@ -88,18 +88,18 @@ const useColumns = () => {
   // Define the columns
   const columnDefs: ColumnDef<TicketsProps>[] = [
     {
-      accessorKey: "client",
+      accessorKey: "service_order",
       header: () => {
         return (
           <Button variant="ghost" className="px-0">
-            Client
+            Service Order
           </Button>
         );
       },
       cell: ({ row }) => {
         return (
           <span className="text-nowrap">
-            {capitalizeFirstLetterOfEveryWord(row.original.client)}
+            {row.original.service_order ?? ""}
           </span>
         );
       },
@@ -121,6 +121,24 @@ const useColumns = () => {
         );
       },
     },
+    {
+      accessorKey: "client",
+      header: () => {
+        return (
+          <Button variant="ghost" className="px-0">
+            Client
+          </Button>
+        );
+      },
+      cell: ({ row }) => {
+        return (
+          <span className="text-nowrap">
+            {capitalizeFirstLetterOfEveryWord(row.original.client ?? "")}
+          </span>
+        );
+      },
+    },
+
     // Add 'Branch' column only if user is 'admin'
     ...(isAdmin
       ? [

@@ -41,7 +41,7 @@ const Page = () => {
           message={error.message ?? "There was an error to get the data"}
         />
       )}
-      {/*<pre>{JSON.stringify(template, null, 2)}</pre>*/}
+
       {template && <FormBuildMessage isFromModal={false} template={template} />}
     </div>
   );

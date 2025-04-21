@@ -133,7 +133,31 @@ const FieldsResendMessage = ({
 
   return (
     <div className="pb-2">
-      <div className="w-full grid grid-cols-1 md:grid-cols-2 gap-3">
+      <div className="w-full grid grid-cols-1 md:grid-cols-3 gap-3">
+        <FormField
+          control={control}
+          name="service_order"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Service Order {field.value}</FormLabel>
+              <FormControl>
+                {isFromModal ? (
+                  <div className="py-2 px-3 h-[40px] border rounded-md bg-muted text-muted-foreground">
+                    {field.value}
+                  </div>
+                ) : (
+                  <Input
+                    placeholder={"Service Order"}
+                    type="text"
+                    {...field}
+                    readOnly={isFromModal}
+                  />
+                )}
+              </FormControl>
+              <CustomFormMessage className="w-full" />
+            </FormItem>
+          )}
+        />
         <FormField
           control={control}
           name="client"
