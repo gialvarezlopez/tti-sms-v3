@@ -98,6 +98,8 @@ const Home = () => {
     }));
   }, [searchParams]);
 
+  const statusTickets = ["closed"];
+
   const {
     data: dataTickets,
     error: errorTickets,
@@ -109,6 +111,7 @@ const Home = () => {
     query: searchParam,
     close_date,
     branches,
+    status: statusTickets,
     templates,
     types: typeTicket,
   });

@@ -30,6 +30,7 @@ import useUsersStore from "@/store/useUsers";
 import useBranchesStore from "@/store/useBranches";
 import FormFilterBranch from "./shared/filter/FormFilterUsersBranch";
 import { useGetRoles } from "@/hooks/useRoles";
+import { SETTINGS_PARAMETER_URL } from "@/lib/constants";
 
 type Props = {
   usersSelected: UserProps[];
@@ -174,17 +175,19 @@ const Filter = ({ usersSelected, branchesSelected }: Props) => {
 
           <div className="flex flex-row gap-3 md:gap-3 mt-3 md:mt-0 w-auto justify-end">
             <div className="flex-1 md:flex-none">
-              <Button
-                type="submit"
-                variant={"outline"}
-                className="flex gap-3 items-center btn-white-normal md:px-8 w-full md:w-auto"
-                onClick={handleDeleteSelected}
-                disabled={
-                  !(usersSelected.length > 0 || branchesSelected.length > 0)
-                }
-              >
-                Delete
-              </Button>
+              {type === SETTINGS_PARAMETER_URL.USERS && (
+                <Button
+                  type="submit"
+                  variant={"outline"}
+                  className="flex gap-3 items-center btn-white-normal md:px-8 w-full md:w-auto"
+                  onClick={handleDeleteSelected}
+                  disabled={
+                    !(usersSelected.length > 0 || branchesSelected.length > 0)
+                  }
+                >
+                  Delete
+                </Button>
+              )}
             </div>
             <FormFilterBranch
               dataRoles={dataRoles?.data ?? []}
