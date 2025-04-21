@@ -12,6 +12,7 @@ import { Dispatch, SetStateAction, useState } from "react";
 import useBranchesStore from "@/store/useBranches";
 import { branchStatus, formatPhoneNumber } from "@/lib/utils/utils";
 import UpdateBranch from "./UpdateBranch";
+import { useUpdateBranch } from "@/hooks/useBranches";
 
 const UpdateCell = ({
   branch,
@@ -50,6 +51,8 @@ const UpdateCell = ({
   );
 };
 
+//To delete multiple options will be pending for now
+/*
 const DeleteCell = ({
   branch,
   setIsOpenDropdown,
@@ -93,6 +96,97 @@ const DeleteCell = ({
     </div>
   );
 };
+*/
+
+const DisableCell = ({
+  branch,
+  setIsOpenDropdown,
+}: {
+  branch: BranchProps;
+  setIsOpenDropdown: Dispatch<SetStateAction<boolean>>;
+}) => {
+  const [, setIsOpen] = useState(false);
+
+  const { mutate: updateBranch, isPending: isUpdating } = useUpdateBranch(
+    branch.id as string
+  );
+
+  const handleClose = () => {
+    setIsOpen(false);
+    setIsOpenDropdown(false);
+  };
+
+  const handleSubmit = () => {
+    const dataUpdate = {
+      status: "inactive",
+      distribution_list: "",
+    };
+    updateBranch(dataUpdate, {
+      onSuccess(data) {
+        handleClose();
+      },
+      onError(data) {
+        handleClose();
+      },
+    });
+  };
+
+  return (
+    <div>
+      <span
+        className="w-full cursor-pointer hover:bg-[#FFF2F2] block p-3 text-sm font-normal"
+        onClick={handleSubmit}
+      >
+        {isUpdating ? "Sending..." : "Disable"}
+      </span>
+    </div>
+  );
+};
+
+const EnableCell = ({
+  branch,
+  setIsOpenDropdown,
+}: {
+  branch: BranchProps;
+  setIsOpenDropdown: Dispatch<SetStateAction<boolean>>;
+}) => {
+  const [, setIsOpen] = useState(false);
+
+  const { mutate: updateBranch, isPending: isUpdating } = useUpdateBranch(
+    branch.id as string
+  );
+
+  const handleClose = () => {
+    setIsOpen(false);
+    setIsOpenDropdown(false);
+  };
+
+  const handleSubmit = () => {
+    const dataUpdate = {
+      status: "active",
+      distribution_list: "",
+    };
+    updateBranch(dataUpdate, {
+      onSuccess(data) {
+        handleClose();
+      },
+      onError(data) {
+        handleClose();
+      },
+    });
+  };
+
+  return (
+    <div>
+      <span
+        className="w-full cursor-pointer hover:bg-[#FFF2F2] block p-3 text-sm font-normal"
+        onClick={handleSubmit}
+      >
+        {isUpdating ? "Sending..." : "Enable"}
+      </span>
+    </div>
+  );
+};
 
 const Cell = ({ row }: { row: BranchProps }) => {
   const [isOpenDropdown, setIsOpenDropdown] = useState(false);
@@ -110,13 +204,21 @@ const Cell = ({ row }: { row: BranchProps }) => {
       </DropdownMenuTrigger>
       <DropdownMenuContent align="end">
         <UpdateCell branch={row} setIsOpenDropdown={setIsOpenDropdown} />
-        <DeleteCell branch={row} setIsOpenDropdown={setIsOpenDropdown} />
+        {row.status === "active" && (
+          <DisableCell branch={row} setIsOpenDropdown={setIsOpenDropdown} />
+        )}
+
+        {row.status === "inactive" && (
+          <EnableCell branch={row} setIsOpenDropdown={setIsOpenDropdown} />
+        )}
       </DropdownMenuContent>
     </DropdownMenu>
   );
 };
 
 export const columns: ColumnDef<BranchProps>[] = [
+  //The checkboxes will be pending for now to select multiple items
+  /*
   {
     accessorKey: "id",
     header: ({ table }) => (
@@ -138,6 +240,7 @@ export const columns: ColumnDef<BranchProps>[] = [
     ),
     enableSorting: false,
   },
+  */
 
   {
     accessorKey: "name",

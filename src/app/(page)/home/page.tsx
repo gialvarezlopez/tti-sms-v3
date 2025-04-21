@@ -18,6 +18,10 @@ import { convertDateYYYYMMDD } from "@/lib/utils/dateUtils";
 import { TICKETS_STATUS, USER_ROLE } from "@/lib/constants";
 import { removeAllParamsFromUrl } from "../../../lib/utils/urlUtils";
 import { capitalizeFirstLetterOfEveryWord } from "@/lib/utils/utils";
+import { Button } from "@/components/ui/button";
+//import InactivityRefresh from "@/components/commons/InactivityRefresh";
+import InactivityRefreshWithWarning from "@/components/commons/InactivityRefreshWithWarning";
+//import { DashboardControlsRefresh } from "@/components/commons/DashboardControlsRefresh";
 
 type IsColumnSelectedFn<T> = (column: ColumnDef<T>, action?: string) => void;
 
@@ -285,6 +289,7 @@ const Home = () => {
         Follow up on your messages and track their progress.
       </p>
 
+      <InactivityRefreshWithWarning />
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-3 mt-4">
         {isLoadingStats ? (
           Array(widthMainDiv <= 768 ? 2 : 5)
@@ -308,7 +313,20 @@ const Home = () => {
       </div>
 
       <div className="rounded-lg bg-white my-6 p-4">
-        <h3 className="text-xl font-semibold">Tickets</h3>
+        <div className="flex gap-3 justify-between">
+          <h3 className="text-xl font-semibold">Tickets</h3>
+          <div>
+            <Button
+              variant={"destructive"}
+              onClick={() => window.location.reload()}
+            >
+              Refresh Dashboard
+            </Button>
+            {/*
+            <DashboardControlsRefresh />
+            */}
+          </div>
+        </div>
         <Actions
           rowSelected={rowSelected}
           handleClearSelected={handleClearSelected}

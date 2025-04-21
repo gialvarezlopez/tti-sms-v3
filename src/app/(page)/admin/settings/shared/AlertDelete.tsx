@@ -18,6 +18,7 @@ import { useDeleteMultiplesUsers, useDeleteUser } from "@/hooks/useUsers";
 import {
   useDeleteBranch,
   useDeleteMultiplesBranches,
+  useUpdateBranch,
 } from "@/hooks/useBranches";
 
 type Props = {
@@ -36,6 +37,13 @@ const AlertDelete = ({ setClearRowsSelected }: Props) => {
   const { mutate: deleteUser, isPending: isDeletingUser } = useDeleteUser();
   const { mutate: deleteMultipleUsers, isPending: isDeletingMultipleUsers } =
     useDeleteMultiplesUsers();
+
+  //Disable branch
+  /*
+  const { mutate: updateBranch, isPending: isUpdating } = useUpdateBranch(
+    branchId as string
+  );
+  */
 
   const { mutate: deleteBranch, isPending: isDeletingBranch } =
     useDeleteBranch();
@@ -123,7 +131,7 @@ const AlertDelete = ({ setClearRowsSelected }: Props) => {
               <div className="flex justify-between gap-3 pb-2">
                 <span className="flex gap-3 items-center font-bold text-2xl">
                   <Image src={IconWarning} alt="Delete" />
-                  {users.length > 0 ? "Delete User" : "Delete Branch"}
+                  {users.length > 0 ? "Delete User" : "Disable Branch"}
                 </span>
                 <button
                   onClick={closeDialog}
@@ -140,7 +148,7 @@ const AlertDelete = ({ setClearRowsSelected }: Props) => {
                   ? `Are you sure you want to delete ${
                       users.length > 1 ? "these users" : "this user"
                     }? If you continue, this they will be permanently deleted.`
-                  : `Are you sure you want to delete ${
+                  : `Are you sure you want to disable ${
                       branches.length > 1 ? "these branches" : "this branch"
                     } ? If you continue, this they will be permanently deleted.`}
               </p>
@@ -151,9 +159,7 @@ const AlertDelete = ({ setClearRowsSelected }: Props) => {
                   ))}
 
                   {branches?.map((branch, index) => (
-                    <p key={index}>
-                      {branch.name} - {branch.phone_number}
-                    </p>
+                    <p key={index}>{branch.name}</p>
                   ))}
                 </p>
               </div>
