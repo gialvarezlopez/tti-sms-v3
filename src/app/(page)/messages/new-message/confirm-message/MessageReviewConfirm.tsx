@@ -58,7 +58,6 @@ const MessageReviewConfirm = ({
       template_id: template?.id,
       recipient_number: getJustNumber(formState?.recipient_number ?? ""),
     };
-    delete cleanData.content;
     delete cleanData.keywords;
     delete cleanData.responses;
 

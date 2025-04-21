@@ -96,7 +96,7 @@ const ModalPreviewTicket = ({
                       templateType(ticket.template?.isTwoWay ?? false)
                     ) === MESSAGE_EXCHANGE.ONE_WAY
                       ? "Resend Message"
-                      : "Resend Reminder"}
+                      : "Send Reminder"}
                   </Button>
                 </>
               )}

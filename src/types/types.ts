@@ -64,7 +64,8 @@ export type BranchProps = {
 };
 
 export type FormReviewMessageProps = {
-  client: string;
+  client?: string;
+  service_order?: string;
   recipient_number: string;
   keywords?: KeywordTemplates[];
   responses?: AutomaticResponsesTemplates[];
@@ -111,6 +112,7 @@ export type TicketsProps = FormReviewMessagePropsWithoutKeywordsAndResponses & {
   closedBy?: ClosedByUserProps;
   closed?: string;
   createdAt?: string;
+  service_order?: string;
 };
 
 export type MessageProps = {

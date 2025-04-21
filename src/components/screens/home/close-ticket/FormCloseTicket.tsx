@@ -72,7 +72,7 @@ const FormCloseTicket = ({
             {tickets &&
               tickets?.map((ticket, index) => (
                 <p key={index}>
-                  {capitalizeFirstLetterOfEveryWord(ticket.client)} /{" "}
+                  {capitalizeFirstLetterOfEveryWord(ticket?.client ?? "")} /{" "}
                   {formatPhoneNumber(ticket.recipientNumber ?? "", true)} /{" "}
                   {ticket.branch && typeof ticket.branch !== "string"
                     ? ticket.branch.name

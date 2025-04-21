@@ -116,6 +116,7 @@ const FormBuildMessage = ({
 
   const [formState, setFormState] = useState<FormReviewMessageProps>({
     client: "",
+    service_order: "",
     recipient_number: "",
     keywords: [],
     responses: [],
@@ -123,7 +124,8 @@ const FormBuildMessage = ({
   });
 
   const FormSchema = z.object({
-    client: z.string().min(2, "Enter the client name"),
+    client: z.string().optional(),
+    service_order: z.string().min(1, "Enter the service order"),
     recipient_number: z
       .string()
       .regex(/^\(\d{3}\) \d{3}-\d{4}$/, {
@@ -152,6 +154,7 @@ const FormBuildMessage = ({
     resolver: zodResolver(FormSchema),
     defaultValues: {
       client: "",
+      service_order: "",
       recipient_number: "",
       content: "",
       keywords: [],
@@ -180,6 +183,7 @@ const FormBuildMessage = ({
 
         const payload = {
           client: data.client ?? "",
+          service_order: data.client ?? "",
           recipient: data.recipient_number ?? "",
           content: ticket?.messages?.at(-1)?.content ?? "",
         };
@@ -191,7 +195,7 @@ const FormBuildMessage = ({
         });
       }
     } else {
-      //Crea new message ist come template inste of ticket
+      //Crea new message if it come template inste of ticket
       setOpenConfirm(true);
     }
 
@@ -218,6 +222,14 @@ const FormBuildMessage = ({
         shouldValidate: true,
       });
 
+      setValue("service_order", ticket.service_order ?? "", {
+        shouldDirty: true,
+      });
+      /*
+      setValue("service_order", "410", {
+        shouldDirty: true,
+      });
+      */
       setValue("client", ticket.client ?? "", {
         shouldDirty: true,
       });

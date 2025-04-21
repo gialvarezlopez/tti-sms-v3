@@ -14,6 +14,25 @@ const DetailConfirm = ({ template, formState }: Props) => {
       <div className="grid grid-cols-1 md:grid-cols-2 gap-3 border-b border-[#d5d8df]  px-6 py-2">
         <div className="flex gap-1">
           <span className="font-normal text-[#1D2433]/60 text-nowrap">
+            Service Order:{" "}
+          </span>
+          <span className="font-bold text-base text-customBlack-v1 ">
+            {formState.service_order}
+          </span>
+        </div>
+        {formState.client && (
+          <div className="flex gap-1">
+            <span className="font-normal text-[#1D2433]/60 text-nowrap">
+              Client Name:{" "}
+            </span>
+            <span className="font-bold text-base text-customBlack-v1 ">
+              {formState.client}
+            </span>
+          </div>
+        )}
+
+        <div className="flex gap-1">
+          <span className="font-normal text-[#1D2433]/60 text-nowrap">
             Telephone Number:{" "}
           </span>
           <span className="font-bold text-base text-customBlack-v1 ">
@@ -30,7 +49,6 @@ const DetailConfirm = ({ template, formState }: Props) => {
           </span>
         </div>
       </div>
-
       <OneAndTwoWay formState={formState} />
     </>
   );
