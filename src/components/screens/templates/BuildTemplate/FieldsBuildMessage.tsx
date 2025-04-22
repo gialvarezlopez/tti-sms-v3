@@ -139,7 +139,7 @@ const FieldsResendMessage = ({
           name="service_order"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Service Order {field.value}</FormLabel>
+              <FormLabel>Service Order</FormLabel>
               <FormControl>
                 {isFromModal ? (
                   <div className="py-2 px-3 h-[40px] border rounded-md bg-muted text-muted-foreground">
