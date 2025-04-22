@@ -52,8 +52,8 @@ const UpdateCell = ({
 };
 
 //To delete multiple options will be pending for now
-/*
-const DeleteCell = ({
+
+const DisableCell = ({
   branch,
   setIsOpenDropdown,
 }: {
@@ -91,14 +91,13 @@ const DeleteCell = ({
         className="w-full cursor-pointer hover:bg-[#FFF2F2] block p-3 text-sm font-normal"
         onClick={handleClose}
       >
-        Delete
+        Disable
       </span>
     </div>
   );
 };
-*/
 
-const DisableCell = ({
+const OlcDisableCell = ({
   branch,
   setIsOpenDropdown,
 }: {

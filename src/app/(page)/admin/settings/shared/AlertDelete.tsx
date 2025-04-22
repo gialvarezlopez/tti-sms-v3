@@ -38,12 +38,9 @@ const AlertDelete = ({ setClearRowsSelected }: Props) => {
   const { mutate: deleteMultipleUsers, isPending: isDeletingMultipleUsers } =
     useDeleteMultiplesUsers();
 
-  //Disable branch
-  /*
-  const { mutate: updateBranch, isPending: isUpdating } = useUpdateBranch(
-    branchId as string
-  );
-  */
+  //Disable branch single record only
+  const { mutate: updateBranch, isPending: isDisablingBranch } =
+    useUpdateBranch(branches[0]?.id as string);
 
   const { mutate: deleteBranch, isPending: isDeletingBranch } =
     useDeleteBranch();
@@ -88,12 +85,30 @@ const AlertDelete = ({ setClearRowsSelected }: Props) => {
 
     //Delete single branch
     if (branches && branches.length === 1 && branches[0]?.id) {
+      const dataUpdate = {
+        status: "inactive",
+        distribution_list: "",
+      };
+      updateBranch(dataUpdate, {
+        onSuccess(data) {
+          successSubmission();
+        },
+        onError(data) {
+          //handleClose();
+        },
+      });
+
+      //Disable the option to delete
+      /*
       deleteBranch(branches[0].id, {
         onSuccess() {
           successSubmission();
         },
       });
-    } else if (branches && branches.length > 1) {
+      */
+    }
+    //Disable the option to delete multiple records
+    /* else if (branches && branches.length > 1) {
       //Delete multiple branches
       const ids = branches
         .map((item) => item.id)
@@ -108,6 +123,7 @@ const AlertDelete = ({ setClearRowsSelected }: Props) => {
         }
       );
     }
+      */
   };
 
   const closeDialog = () => {
@@ -150,7 +166,7 @@ const AlertDelete = ({ setClearRowsSelected }: Props) => {
                     }? If you continue, this they will be permanently deleted.`
                   : `Are you sure you want to disable ${
                       branches.length > 1 ? "these branches" : "this branch"
-                    } ? If you continue, this they will be permanently deleted.`}
+                    } ? `}
               </p>
               <div className="overflow-y-auto max-h-[calc(100vh-350px)] text-left">
                 <p className="font-bold mt-2">
@@ -199,12 +215,18 @@ const AlertDelete = ({ setClearRowsSelected }: Props) => {
                 isDeletingMultipleBranches
               }
             >
-              {isDeletingUser ||
-              isDeletingBranch ||
-              isDeletingMultipleUsers ||
-              isDeletingMultipleBranches
-                ? "Deleting"
-                : "Delete"}
+              {branches ? (
+                <>{isDisablingBranch ? "Sending..." : "Disable"}</>
+              ) : (
+                <>
+                  {isDeletingUser ||
+                  //isDeletingBranch ||
+                  isDeletingMultipleUsers
+                    ? //isDeletingMultipleBranches
+                      "Deleting"
+                    : "Delete"}
+                </>
+              )}
             </Button>
           </AlertDialogFooter>
         </AlertDialogContent>
