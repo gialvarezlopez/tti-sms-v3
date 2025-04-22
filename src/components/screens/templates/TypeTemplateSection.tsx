@@ -1,13 +1,13 @@
 import { TemplateProps } from "@/types/types";
 import React, { useEffect, useRef } from "react";
-import Link from "next/link"; // Asegúrate de importar Link desde Next.js
+import Link from "next/link";
 import { templateType } from "@/lib/utils/utils";
 
 type Props = {
   dataTemplates: TemplateProps[];
   handleSelected: (item?: string) => void;
   selected?: string;
-  isLink?: boolean; // Nueva propiedad isLink
+  isLink?: boolean;
   templateId?: string;
   addAutoSelect?: boolean;
 };
@@ -16,7 +16,7 @@ const TypeTemplateSection = ({
   dataTemplates,
   handleSelected,
   selected,
-  isLink = false, // Valor por defecto en false
+  isLink = false,
   templateId,
   addAutoSelect,
 }: Props) => {
@@ -37,10 +37,18 @@ const TypeTemplateSection = ({
         const content = (
           <div
             ref={isAutoClickItem ? autoClickRef : null}
-            className={`border-2 rounded-lg hover:border-[#E02D3C] hover:border-2 cursor-pointer h-full ${
+            className={`border-2 rounded-lg  ${
+              item.branch?.status !== "inactive"
+                ? "hover:border-[#E02D3C] hover:border-2 cursor-pointer"
+                : ""
+            } h-full ${
               selected === item?.id ? "border-[#E02D3C]" : "border-[#E1E1E1]"
             }`}
-            onClick={() => handleSelected(item?.id ?? "")}
+            onClick={() =>
+              item.branch?.status !== "inactive"
+                ? handleSelected(item?.id ?? "")
+                : ""
+            }
           >
             <div className="flex flex-col gap-2 justify-between bg-[#F9F9F9] p-4 rounded-tl-lg rounded-tr-lg items-start w-full">
               <div className="flex gap-3 justify-between w-full">
@@ -51,8 +59,15 @@ const TypeTemplateSection = ({
               </div>
               <p className="col-span-2 flex-1 w-full">
                 <div className="flex justify-between gap-3">
-                  <small className="text-gray-500">
+                  <small className="text-gray-500 flex gap-3">
                     {item?.branch?.name ?? "All Branches"}
+
+                    {item.branch?.status === "inactive" && (
+                      <div className="bg-customGray-v1 text-[#1D2433]/80 flex place-items-center px-4 py-1 rounded-[12px] gap-2 text-xs">
+                        <span className="rounded-full bg-[#1D2433]/80 flex-none w-[6px] h-[6px]"></span>
+                        <span className="flex-none">Inactive</span>
+                      </div>
+                    )}
                   </small>
                   <small className="text-gray-500">
                     {item?.type ? `Is Reminder` : ""}
@@ -70,7 +85,15 @@ const TypeTemplateSection = ({
         return (
           <div className="w-full" key={index}>
             {isLink ? (
-              <Link href={`/messages/new-message/${item.id}`}>{content}</Link>
+              <>
+                {item.branch?.status === "inactive" ? (
+                  content
+                ) : (
+                  <Link href={`/messages/new-message/${item.id}`}>
+                    {content}
+                  </Link>
+                )}
+              </>
             ) : (
               content
             )}
