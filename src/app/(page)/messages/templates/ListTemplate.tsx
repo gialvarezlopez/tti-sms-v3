@@ -121,6 +121,7 @@ const Cell = ({ row }: { row: TemplateProps }) => {
         <Button
           variant="ghost"
           className="h-8 w-8 p-0 hover:bg-[#E1E1E1] rounded-full"
+          disabled={row.branch?.status === "inactive"}
         >
           <span className="sr-only">Open menu</span>
           <MoreVertical className="h-4 w-4" />
@@ -302,8 +303,14 @@ const ListTemplate = ({
                       </div>
                       <p className="col-span-2 flex-1 w-full">
                         <div className="flex justify-between gap-3">
-                          <small className="text-gray-500">
-                            {item?.branch?.name ?? "All Branches"}
+                          <small className="text-gray-500 flex gap-3">
+                            {item?.branch?.name ?? "All Branches"}{" "}
+                            {item.branch?.status === "inactive" && (
+                              <div className="bg-customGray-v1 text-[#1D2433]/80 flex place-items-center px-4 py-1 rounded-[12px] gap-2 text-xs">
+                                <span className="rounded-full bg-[#1D2433]/80 flex-none w-[6px] h-[6px]"></span>
+                                <span className="flex-none">Inactive</span>
+                              </div>
+                            )}
                           </small>
                           <small className="text-gray-500">
                             {item?.type ? `Is Reminder` : ""}
