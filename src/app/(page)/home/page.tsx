@@ -343,7 +343,7 @@ const Home = () => {
         ref={holderRef}
       >
         <div className="flex gap-3 justify-between">
-          <h3 className="text-xl font-semibold">Tickets</h3> {holderHeight}
+          <h3 className="text-xl font-semibold">Tickets</h3>
           <div>
             <Button
               variant={"destructive"}
