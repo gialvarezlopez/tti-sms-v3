@@ -117,19 +117,12 @@ const Items = ({ dataStats }: Props) => {
         />
       </div>
 
-      <div
-        className={`cursor-pointer ${
-          isActive("closed") ? "border-2 border-black rounded-lg" : ""
-        }`}
-        onClick={() => toggleStatus("closed")}
-      >
-        <CardProcess
-          title={statusKeys.closed}
-          footer={getNumber(+dataStats?.closed?.total)}
-          icon={IconClosed}
-          setClass={"cardRecentlyClosed"}
-        />
-      </div>
+      <CardProcess
+        title={statusKeys.closed}
+        footer={getNumber(+dataStats?.closed?.total)}
+        icon={IconClosed}
+        setClass={"cardRecentlyClosed"}
+      />
     </>
   );
 };
