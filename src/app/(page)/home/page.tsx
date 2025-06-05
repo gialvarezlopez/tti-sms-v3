@@ -32,6 +32,9 @@ const Home = () => {
   const router = useRouter();
   const searchParams = useSearchParams();
 
+  const holderRef = React.useRef<HTMLDivElement | null>(null);
+  const [holderHeight, setHolderHeight] = useState<number>(0);
+
   const selectedPage = searchParams?.get("page");
 
   const hasParams = searchParams
@@ -274,8 +277,30 @@ const Home = () => {
     }
   }, [errorTickets]);
 
+  useEffect(() => {
+    const updateHeight = () => {
+      if (holderRef.current) {
+        setHolderHeight(holderRef.current.offsetHeight);
+      }
+    };
+
+    updateHeight(); // al montar
+
+    // también al redimensionar
+    window.addEventListener("resize", updateHeight);
+    return () => window.removeEventListener("resize", updateHeight);
+  }, []);
+  /*
   const maxHeightScrollTable = () => {
     return widthMainDiv <= 768 ? `max-h-[450px]` : `max-h-[calc(100vh-540px)]`;
+  };
+  */
+
+  const maxHeightScrollTable = () => {
+    if (widthMainDiv > 768 && holderHeight < 450) {
+      return "max-h-[700px]";
+    }
+    return widthMainDiv <= 768 ? "max-h-[450px]" : "max-h-[calc(100vh-540px)]";
   };
 
   return (
@@ -312,9 +337,13 @@ const Home = () => {
         )}
       </div>
 
-      <div className="rounded-lg bg-white my-6 p-4">
+      <div
+        className="rounded-lg bg-white my-6 p-4"
+        id="holder_table"
+        ref={holderRef}
+      >
         <div className="flex gap-3 justify-between">
-          <h3 className="text-xl font-semibold">Tickets</h3>
+          <h3 className="text-xl font-semibold">Tickets</h3> {holderHeight}
           <div>
             <Button
               variant={"destructive"}
