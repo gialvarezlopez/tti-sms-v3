@@ -50,6 +50,8 @@ const FieldsResendMessage = ({
 
   const [isPopoverOpen, setIsPopoverOpen] = useState(false);
 
+  //const [defaultValue, setDefaultValue] = useState(any);
+
   const { fields, replace } = useFieldArray({
     control,
     name: "keywords",
@@ -59,29 +61,41 @@ const FieldsResendMessage = ({
     return date && !isNaN(new Date(date).getTime());
   };
 
-  const handleKeywordChange = (index: number, value: string) => {
-    setValue(`keywords[${index}].value`, value);
+  const handleKeywordChange = (
+    index: number,
+    value: string,
+    defaultValue = ""
+  ) => {
+    //console.log("defaultValue", defaultValue);
+    value = value !== "" ? value : defaultValue;
+    setValue(`keywords[${index}].value`, value, {
+      shouldDirty: true,
+    });
 
-    // Get the updated values ​​of the keywords
-    const keywordValues = getValues("keywords") as Keyword[];
+    // Usamos watch para obtener los valores actuales del formulario
+    const keywordValues = watch("keywords") as Keyword[];
 
-    // Update the `content` with the keyword values
+    // Creamos una copia con el nuevo valor actualizado manualmente
+    const updatedKeywords = [...keywordValues];
+    updatedKeywords[index] = {
+      ...updatedKeywords[index],
+      value,
+    };
+
     const message = template?.content ?? "";
     const updatedMessage = highlightKeyword(
       message,
-      keywordValues.map(({ keyword, value, type }) => {
+      updatedKeywords.map(({ keyword, value, type }) => {
         let formattedValue = value;
 
-        // Check if the type is "currency" and the value is numeric
         if (type === "currency") {
-          const numericValue = value?.replace("$", ""); // Remove the "$" symbol if it already exists
+          const numericValue = value?.replace("$", "");
           if (
             /^\d+(\.\d{1,2})?$/.test(numericValue) ||
             numericValue === "" ||
             Number(numericValue) >= 0
           ) {
-            // Check if it is a valid number
-            formattedValue = `$${numericValue}`; // Add the "$" symbol
+            formattedValue = `$${numericValue}`;
           }
         }
 
@@ -111,6 +125,8 @@ const FieldsResendMessage = ({
 
       // Replace the entire array
       replace(newKeywords);
+
+      //setDefaultValue(newKeywords);
     }
   }, [template, replace, watch]);
 
@@ -332,30 +348,70 @@ const FieldsResendMessage = ({
                   )}
                 />
               ) : (
-                <FormField
-                  control={control}
-                  name={`keywords[${index}].value`}
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>{(item as Keyword).keyword}</FormLabel>
-                      <FormControl>
-                        <div className="flex gap-1 items-center">
-                          {renderIcon((item as Keyword).type)}
-                          <Input
-                            placeholder={(item as Keyword).keyword}
-                            {...field}
-                            autoComplete="off"
-                            onChange={(e) => {
-                              field.onChange(e);
-                              handleKeywordChange(index, e.target.value);
-                            }}
-                          />
-                        </div>
-                      </FormControl>
-                      <CustomFormMessage className="w-full" />
-                    </FormItem>
-                  )}
-                />
+                <div>
+                  {/* Input original */}
+                  <div className="hidden">
+                    <FormField
+                      control={control}
+                      name={`keywords[${index}].value`}
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel>{(item as Keyword).keyword} </FormLabel>
+                          <FormControl>
+                            <div className="flex gap-1 items-center">
+                              {renderIcon((item as Keyword).type)}
+                              <Input
+                                type="hidden"
+                                placeholder={(item as Keyword).keyword}
+                                {...field}
+                                autoComplete="off"
+                                onChange={(e) => {
+                                  field.onChange(e);
+                                  handleKeywordChange(
+                                    index,
+                                    e.target.value,
+                                    (item as Keyword).keyword
+                                  );
+                                }}
+                              />
+                            </div>
+                          </FormControl>
+                          <CustomFormMessage className="w-full" />
+                        </FormItem>
+                      )}
+                    />
+                  </div>
+
+                  {/* Input copy from original */}
+                  <FormField
+                    control={control}
+                    name={`keywords[${index}].value_copy`}
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>{(item as Keyword).keyword} </FormLabel>
+                        <FormControl>
+                          <div className="flex gap-1 items-center">
+                            {renderIcon((item as Keyword).type)}
+                            <Input
+                              placeholder={(item as Keyword).keyword}
+                              {...field}
+                              autoComplete="off"
+                              onChange={(e) => {
+                                field.onChange(e);
+                                handleKeywordChange(
+                                  index,
+                                  e.target.value,
+                                  (item as Keyword).keyword
+                                );
+                              }}
+                            />
+                          </div>
+                        </FormControl>
+                        <CustomFormMessage className="w-full" />
+                      </FormItem>
+                    )}
+                  />
+                </div>
               )}
             </div>
           ))}

@@ -20,7 +20,7 @@ const CardProcess = ({ title, footer, icon, setClass }: Props) => {
           </CardTitle>
         </CardHeader>
         <CardFooter>
-          <h3 className="font-bold text-2xl transition-transform duration-300 transform group-hover:translate-y-[-4px]">
+          <h3 className="font-bold text-lg xl:text-2xl transition-transform duration-300 transform group-hover:translate-y-[-4px]">
             {footer}
           </h3>
         </CardFooter>
