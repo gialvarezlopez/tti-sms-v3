@@ -295,13 +295,18 @@ const Home = () => {
     return widthMainDiv <= 768 ? `max-h-[450px]` : `max-h-[calc(100vh-540px)]`;
   };
   */
+  const maxHeightScrollTable = () => {
+    return widthMainDiv <= 768 ? `max-h-[450px]` : `max-h-[700px]`;
+  };
 
+  /*
   const maxHeightScrollTable = () => {
     if (widthMainDiv > 768 && holderHeight < 450) {
       return "max-h-[700px]";
     }
     return widthMainDiv <= 768 ? "max-h-[450px]" : "max-h-[calc(100vh-540px)]";
   };
+  */
 
   return (
     <div ref={refMainDiv}>
