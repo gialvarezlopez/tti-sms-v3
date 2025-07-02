@@ -26,6 +26,7 @@ import InactivityRefreshWithWarning from "@/components/commons/InactivityRefresh
 type IsColumnSelectedFn<T> = (column: ColumnDef<T>, action?: string) => void;
 
 const paramsToIgnore = ["sortOrder", "page"];
+const limitByDefault = 10;
 
 const Home = () => {
   const { data: session, status } = useSession();
@@ -36,6 +37,8 @@ const Home = () => {
   const [holderHeight, setHolderHeight] = useState<number>(0);
 
   const selectedPage = searchParams?.get("page");
+
+  const selectedLimit = searchParams?.get("limit");
 
   const hasParams = searchParams
     ? Array.from(searchParams.entries()).filter(
@@ -56,7 +59,7 @@ const Home = () => {
 
   const [pagination, setPagination] = useState({
     pageIndex: selectedPage ? +selectedPage - 1 : 0,
-    pageSize: 50,
+    pageSize: selectedLimit ? +selectedLimit : limitByDefault,
   });
 
   const { ref: refMainDiv, width: widthMainDiv = 0 } =
@@ -71,14 +74,6 @@ const Home = () => {
   const lastReceivedToParams = searchParams?.get("lastReceivedTo");
   const typeOfMessageParams = searchParams?.get("typeOfMessage");
 
-  /*
-  const branches =
-    branchesParam &&
-    branchesParam !== "all" &&
-    session?.user?.primaryRole !== USER_ROLE.USER // user
-      ? branchesParam.split(",")
-      : [];
-  */
   const branches =
     session?.user?.primaryRole === USER_ROLE.USER
       ? [session?.user?.branch.id]
@@ -133,10 +128,14 @@ const Home = () => {
       ? Number(searchParams.get("page")) - 1
       : 0;
 
-    setPagination((prev) => ({
-      ...prev,
+    const newLimit = searchParams?.get("limit")
+      ? Number(searchParams.get("limit"))
+      : limitByDefault;
+
+    setPagination({
       pageIndex: newPage,
-    }));
+      pageSize: newLimit,
+    });
   }, [searchParams]);
 
   const {
@@ -177,7 +176,6 @@ const Home = () => {
 
   const fetchData = (page: number, pageSize: number) => {
     setPagination({ pageIndex: page - 1, pageSize });
-    //setSearch(search);
   };
 
   const selected: IsColumnSelectedFn<TicketsProps> = (
@@ -284,9 +282,9 @@ const Home = () => {
       }
     };
 
-    updateHeight(); // al montar
+    updateHeight(); // when mounting
 
-    // también al redimensionar
+    // also when resizing
     window.addEventListener("resize", updateHeight);
     return () => window.removeEventListener("resize", updateHeight);
   }, []);
@@ -320,7 +318,7 @@ const Home = () => {
       </p>
 
       <InactivityRefreshWithWarning />
-      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-3 mt-4">
+      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3 mt-4">
         {isLoadingStats ? (
           Array(widthMainDiv <= 768 ? 2 : 5)
             .fill(0)

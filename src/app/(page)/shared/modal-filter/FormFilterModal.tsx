@@ -311,7 +311,7 @@ const FormFilterModal = ({ fromPage }: Props) => {
       <Button
         type="button"
         variant={"outline"}
-        className={`flex gap-3 items-center w-full md:w-auto  ${
+        className={`flex gap-3 items-center w-full md:w-[90px]  ${
           isOpen || hasParamsInURL()
             ? "border-[2px] border-red-500"
             : "btn-white-normal"

@@ -4,7 +4,6 @@ import { useSession } from "next-auth/react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { ColumnDef } from "@tanstack/react-table";
 import DataTable from "@/components/ui/DataTable";
-//import { columns } from "./Columns";
 import useColumns from "./Columns";
 import { RefetchOptions, TicketsProps } from "@/types/types";
 import TableSkeleton from "@/components/skeletons/TableSkeleton";
@@ -23,13 +22,14 @@ const Actions = dynamic(() => import("./Actions"), {
 type IsColumnSelectedFn<T> = (column: ColumnDef<T>, action?: string) => void;
 
 const paramsToIgnore = ["sortOrder", "page"];
-
+const limitByDefault = 10;
 const Home = () => {
   const { data: session, status } = useSession();
   const router = useRouter(); // Acceder al router
   const searchParams = useSearchParams();
   const columns = useColumns();
   const selectedPage = searchParams?.get("page");
+  const selectedLimit = searchParams?.get("limit");
   const hasParams = searchParams
     ? Array.from(searchParams.entries()).filter(
         ([key, value]) =>
@@ -47,7 +47,7 @@ const Home = () => {
 
   const [pagination, setPagination] = useState({
     pageIndex: selectedPage ? +selectedPage - 1 : 0,
-    pageSize: 50,
+    pageSize: selectedLimit ? +selectedLimit : limitByDefault,
   });
 
   const { ref: refMainDiv, width: widthMainDiv = 0 } =
@@ -92,10 +92,14 @@ const Home = () => {
       ? Number(searchParams.get("page")) - 1
       : 0;
 
-    setPagination((prev) => ({
-      ...prev,
+    const newLimit = searchParams?.get("limit")
+      ? Number(searchParams.get("limit"))
+      : limitByDefault;
+
+    setPagination({
       pageIndex: newPage,
-    }));
+      pageSize: newLimit,
+    });
   }, [searchParams]);
 
   const statusTickets = ["closed"];
@@ -116,16 +120,16 @@ const Home = () => {
     types: typeTicket,
   });
 
-  // Cálculo de los registros mostrados y el rango
-  const currentPage = pagination.pageIndex + 1; // la página actual (1-indexed)
-  const perPage = pagination.pageSize; // elementos por página
-  const total = dataTickets?.meta.pagination.count || 0; // total de registros
+  // Calculation of the displayed records and the range
+  const currentPage = pagination.pageIndex + 1; // the current page (1-indexed)
+  const perPage = pagination.pageSize; // elements per page
+  const total = dataTickets?.meta.pagination.count || 0; // total records
 
-  // Calculamos el rango de registros que se están mostrando
+  // We calculate the range of records being displayed
   const startRecord = (currentPage - 1) * perPage + 1;
   const endRecord = Math.min(currentPage * perPage, total);
 
-  // Mostrar el rango y el total de elementos
+  // Show the range and total of elements
   const displayText = `Showing ${startRecord}-${endRecord} of ${total} items`;
 
   useEffect(() => {

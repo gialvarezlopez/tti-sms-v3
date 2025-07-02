@@ -19,7 +19,7 @@ const statusKeys = {
   overdue: "Overdue",
   to_be_overdue: "To Be Overdue",
   in_progress: "Unanswered Tickets",
-  closed: "Recently Closed",
+  closed: "Recently Answered",
 };
 
 const Items = ({ dataStats }: Props) => {
@@ -49,6 +49,37 @@ const Items = ({ dataStats }: Props) => {
     }
 
     router.push(`?${params.toString()}`);
+  };
+
+  const goHistory = () => {
+    const today = new Date(); // Fecha actual
+    const sevenDaysAgo = new Date();
+    sevenDaysAgo.setDate(today.getDate() - 7); // Resta 7 días
+
+    // ✅ Sumar un día a closeDateTo (hoy + 1)
+    today.setDate(today.getDate() + 1);
+
+    // Formatea las fechas como mm/dd/yyyy
+    const formatDate = (date: Date) => {
+      const mm = String(date.getMonth() + 1).padStart(2, "0");
+      const dd = String(date.getDate()).padStart(2, "0");
+      const yyyy = date.getFullYear();
+      return `${mm}/${dd}/${yyyy}`;
+    };
+
+    const closeDateFrom = formatDate(sevenDaysAgo);
+    const closeDateTo = formatDate(today);
+
+    // Construye la URL con los parámetros
+    const params = new URLSearchParams({
+      page: "1",
+      sortOrder: "ASC",
+      typeOfMessage: "twoway",
+      closeDateFrom,
+      closeDateTo,
+    });
+
+    router.push(`/history?${params.toString()}`);
   };
 
   const getNumber = (number: number) => {
@@ -102,7 +133,8 @@ const Items = ({ dataStats }: Props) => {
           setClass={""}
         />
       </div>
-
+      {/*  
+      //Temporally hidden
       <div
         className={`cursor-pointer ${
           isActive("in_progress") ? "border-2 border-black rounded-lg" : ""
@@ -116,13 +148,15 @@ const Items = ({ dataStats }: Props) => {
           setClass={"cardUnansweredTickets"}
         />
       </div>
-
-      <CardProcess
-        title={statusKeys.closed}
-        footer={getNumber(+dataStats?.closed?.total)}
-        icon={IconClosed}
-        setClass={"cardRecentlyClosed"}
-      />
+      */}
+      <div className={`cursor-pointer`} onClick={() => goHistory()}>
+        <CardProcess
+          title={statusKeys.closed}
+          footer={getNumber(+dataStats?.closed?.total)}
+          icon={IconClosed}
+          setClass={"cardRecentlyClosed"}
+        />
+      </div>
     </>
   );
 };

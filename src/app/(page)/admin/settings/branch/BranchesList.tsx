@@ -19,7 +19,7 @@ type Props = {
   setClearRowsSelected: React.Dispatch<React.SetStateAction<boolean>>;
   setBranchesSelected: React.Dispatch<React.SetStateAction<BranchProps[]>>;
 };
-
+const limitByDefault = 10;
 const BranchesList = ({
   clearRowsSelected,
   setClearRowsSelected,
@@ -34,6 +34,7 @@ const BranchesList = ({
     : false;
 
   const selectedPage = searchParams?.get("page");
+  const selectedLimit = searchParams?.get("limit");
   const selectedSortOrder = searchParams ? searchParams.get("sortOrder") : null;
   const selectedSortBy = searchParams ? searchParams.get("sortBy") : null;
 
@@ -55,7 +56,7 @@ const BranchesList = ({
 
   const [pagination, setPagination] = useState({
     pageIndex: selectedPage ? +selectedPage - 1 : 0,
-    pageSize: 50,
+    pageSize: selectedLimit ? +selectedLimit : limitByDefault,
   });
 
   const queryParam = searchParams?.get("search") ?? "";
@@ -70,13 +71,6 @@ const BranchesList = ({
     statusParams && statusParams !== "all" ? statusParams.split(",") : [];
   /*
   useEffect(() => {
-    // If there is no `page` parameter in the URL, reset to page 1
-    if (!searchParams?.get("page")) {
-      setPagination((prev) => ({ ...prev, pageIndex: 0 }));
-    }
-  }, [searchParams]);
-  */
-  useEffect(() => {
     const newPage = searchParams?.get("page")
       ? Number(searchParams.get("page")) - 1
       : 0;
@@ -85,6 +79,22 @@ const BranchesList = ({
       ...prev,
       pageIndex: newPage,
     }));
+  }, [searchParams]);
+  */
+
+  useEffect(() => {
+    const newPage = searchParams?.get("page")
+      ? Number(searchParams.get("page")) - 1
+      : 0;
+
+    const newLimit = searchParams?.get("limit")
+      ? Number(searchParams.get("limit"))
+      : limitByDefault;
+
+    setPagination({
+      pageIndex: newPage,
+      pageSize: newLimit,
+    });
   }, [searchParams]);
 
   const {
@@ -100,16 +110,16 @@ const BranchesList = ({
     status: statusTypes,
   });
 
-  // Cálculo de los registros mostrados y el rango
-  const currentPage = pagination.pageIndex + 1; // la página actual (1-indexed)
-  const perPage = pagination.pageSize; // elementos por página
-  const total = response?.meta.pagination.count || 0; // total de registros
+  // Calculation of the displayed records and the range
+  const currentPage = pagination.pageIndex + 1; // the current page (1-indexed)
+  const perPage = pagination.pageSize; // elements per page
+  const total = response?.meta.pagination.count || 0; // total records
 
-  // Calculamos el rango de registros que se están mostrando
+  // We calculate the range of records being displayed
   const startRecord = (currentPage - 1) * perPage + 1;
   const endRecord = Math.min(currentPage * perPage, total);
 
-  // Mostrar el rango y el total de elementos
+  // Show the range and total of elements
   const displayText = `Showing ${startRecord}-${endRecord} of ${total} items`;
 
   useEffect(() => {

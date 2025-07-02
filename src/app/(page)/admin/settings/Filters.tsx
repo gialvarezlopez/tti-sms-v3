@@ -36,8 +36,9 @@ type Props = {
   usersSelected: UserProps[];
   branchesSelected: BranchProps[];
 };
-
+const limitByDefault = 10;
 const Filter = ({ usersSelected, branchesSelected }: Props) => {
+  const [limit, setLimit] = useState(limitByDefault.toString());
   const router = useRouter();
   const searchParams = useSearchParams();
 
@@ -88,6 +89,8 @@ const Filter = ({ usersSelected, branchesSelected }: Props) => {
     params.delete("status");
     params.delete("roles");
     params.delete("search");
+    params.delete("limit");
+    setLimit(limitByDefault.toString());
 
     router.push(`?${params.toString()}`);
   };
@@ -119,6 +122,11 @@ const Filter = ({ usersSelected, branchesSelected }: Props) => {
     setValue("search", searchParams?.get("search") ?? "", {
       shouldDirty: true,
     });
+
+    const limitParam = searchParams?.get("limit");
+    if (limitParam) {
+      setLimit(limitParam);
+    }
   }, [searchParams, setValue]);
 
   return (
@@ -195,6 +203,28 @@ const Filter = ({ usersSelected, branchesSelected }: Props) => {
               isLoadingRoles={isLoadingRoles}
             />
             <ModalAdd selectedValue={selectedValue} />
+            <Select
+              value={limit}
+              onValueChange={(value) => {
+                setLimit(value);
+                const params = new URLSearchParams(searchParams || "");
+                params.set("limit", value);
+                params.delete("page"); // Restart pagination if necessary
+                router.push(`?${params.toString()}`);
+              }}
+            >
+              <SelectTrigger>
+                <SelectValue placeholder="Entries per page" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectGroup>
+                  <SelectLabel>Entry</SelectLabel>
+                  <SelectItem value="10">10</SelectItem>
+                  <SelectItem value="25">25</SelectItem>
+                  <SelectItem value="50">50</SelectItem>
+                </SelectGroup>
+              </SelectContent>
+            </Select>
           </div>
         </div>
       </div>
