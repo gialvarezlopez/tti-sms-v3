@@ -9,14 +9,14 @@ interface UserParams extends PaginateParams {
   roles?: string[]; //string[];
 }
 
-const useGetUsers = ({ page, limit, roles, query }: UserParams) => {
+const useGetUsers = ({ page, per_page, roles, query }: UserParams) => {
   return useQuery({
-    queryKey: ["user-list", page, limit, roles, query],
+    queryKey: ["user-list", page, per_page, roles, query],
     queryFn: async () => {
       try {
         const params: UserParams = {
           page,
-          limit,
+          per_page,
           query,
           ...(roles?.length && { roles }),
         };

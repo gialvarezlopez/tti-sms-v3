@@ -31,7 +31,7 @@ const Page = () => {
     isLoading,
   } = useGetTemplates({
     page: pagination.pageIndex + 1,
-    limit: pagination.pageSize,
+    per_page: pagination.pageSize,
     query: selectedSearch,
   });
 

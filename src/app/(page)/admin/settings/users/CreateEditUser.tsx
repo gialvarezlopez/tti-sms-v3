@@ -29,7 +29,7 @@ const CreateEditUser = ({ setIsOpen, user }: Props) => {
     isLoading: isLoadingBranches,
   } = useGetBranches({
     page: 1,
-    limit: 100,
+    per_page: 100,
     query: "",
   });
 
@@ -39,7 +39,7 @@ const CreateEditUser = ({ setIsOpen, user }: Props) => {
     isLoading: isLoadingRoles,
   } = useGetRoles({
     page: 1,
-    limit: 100,
+    per_page: 100,
     query: "",
   });
 

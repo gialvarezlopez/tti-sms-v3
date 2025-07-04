@@ -36,11 +36,16 @@ type Props = {
   usersSelected: UserProps[];
   branchesSelected: BranchProps[];
 };
-const limitByDefault = 10;
+
 const Filter = ({ usersSelected, branchesSelected }: Props) => {
-  const [limit, setLimit] = useState(limitByDefault.toString());
   const router = useRouter();
   const searchParams = useSearchParams();
+
+  const type = searchParams ? searchParams.get("type") : null;
+  const limitByDefault =
+    type === SETTINGS_PARAMETER_URL.USERS || type === null ? 25 : 10;
+
+  const [limit, setLimit] = useState(limitByDefault.toString());
 
   const { setUsers } = useUsersStore();
   const { setBranches } = useBranchesStore();
@@ -51,7 +56,7 @@ const Filter = ({ usersSelected, branchesSelected }: Props) => {
     isLoading: isLoadingRoles,
   } = useGetRoles({
     page: 1,
-    limit: 100,
+    per_page: 100,
     query: "",
   });
 
@@ -115,8 +120,6 @@ const Filter = ({ usersSelected, branchesSelected }: Props) => {
       }
     }
   }, []);
-
-  const type = searchParams ? searchParams.get("type") : null;
 
   useEffect(() => {
     setValue("search", searchParams?.get("search") ?? "", {

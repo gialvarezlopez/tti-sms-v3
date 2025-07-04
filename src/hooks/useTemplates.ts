@@ -12,14 +12,14 @@ interface TemplateParams extends PaginateParams {
   branch?: string; //string[];
 }
 
-const useGetTemplates = ({ page, limit, query, branch }: TemplateParams) => {
+const useGetTemplates = ({ page, per_page, query, branch }: TemplateParams) => {
   return useQuery({
-    queryKey: ["template-list", page, limit, query, branch],
+    queryKey: ["template-list", page, per_page, query, branch],
     queryFn: async () => {
       try {
         const params = {
           page,
-          limit,
+          per_page,
           query,
           ...(branch && { branch }),
         };

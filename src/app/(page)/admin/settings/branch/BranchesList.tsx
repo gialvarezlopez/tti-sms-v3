@@ -104,7 +104,7 @@ const BranchesList = ({
     refetch,
   } = useGetBranches({
     page: pagination.pageIndex + 1,
-    limit: pagination.pageSize,
+    per_page: pagination.pageSize,
     query: queryParam,
     provinces: provincesTypes,
     status: statusTypes,

@@ -207,7 +207,7 @@ export type PhoneNumberProps = {
 
 export interface PaginateParams {
   page?: number;
-  limit?: number | string;
+  per_page?: number | string;
   query?: string;
 }
 

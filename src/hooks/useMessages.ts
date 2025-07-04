@@ -12,16 +12,16 @@ import { showToast } from "@/lib/toastUtil";
 
 const returnAfterSubmit = "/messages/new-message";
 
-const useGetMessages = ({ page, limit, query }: PaginateParams) => {
+const useGetMessages = ({ page, per_page, query }: PaginateParams) => {
   return useQuery({
-    queryKey: ["message-list", page, limit, query],
+    queryKey: ["message-list", page, per_page, query],
     queryFn: async () => {
       try {
         const url = messagesRoutes.list;
 
         const params = {
           page,
-          limit,
+          per_page,
           query,
         };
 

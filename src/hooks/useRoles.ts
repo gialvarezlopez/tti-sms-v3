@@ -4,14 +4,14 @@ import { rolesRoutes } from "@/config/apiRoutes";
 import { useQuery } from "@tanstack/react-query";
 import { PaginateParams } from "@/types/types";
 
-const useGetRoles = ({ page, limit, query }: PaginateParams) => {
+const useGetRoles = ({ page, per_page, query }: PaginateParams) => {
   return useQuery({
-    queryKey: ["role-list", page, limit, query],
+    queryKey: ["role-list", page, per_page, query],
     queryFn: async () => {
       try {
         const params = {
           page,
-          limit,
+          per_page,
           query,
         };
 
