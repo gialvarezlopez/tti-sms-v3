@@ -6,6 +6,7 @@ import { PaginateParams, ResendMessageProps, UserProps } from "@/types/types";
 import { showToast } from "@/lib/toastUtil";
 
 interface TicketParams extends PaginateParams {
+  PaginateParams?: number | string;
   status?: string[]; // It can be: 'in_progress', 'overdue', 'toBeOverdue', 'closed', 'error'
   templates?: string[] | null;
   branches?: string[] | null;
@@ -17,7 +18,7 @@ interface TicketParams extends PaginateParams {
 
 const useGetTickets = ({
   page,
-  limit,
+  per_page,
   query,
   status,
   templates,
@@ -32,7 +33,7 @@ const useGetTickets = ({
     queryKey: [
       "ticket-list",
       page,
-      limit,
+      per_page,
       query,
       status,
       templates,
@@ -57,7 +58,7 @@ const useGetTickets = ({
         // Filters - Only added if they exist
         const params: TicketParams = {
           page,
-          limit,
+          per_page,
           query,
           ...(status?.length && { status }),
           ...(templates?.length && { templates }),

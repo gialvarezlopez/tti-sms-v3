@@ -12,18 +12,18 @@ interface BranchParams extends PaginateParams {
 
 const useGetBranches = ({
   page,
-  limit,
+  per_page,
   provinces,
   status,
   query,
 }: BranchParams) => {
   return useQuery({
-    queryKey: ["branch-list", page, limit, provinces, query, status],
+    queryKey: ["branch-list", page, per_page, provinces, query, status],
     queryFn: async () => {
       try {
         const params: BranchParams = {
           page,
-          limit,
+          per_page,
           ...(provinces?.length && { provinces }),
           ...(status?.length && { status }),
           ...(query?.length && { query }),

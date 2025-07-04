@@ -44,7 +44,7 @@ const TemplateSelection = ({
     isFetched,
   } = useGetTemplates({
     page: 1,
-    limit: 100,
+    per_page: 100,
     query: selectedSearch,
     branch:
       (session && session?.user?.primaryRole === USER_ROLE.USER

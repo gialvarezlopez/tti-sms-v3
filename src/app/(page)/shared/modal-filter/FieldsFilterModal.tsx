@@ -49,7 +49,7 @@ const FieldsFilterModal = ({ fromPage }: Props) => {
     isLoading,
   } = useGetBranches({
     page: 1,
-    limit: 50,
+    per_page: 50,
     query: "",
   });
 
@@ -59,7 +59,7 @@ const FieldsFilterModal = ({ fromPage }: Props) => {
     isLoading: isLoadingTemplates,
   } = useGetTemplates({
     page: 1,
-    limit: 50,
+    per_page: 50,
     query: "",
   });
 

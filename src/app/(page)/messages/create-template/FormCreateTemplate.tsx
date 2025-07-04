@@ -57,7 +57,7 @@ const FormCreateTemplate = () => {
   const { data: responseBranches, isLoading: isLoadingBranches } =
     useGetBranches({
       page: 1,
-      limit: 50,
+      per_page: 50,
       query: "",
     });
 

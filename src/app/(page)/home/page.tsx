@@ -145,7 +145,7 @@ const Home = () => {
     refetch,
   } = useGetTickets({
     page: pagination.pageIndex + 1,
-    limit: pagination.pageSize,
+    per_page: pagination.pageSize,
     query: searchParam,
     branches,
     status: statusTickets,

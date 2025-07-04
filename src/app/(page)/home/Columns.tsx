@@ -206,6 +206,15 @@ const Cell = ({ row }: { row: TicketsProps }) => {
           />
         )}
 
+        {/*template?.template?.isTwoWay &&
+          convertToSnakeCase(template.status) !== TICKETS_STATUS.CLOSED && (
+            <ResendMessageCell
+              template={template}
+              setIsOpenDropdown={setIsOpenDropdown}
+            />
+          )
+            */}
+
         {convertToSnakeCase(template.status) === TICKETS_STATUS.IN_PROGRESS &&
           template?.template?.isTwoWay && (
             <SendRemainderCell

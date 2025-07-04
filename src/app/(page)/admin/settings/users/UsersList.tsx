@@ -17,7 +17,7 @@ type Props = {
   clearRowsSelected: boolean;
   setClearRowsSelected: React.Dispatch<React.SetStateAction<boolean>>;
 };
-const limitByDefault = 10;
+const limitByDefault = 25;
 const UsersList = ({
   setUsersSelected,
   clearRowsSelected,
@@ -84,7 +84,7 @@ const UsersList = ({
     refetch,
   } = useGetUsers({
     page: pagination.pageIndex + 1,
-    limit: pagination.pageSize,
+    per_page: pagination.pageSize,
     query: searchParam,
     roles: roleTypes,
   });

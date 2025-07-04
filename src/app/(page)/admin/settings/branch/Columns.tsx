@@ -297,6 +297,24 @@ export const columns: ColumnDef<BranchProps>[] = [
   },
 
   {
+    accessorKey: "number",
+    header: () => {
+      return (
+        <Button variant="ghost" className="px-0">
+          Distribution List
+        </Button>
+      );
+    },
+    cell: ({ row }) => {
+      return (
+        <span className="text-nowrap">
+          {row.original.distributionList ?? ""}
+        </span>
+      );
+    },
+  },
+
+  {
     accessorKey: "status",
     header: ({}: { column: ColumnDef<BranchProps> }) => {
       return (
