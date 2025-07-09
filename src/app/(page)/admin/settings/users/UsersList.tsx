@@ -12,71 +12,63 @@ import ErrorFetching from "@/components/ui/errorFetching";
 import { removeAllParamsFromUrl } from "../../../../../lib/utils/urlUtils";
 
 type IsColumnSelectedFn<T> = (column: ColumnDef<T>, action?: string) => void;
+
 type Props = {
   setUsersSelected: React.Dispatch<React.SetStateAction<UserProps[]>>;
   clearRowsSelected: boolean;
   setClearRowsSelected: React.Dispatch<React.SetStateAction<boolean>>;
+  limitByDefault: number;
 };
-const limitByDefault = 25;
+
+//const limitByDefault = 25;
+
 const UsersList = ({
   setUsersSelected,
   clearRowsSelected,
   setClearRowsSelected,
+  limitByDefault,
 }: Props) => {
   const columns = useColumns();
   const router = useRouter();
   const searchParams = useSearchParams();
 
-  const hasParams = searchParams
-    ? Array.from(searchParams.entries()).length > 0
-    : false;
-
-  const selectedPage = searchParams?.get("page");
-  const selectedLimit = searchParams?.get("limit");
-  const selectedSortOrder = searchParams ? searchParams.get("sortOrder") : null;
-  const selectedSortBy = searchParams ? searchParams.get("sortBy") : null;
-
   const { ref: refMainDiv, width: widthMainDiv = 0 } =
     useResizeObserver<HTMLDivElement>();
 
-  const [search, setSearch] = useState("");
-  const [sortBy, setSortBy] = useState<string>(selectedSortBy ?? ""); // Status for the sort field
-  const [sortOrder, setSortOrder] = useState<"asc" | "desc" | null>(
-    selectedSortOrder === "asc" || selectedSortOrder === "desc"
-      ? (selectedSortOrder.toLowerCase() as "asc" | "desc")
-      : null
-  );
-  const [data, setData] = useState<UserProps[]>([]);
-  const [isDataLoaded, setIsDataLoaded] = useState(false);
-  const [totalPages, setTotalPages] = useState(0);
-  const [clearSelected, setClearSelected] = useState(false);
-  const [rowSelected, setRowSelected] = useState<number[]>([]);
-
   const [pagination, setPagination] = useState({
-    pageIndex: selectedPage ? +selectedPage - 1 : 0,
-    pageSize: selectedLimit ? +selectedLimit : limitByDefault,
+    pageIndex: 0,
+    pageSize: limitByDefault,
   });
+  const [sortBy, setSortBy] = useState<string>("");
+  const [sortOrder, setSortOrder] = useState<"asc" | "desc" | null>(null);
+  const [data, setData] = useState<UserProps[]>([]);
+  const [totalPages, setTotalPages] = useState(0);
+  const [isDataLoaded, setIsDataLoaded] = useState(false);
+  const [clearSelected, setClearSelected] = useState(false);
 
   const searchParam = searchParams?.get("search") ?? "";
   const rolesParams = searchParams?.get("roles");
   const roleTypes =
     rolesParams && rolesParams !== "all" ? rolesParams.split(",") : [];
 
+  // 1. Sync state from URL
   useEffect(() => {
-    const newPage = searchParams?.get("page")
-      ? Number(searchParams.get("page")) - 1
-      : 0;
+    const page = Number(searchParams?.get("page") ?? "1") - 1;
+    const limit = Number(searchParams?.get("limit") ?? limitByDefault);
+    const sortByParam = searchParams?.get("sortBy") ?? "";
+    const sortOrderParam =
+      searchParams?.get("sortOrder")?.toLowerCase() ?? null;
 
-    const newLimit = searchParams?.get("limit")
-      ? Number(searchParams.get("limit"))
-      : limitByDefault;
+    setPagination({ pageIndex: page, pageSize: limit });
+    setSortBy(sortByParam);
+    setSortOrder(
+      sortOrderParam === "asc" || sortOrderParam === "desc"
+        ? (sortOrderParam as "asc" | "desc")
+        : null
+    );
+  }, [searchParams, limitByDefault]);
 
-    setPagination({
-      pageIndex: newPage,
-      pageSize: newLimit,
-    });
-  }, [searchParams]);
-
+  // 2. Fetch users
   const {
     data: response,
     error,
@@ -89,123 +81,30 @@ const UsersList = ({
     roles: roleTypes,
   });
 
-  // Calculation of the displayed records and the range
-  const currentPage = pagination.pageIndex + 1; // the current page (1-indexed)
-  const perPage = pagination.pageSize; // elements per page
-  const total = response?.meta.pagination.count || 0; // total records
-
-  // We calculate the range of records being displayed
-  const startRecord = (currentPage - 1) * perPage + 1;
-  const endRecord = Math.min(currentPage * perPage, total);
-
-  // Show the range and total of elements
-  const displayText = `Showing ${startRecord}-${endRecord} of ${total} items`;
-
+  // 3. Load data into state
   useEffect(() => {
     if (response) {
-      setData(response?.data);
-      setTotalPages(response?.meta?.pagination?.totalPages);
+      setData(response.data);
+      setTotalPages(response.meta?.pagination?.totalPages || 0);
       setIsDataLoaded(true);
     }
   }, [response]);
 
-  const fetchData = (page: number, pageSize: number) => {
-    setPagination({ pageIndex: page - 1, pageSize });
-  };
-
-  const selected: IsColumnSelectedFn<UserProps> = (
-    column: ColumnDef<UserProps>
-  ) => {
-    const ids = [];
-    for (const [clave, valor] of Object.entries(column)) {
-      ids.push(valor);
+  // 4. Show error if fetch failed
+  useEffect(() => {
+    if (error) {
+      setIsDataLoaded(true);
     }
+  }, [error]);
 
-    setRowSelected(ids);
-    setUsersSelected(ids);
-    setClearRowsSelected(false);
-  };
-
-  const handleClearSelected = (value: boolean) => {
-    setClearSelected(value);
-  };
-
+  // 5. Clear selected state if requested
   useEffect(() => {
     if (clearRowsSelected) {
-      handleClearSelected(true);
+      setClearSelected(true);
     }
   }, [clearRowsSelected]);
 
-  //=====================================
-  //Start URL Parameters
-  //=====================================
-  //1. Update URL when sorting changes
-  const handleSortChange = (field: string) => {
-    let newSortOrder: "asc" | "desc" | null = "asc"; // By default, ascending order
-
-    if (field === sortBy) {
-      // If already sorted by the same field, reverse the order
-      newSortOrder = sortOrder === "asc" ? "desc" : "asc";
-    }
-
-    // Update local states
-    setSortBy(field);
-    setSortOrder(newSortOrder);
-
-    // Update URL
-    const params = new URLSearchParams(window.location.search);
-    params.set("sortBy", field);
-    params.set("sortOrder", newSortOrder === "asc" ? "ASC" : "DESC");
-    params.set("page", (pagination.pageIndex + 1).toString());
-
-    router.push(`${window.location.pathname}?${params.toString()}`);
-  };
-
-  //2. Synchronizing local states with the URL when loading the component
-  useEffect(() => {
-    const searchParams = new URLSearchParams(window.location.search);
-    const sortByParam = searchParams.get("sortBy");
-    const sortOrderParam = searchParams.get("sortOrder");
-
-    if (sortByParam) {
-      setSortBy(sortByParam);
-    }
-    if (sortOrderParam) {
-      setSortOrder(sortOrderParam.toUpperCase() === "ASC" ? "asc" : "desc");
-    }
-  }, []);
-
-  //3. Refetch data when URL parameters change
-  useEffect(() => {
-    if (pagination.pageIndex >= 0) {
-      const refetchOptions: RefetchOptions = {
-        pagination: {
-          page: pagination.pageIndex + 1,
-          limit: pagination.pageSize,
-        },
-        query: searchParam,
-        sortBy,
-        sortOrder,
-      };
-
-      refetch(refetchOptions as object);
-    }
-  }, [pagination, searchParam, sortBy, sortOrder, refetch]);
-
-  //4. Handling pagination
-  useEffect(() => {
-    const params = new URLSearchParams(window.location.search);
-    params.set("page", (pagination.pageIndex + 1).toString());
-    if (sortBy) {
-      params.set("sortBy", sortBy);
-    }
-    if (sortOrder) {
-      params.set("sortOrder", sortOrder === "asc" ? "ASC" : "DESC");
-    }
-    router.push(`${window.location.pathname}?${params.toString()}`);
-  }, [pagination.pageIndex, router, sortBy, sortOrder]);
-
-  //5. Clearing states when unmounting the component
+  // 6. Cleanup on unmount
   useEffect(() => {
     return () => {
       setUsersSelected([]);
@@ -213,15 +112,52 @@ const UsersList = ({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  useEffect(() => {
-    if (error) {
-      setIsDataLoaded(true);
+  // 7. Column selection handler
+  const selected: IsColumnSelectedFn<UserProps> = (column) => {
+    const ids = Object.values(column);
+    setUsersSelected(ids as UserProps[]);
+    setClearRowsSelected(false);
+  };
+
+  // 8. Handle pagination change
+  const fetchData = (page: number, pageSize: number) => {
+    const params = new URLSearchParams(window.location.search);
+    params.set("page", page.toString());
+    params.set("limit", pageSize.toString());
+    if (sortBy) params.set("sortBy", sortBy);
+    if (sortOrder) params.set("sortOrder", sortOrder.toUpperCase());
+    router.push(`${window.location.pathname}?${params.toString()}`);
+  };
+
+  // 9. Handle sorting
+  const handleSortChange = (field: string) => {
+    let newOrder: "asc" | "desc" = "asc";
+    if (sortBy === field) {
+      newOrder = sortOrder === "asc" ? "desc" : "asc";
     }
-  }, [error]);
+
+    const params = new URLSearchParams(window.location.search);
+    params.set("sortBy", field);
+    params.set("sortOrder", newOrder.toUpperCase());
+    params.set("page", "1"); // reset to first page on sort change
+    router.push(`${window.location.pathname}?${params.toString()}`);
+  };
+
+  // Pagination range text
+  const currentPage = pagination.pageIndex + 1;
+  const perPage = pagination.pageSize;
+  const total = response?.meta.pagination.total || 0;
+  const startRecord = (currentPage - 1) * perPage + 1;
+  const endRecord = Math.min(currentPage * perPage, total);
+  const displayText = `Showing ${startRecord}-${endRecord} of ${total} items`;
 
   const maxHeightScrollTable = () => {
     return widthMainDiv <= 768 ? `max-h-[450px]` : `max-h-[calc(100vh-310px)]`;
   };
+
+  const hasParams = searchParams
+    ? Array.from(searchParams.entries()).length > 0
+    : false;
 
   return (
     <div ref={refMainDiv}>
@@ -230,42 +166,36 @@ const UsersList = ({
           <div className="mt-4">
             <ErrorFetching message={error.message} />
           </div>
+        ) : isLoading || !isDataLoaded ? (
+          <TableSkeleton
+            rows={5}
+            cols={widthMainDiv <= 768 ? 2 : 5}
+            checkbox={true}
+            dots={true}
+            width="w-full md:w-1/2"
+          />
         ) : (
-          <>
-            {isLoading || !isDataLoaded ? (
-              <TableSkeleton
-                rows={5}
-                cols={widthMainDiv <= 768 ? 2 : 5}
-                checkbox={true}
-                dots={true}
-                width="w-full md:w-1/2"
-              />
-            ) : (
-              <DataTable
-                columns={columns}
-                data={data}
-                pagination={pagination}
-                setPagination={setPagination}
-                totalPages={totalPages}
-                search={searchParam}
-                fetchData={fetchData}
-                sortBy={sortBy}
-                sortOrder={sortOrder}
-                onSortChange={handleSortChange} // Pass the sort change function
-                isColumnSelected={selected}
-                clearSelected={clearSelected} //clear the checkboxes
-                onClearSelected={() => setClearSelected(false)} //change the status
-                paramsUrl={{ hasParams, removeAllParamsFromUrl }}
-                messageNoRecord={
-                  hasParams
-                    ? "We have not found any results for your search."
-                    : ""
-                }
-                scrollBody={maxHeightScrollTable()}
-                displayText={displayText}
-              />
-            )}
-          </>
+          <DataTable
+            columns={columns}
+            data={data}
+            pagination={pagination}
+            setPagination={setPagination}
+            totalPages={totalPages}
+            search={searchParam}
+            fetchData={fetchData}
+            sortBy={sortBy}
+            sortOrder={sortOrder}
+            onSortChange={handleSortChange}
+            isColumnSelected={selected}
+            clearSelected={clearSelected}
+            onClearSelected={() => setClearSelected(false)}
+            paramsUrl={{ hasParams, removeAllParamsFromUrl }}
+            messageNoRecord={
+              hasParams ? "We have not found any results for your search." : ""
+            }
+            scrollBody={maxHeightScrollTable()}
+            displayText={displayText}
+          />
         )}
       </div>
     </div>

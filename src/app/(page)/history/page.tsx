@@ -123,7 +123,7 @@ const Home = () => {
   // Calculation of the displayed records and the range
   const currentPage = pagination.pageIndex + 1; // the current page (1-indexed)
   const perPage = pagination.pageSize; // elements per page
-  const total = dataTickets?.meta.pagination.count || 0; // total records
+  const total = dataTickets?.meta.pagination.total || 0; // total records
 
   // We calculate the range of records being displayed
   const startRecord = (currentPage - 1) * perPage + 1;
