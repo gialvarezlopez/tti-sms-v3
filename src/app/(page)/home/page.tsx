@@ -157,7 +157,7 @@ const Home = () => {
   // Cálculo de los registros mostrados y el rango
   const currentPage = pagination.pageIndex + 1; // la página actual (1-indexed)
   const perPage = pagination.pageSize; // elementos por página
-  const total = dataTickets?.meta.pagination.count || 0; // total de registros
+  const total = dataTickets?.meta.pagination.total || 0; // total de registros
 
   // Calculamos el rango de registros que se están mostrando
   const startRecord = (currentPage - 1) * perPage + 1;

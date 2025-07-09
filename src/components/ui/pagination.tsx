@@ -34,7 +34,7 @@ const PaginationItem = React.forwardRef<
     className={cn(
       active
         ? "rounded-md cursor-text page-active-datable bg-[#DC2F2F] text-white hover:bg-[#DC2F2F]"
-        : "cursor-pointer ",
+        : "cursor-pointer bg-gray-200 rounded-md",
       className
     )}
     {...props}

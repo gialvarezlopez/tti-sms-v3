@@ -35,16 +35,17 @@ import { SETTINGS_PARAMETER_URL } from "@/lib/constants";
 type Props = {
   usersSelected: UserProps[];
   branchesSelected: BranchProps[];
+  limitByDefault: number;
 };
 
-const Filter = ({ usersSelected, branchesSelected }: Props) => {
+const Filter = ({ usersSelected, branchesSelected, limitByDefault }: Props) => {
   const router = useRouter();
   const searchParams = useSearchParams();
 
   const type = searchParams ? searchParams.get("type") : null;
-  const limitByDefault =
-    type === SETTINGS_PARAMETER_URL.USERS || type === null ? 25 : 10;
 
+  //const limitByDefault = type === SETTINGS_PARAMETER_URL.BRANCH ? 10 : 25;
+  console.log("limitByDefault", limitByDefault);
   const [limit, setLimit] = useState(limitByDefault.toString());
 
   const { setUsers } = useUsersStore();
@@ -132,6 +133,14 @@ const Filter = ({ usersSelected, branchesSelected }: Props) => {
     }
   }, [searchParams, setValue]);
 
+  useEffect(() => {
+    const limitAsString = limitByDefault.toString();
+
+    if (limit !== limitAsString) {
+      setLimit(limitAsString);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [limitByDefault]);
   return (
     <>
       <div className="flex flex-col md:flex-row justify-between items-start gap-6 relative">

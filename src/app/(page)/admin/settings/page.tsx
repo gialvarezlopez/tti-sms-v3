@@ -20,6 +20,13 @@ const Setting = () => {
   const [branchesSelected, setBranchesSelected] = useState<BranchProps[]>([]);
 
   const type = searchParams ? searchParams.get("type") : null;
+  const limit = searchParams ? searchParams.get("limit") : null;
+
+  let limitByDefault = type === SETTINGS_PARAMETER_URL.BRANCH ? 10 : 25;
+  if (limit && limit !== null) {
+    limitByDefault = +limit;
+  }
+  //const limitByDefault = type === SETTINGS_PARAMETER_URL.BRANCH ? 10 : 25;
 
   return (
     <div>
@@ -31,6 +38,7 @@ const Setting = () => {
           <Filter
             usersSelected={usersSelected}
             branchesSelected={branchesSelected}
+            limitByDefault={limitByDefault}
           />
         </p>
         {type === SETTINGS_PARAMETER_URL.BRANCH ? (
@@ -38,12 +46,14 @@ const Setting = () => {
             setBranchesSelected={setBranchesSelected}
             clearRowsSelected={clearRowsSelected}
             setClearRowsSelected={setClearRowsSelected}
+            limitByDefault={limitByDefault}
           />
         ) : (
           <UsersList
             setUsersSelected={setUsersSelected}
             clearRowsSelected={clearRowsSelected}
             setClearRowsSelected={setClearRowsSelected}
+            limitByDefault={limitByDefault}
           />
         )}
       </div>
