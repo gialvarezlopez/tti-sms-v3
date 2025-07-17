@@ -168,9 +168,20 @@ const FormBuildMessage = ({
     if (isFromModal) {
       //Its two way
       if (template?.isTwoWay) {
+        /*
         const formData = {
           content: removeBrackets(removeHtmlTags(data.content ?? "")),
         };
+        */
+        console.log(data);
+        const formData = {
+          client: data.client ?? "",
+          service_order: data.client ?? "",
+          recipient: data.recipient_number ?? "",
+          content: ticket?.lastSentMessage?.content ?? "",
+        };
+        //console.log(formData);
+        //return false; //--------------------------------------------------------------------------------------x
         resendReminder(formData, {
           onSuccess() {
             if (onClose) onClose();
@@ -304,10 +315,7 @@ const FormBuildMessage = ({
                 }`}
                 variant={"destructive"}
                 disabled={
-                  (watch("content") === "" ||
-                    isSendingReminder ||
-                    isSendingMessage) &&
-                  template?.isTwoWay
+                  (isSendingReminder || isSendingMessage) && template?.isTwoWay
                 }
                 isLoading={isSendingReminder || isSendingMessage}
               >

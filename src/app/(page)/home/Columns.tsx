@@ -199,6 +199,7 @@ const Cell = ({ row }: { row: TicketsProps }) => {
       <DropdownMenuContent align="end">
         <PreviewCell ticket={template} setIsOpenDropdown={setIsOpenDropdown} />
 
+        {/* one way tickets */}
         {!template?.template?.isTwoWay && (
           <ResendMessageCell
             template={template}
@@ -206,14 +207,14 @@ const Cell = ({ row }: { row: TicketsProps }) => {
           />
         )}
 
-        {/*template?.template?.isTwoWay &&
+        {/* New, two way tickets */}
+        {template?.template?.isTwoWay &&
           convertToSnakeCase(template.status) !== TICKETS_STATUS.CLOSED && (
             <ResendMessageCell
               template={template}
               setIsOpenDropdown={setIsOpenDropdown}
             />
-          )
-            */}
+          )}
 
         {convertToSnakeCase(template.status) === TICKETS_STATUS.IN_PROGRESS &&
           template?.template?.isTwoWay && (

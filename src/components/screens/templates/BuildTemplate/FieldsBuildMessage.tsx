@@ -141,7 +141,8 @@ const FieldsResendMessage = ({
   const dataContent =
     isFromModal && template
       ? template.isTwoWay
-        ? template?.content
+        ? //? template?.content
+          ticket?.lastSentMessage?.content
         : typeOperation !== "resend-reminder"
         ? lastMessageContent //Its resend message, no data edit
         : template?.content //Its resend reminder show the template data to fill out the information
