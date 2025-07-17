@@ -13,7 +13,7 @@ import Image from "next/image";
 import { Separator } from "@/components/ui/separator";
 import { TicketsProps } from "@/types/types";
 import Features from "./Features";
-import { MESSAGE_EXCHANGE } from "@/lib/constants";
+import { MESSAGE_EXCHANGE, TICKETS_STATUS } from "@/lib/constants";
 import { generateSlug, templateType } from "@/lib/utils/utils";
 
 type Props = {
@@ -80,6 +80,21 @@ const ModalPreviewTicket = ({
                   >
                     Cancel
                   </Button>
+
+                  {/* This button is available only for two way tickets and the status !== 'closed' */}
+                  {ticket.template?.isTwoWay &&
+                    ticket.status !== TICKETS_STATUS.CLOSED && (
+                      <Button
+                        type="submit"
+                        className="bg-customRed-v3 w-full md:w-[33%]"
+                        variant={"destructive"}
+                        onClick={() => handleResendMessage("message")}
+                      >
+                        Resend Message
+                      </Button>
+                    )}
+                  {/* end validation */}
+
                   <Button
                     type="submit"
                     className="bg-customRed-v3 w-full md:w-[33%]"
