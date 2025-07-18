@@ -113,6 +113,7 @@ export type TicketsProps = FormReviewMessagePropsWithoutKeywordsAndResponses & {
   closed?: string;
   createdAt?: string;
   service_order?: string;
+  type?: string;
 };
 
 export type MessageProps = {

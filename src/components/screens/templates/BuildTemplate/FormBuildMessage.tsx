@@ -162,31 +162,55 @@ const FormBuildMessage = ({
     },
   });
 
+  function stripHtmlKeepNewlines(input: string): string {
+    return input
+      .replace(/<[^>]+>/g, "") // Quita todas las etiquetas HTML
+      .trim();
+  }
+
   const { setValue, watch, trigger } = form;
 
   function onSubmit(data: z.infer<typeof FormSchema>) {
     if (isFromModal) {
       //Its two way
-      if (template?.isTwoWay) {
-        /*
-        const formData = {
-          content: removeBrackets(removeHtmlTags(data.content ?? "")),
+      if (ticket?.type === "twoway") {
+        //resend-reminder
+        let formData = {
+          client: "",
+          service_order: "",
+          recipient: "",
+          content: "",
         };
-        */
-        console.log(data);
-        const formData = {
-          client: data.client ?? "",
-          service_order: data.client ?? "",
-          recipient: data.recipient_number ?? "",
-          content: ticket?.lastSentMessage?.content ?? "",
-        };
-        //console.log(formData);
-        //return false; //--------------------------------------------------------------------------------------x
-        resendReminder(formData, {
-          onSuccess() {
-            if (onClose) onClose();
-          },
-        });
+        if (typeOperation === "resend-reminder") {
+          //console.log(data);
+          const plainText = stripHtmlKeepNewlines(data?.content ?? "");
+          formData = {
+            client: data.client ?? "",
+            service_order: data.client ?? "",
+            recipient: data.recipient_number ?? "",
+            content: plainText,
+          };
+
+          resendReminder(formData, {
+            onSuccess() {
+              if (onClose) onClose();
+            },
+          });
+        } else {
+          //console.log(data);
+          formData = {
+            client: data.client ?? "",
+            service_order: data.client ?? "",
+            recipient: data.recipient_number ?? "",
+            content: ticket?.lastSentMessage?.content ?? "",
+          };
+
+          resendMessage(formData, {
+            onSuccess() {
+              if (onClose) onClose();
+            },
+          });
+        }
       } else {
         //Its one way
         const messageId = (ticket?.messages?.at(-1)?.id ??
@@ -263,7 +287,6 @@ const FormBuildMessage = ({
 
         <Separator className="my-3" />
       </div>
-
       <Form {...form}>
         <form onSubmit={form.handleSubmit(onSubmit)} className="w-full">
           <div className="h-full flex flex-col pb-5">
@@ -314,12 +337,12 @@ const FormBuildMessage = ({
                   isFromModal ? "w-full md:w-[33%]" : "px-8"
                 }`}
                 variant={"destructive"}
-                disabled={
-                  (isSendingReminder || isSendingMessage) && template?.isTwoWay
-                }
+                disabled={isSendingMessage && template?.isTwoWay}
                 isLoading={isSendingReminder || isSendingMessage}
               >
-                {isSendingReminder ? "Sending..." : "Submit"}
+                {isSendingReminder || isSendingMessage
+                  ? "Sending..."
+                  : "Submit"}
               </Button>
             </div>
           </div>
