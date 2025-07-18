@@ -207,7 +207,7 @@ const Cell = ({ row }: { row: TicketsProps }) => {
           />
         )}
 
-        {/* New, two way tickets */}
+        {/* New, two-way tickets */}
         {template?.template?.isTwoWay &&
           convertToSnakeCase(template.status) !== TICKETS_STATUS.CLOSED && (
             <ResendMessageCell
