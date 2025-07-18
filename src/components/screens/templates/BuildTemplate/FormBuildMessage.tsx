@@ -123,6 +123,74 @@ const FormBuildMessage = ({
     content: "",
   });
 
+  const KeywordSchema = z
+    .object({
+      keyword: z.string().min(1, "Keyword is required"),
+      value: z.string(),
+      value_copy: z.string().min(1, "Value is required"),
+      type: z.string().min(1, "Type is required"),
+    })
+    .superRefine((keyword, ctx) => {
+      const { value_copy, type } = keyword;
+
+      if (!value_copy || value_copy.trim() === "") {
+        ctx.addIssue({
+          code: z.ZodIssueCode.custom,
+          message: "Value is required",
+          path: ["value_copy"],
+        });
+      }
+
+      switch (type) {
+        case "currency":
+          if (!/^\d+(\.\d{1,2})?$/.test(value_copy)) {
+            ctx.addIssue({
+              code: z.ZodIssueCode.custom,
+              message: "Currency must be a valid number (e.g., 12.34)",
+              path: ["value_copy"],
+            });
+          }
+          break;
+
+        case "number":
+          if (!/^\d+$/.test(value_copy)) {
+            ctx.addIssue({
+              code: z.ZodIssueCode.custom,
+              message: "Number must be an integer",
+              path: ["value_copy"],
+            });
+          }
+          break;
+
+        case "date":
+          if (
+            !/^(0[1-9]|1[0-2])\/(0[1-9]|[12][0-9]|3[01])\/\d{4}$/.test(
+              value_copy
+            )
+          ) {
+            ctx.addIssue({
+              code: z.ZodIssueCode.custom,
+              message: "Date must be in MM/DD/YYYY format",
+              path: ["value_copy"],
+            });
+          }
+          break;
+
+        case "string":
+        case "text":
+          // No extra validation
+          break;
+
+        default:
+          ctx.addIssue({
+            code: z.ZodIssueCode.custom,
+            message: "Invalid keyword type",
+            path: ["type"],
+          });
+          break;
+      }
+    });
+
   const FormSchema = z.object({
     client: z.string().optional(),
     service_order: z.string().min(1, "Enter the service order"),
@@ -133,10 +201,13 @@ const FormBuildMessage = ({
       })
       .min(1, { message: "Phone number is required" }),
     content: z.string().optional(),
+    keywords: z.array(KeywordSchema),
+    /*
     keywords: z.array(KeywordSchema).superRefine((keywords, ctx) => {
       // If there is at least one keyword, all must be valid
       if (keywords.length > 0) {
         keywords.forEach((keyword, index) => {
+          console.log(keyword.keyword + " - " + keyword.value);
           if (!keyword.keyword || !keyword.value) {
             ctx.addIssue({
               code: z.ZodIssueCode.custom,
@@ -147,6 +218,8 @@ const FormBuildMessage = ({
         });
       }
     }),
+    */
+
     responses: z.array(ResponseSchema).optional(),
   });
 
@@ -173,6 +246,7 @@ const FormBuildMessage = ({
   function onSubmit(data: z.infer<typeof FormSchema>) {
     if (isFromModal) {
       //Its two way
+      //console.log("ticket?.messages", ticket?.messages);
       if (ticket?.type === "twoway") {
         //resend-reminder
         let formData = {
@@ -190,7 +264,8 @@ const FormBuildMessage = ({
             recipient: data.recipient_number ?? "",
             content: plainText,
           };
-
+          //console.log(formData);
+          //return false;
           resendReminder(formData, {
             onSuccess() {
               if (onClose) onClose();
@@ -202,9 +277,12 @@ const FormBuildMessage = ({
             client: data.client ?? "",
             service_order: data.client ?? "",
             recipient: data.recipient_number ?? "",
-            content: ticket?.lastSentMessage?.content ?? "",
+            //content: ticket?.lastSentMessage?.content ?? "",
+            content: (ticket?.messages ?? [])[0]?.content ?? "",
           };
 
+          //console.log(formData);
+          //return false;
           resendMessage(formData, {
             onSuccess() {
               if (onClose) onClose();
@@ -220,9 +298,11 @@ const FormBuildMessage = ({
           client: data.client ?? "",
           service_order: data.client ?? "",
           recipient: data.recipient_number ?? "",
-          content: ticket?.messages?.at(-1)?.content ?? "",
+          //content: ticket?.messages?.at(-1)?.content ?? "",
+          content: (ticket?.messages ?? [])[0]?.content ?? "",
         };
-
+        //console.log(payload);
+        //return false;
         resendMessage(payload, {
           onSuccess() {
             if (onClose) onClose();
