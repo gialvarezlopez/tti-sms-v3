@@ -19,7 +19,7 @@ export type UserProps = {
 };
 
 export type ResetPassword = {
-  newPassword: string;
+  password: string;
 };
 
 export type LoginProps = {
