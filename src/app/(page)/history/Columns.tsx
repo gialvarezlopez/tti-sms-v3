@@ -215,6 +215,24 @@ const useColumns = () => {
       },
     },
     {
+      accessorKey: "createdBy",
+      id: "createdBy.name",
+      header: () => {
+        return (
+          <Button variant="ghost" className="px-0">
+            Created By
+          </Button>
+        );
+      },
+      cell: ({ row }) => {
+        return (
+          <span className="text-nowrap">
+            {row.original.createdBy?.name ?? ""}
+          </span>
+        );
+      },
+    },
+    {
       accessorKey: "closedBy",
       id: "user.name",
       header: () => {
@@ -246,6 +264,29 @@ const useColumns = () => {
         return (
           <>
             <div>{row.original.closedBy?.closedReason ?? ""}</div>
+          </>
+        );
+      },
+    },
+    {
+      accessorKey: "reason",
+      id: "closedBy.closedReason",
+      header: () => {
+        return (
+          <Button variant="ghost" className="px-0">
+            Customer Response
+          </Button>
+        );
+      },
+      cell: ({ row }) => {
+        // Filtrar el último mensaje del usuario
+        const lastUserMessage = row.original.messages
+          ?.filter((msg: any) => msg.sentByType === "user")
+          .pop();
+
+        return (
+          <>
+            <div>{lastUserMessage?.content ?? ""}</div>
           </>
         );
       },
