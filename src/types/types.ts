@@ -92,6 +92,13 @@ export type ClosedByUserProps = {
   user?: UserProps;
 };
 
+export type CreatedByUserProps = {
+  id?: string;
+  name: string;
+  email: string;
+  closedAt?: string;
+};
+
 export type TicketsProps = FormReviewMessagePropsWithoutKeywordsAndResponses & {
   id?: string | number;
   branch?: BranchProps;
@@ -109,6 +116,7 @@ export type TicketsProps = FormReviewMessagePropsWithoutKeywordsAndResponses & {
   errorMessage?: string;
   chat: ChatMessage[];
   reason?: string;
+  createdBy?: CreatedByUserProps;
   closedBy?: ClosedByUserProps;
   closed?: string;
   createdAt?: string;

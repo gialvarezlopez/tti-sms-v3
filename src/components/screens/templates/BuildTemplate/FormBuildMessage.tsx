@@ -32,63 +32,6 @@ type Props = {
   typeOperation?: string;
 };
 
-const KeywordSchema = z
-  .object({
-    keyword: z.string().min(1, "Keyword is required"),
-    value: z.string().min(1, "Value is required"),
-    type: z.string().min(1, "Type is required"),
-  })
-  .superRefine((keyword, ctx) => {
-    switch (keyword.type) {
-      case "string":
-      case "text":
-        break;
-
-      case "currency":
-        if (!/^\d+(\.\d{1,2})?$/.test(keyword.value)) {
-          ctx.addIssue({
-            code: z.ZodIssueCode.custom,
-            message: "Currency must be a number (integer or float)",
-            path: ["value"],
-          });
-        }
-        break;
-
-      case "number":
-        if (!/^\d+$/.test(keyword.value)) {
-          ctx.addIssue({
-            code: z.ZodIssueCode.custom,
-            message: "Number must be an integer",
-            path: ["value"],
-          });
-        }
-        break;
-
-      case "date":
-        if (
-          !/^(0[1-9]|1[0-2])\/(0[1-9]|[12][0-9]|3[01])\/\d{4}$/.test(
-            keyword.value
-          )
-        ) {
-          ctx.addIssue({
-            code: z.ZodIssueCode.custom,
-            message: "Date must be in the format MM/DD/YYYY",
-            path: ["value"],
-          });
-        }
-        break;
-
-      default:
-        // Unrecognized type
-        ctx.addIssue({
-          code: z.ZodIssueCode.custom,
-          message: "Invalid type",
-          path: ["type"],
-        });
-        break;
-    }
-  });
-
 const ResponseSchema = z.object({
   response: z.string().optional(),
   reply: z.string().optional(),
@@ -202,23 +145,6 @@ const FormBuildMessage = ({
       .min(1, { message: "Phone number is required" }),
     content: z.string().optional(),
     keywords: z.array(KeywordSchema),
-    /*
-    keywords: z.array(KeywordSchema).superRefine((keywords, ctx) => {
-      // If there is at least one keyword, all must be valid
-      if (keywords.length > 0) {
-        keywords.forEach((keyword, index) => {
-          console.log(keyword.keyword + " - " + keyword.value);
-          if (!keyword.keyword || !keyword.value) {
-            ctx.addIssue({
-              code: z.ZodIssueCode.custom,
-              message: "All keyword fields are required",
-              path: ["keywords", index],
-            });
-          }
-        });
-      }
-    }),
-    */
 
     responses: z.array(ResponseSchema).optional(),
   });
@@ -241,7 +167,12 @@ const FormBuildMessage = ({
       .trim();
   }
 
-  const { setValue, watch, trigger } = form;
+  const {
+    setValue,
+    watch,
+    trigger,
+    formState: { errors },
+  } = form;
 
   function onSubmit(data: z.infer<typeof FormSchema>) {
     if (isFromModal) {

@@ -127,7 +127,7 @@ const Items = ({ dataStats }: Props) => {
         onClick={() => toggleStatus("to_be_overdue")}
       >
         <CardProcess
-          title={statusKeys.to_be_overdue}
+          title={`${statusKeys.to_be_overdue}\u00A0\u00A0 (> 30 Days)`}
           footer={getNumber(+dataStats?.toBeOverdue)}
           icon={IconOverdue}
           setClass={""}

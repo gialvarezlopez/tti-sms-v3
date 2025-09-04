@@ -297,7 +297,7 @@ const FieldsResendMessage = ({
               {(item as Keyword).type === "date" ? (
                 <FormField
                   control={control}
-                  name={`keywords[${index}].value`}
+                  name={`keywords[${index}].value_copy`}
                   render={({ field }) => (
                     <FormItem className="flex flex-col mt-[10px] w-full">
                       <FormLabel>{(item as Keyword).keyword}</FormLabel>
