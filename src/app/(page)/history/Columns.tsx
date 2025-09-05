@@ -166,6 +166,106 @@ const useColumns = () => {
         ]
       : []),
     {
+      accessorKey: "closed",
+      id: "closedBy.closedAt",
+      header: () => {
+        return (
+          <Button variant="ghost" className="px-0">
+            Closed
+          </Button>
+        );
+      },
+      cell: ({ row }) => {
+        return (
+          <span className="text-nowrap">
+            {formatDate(row.original.closedBy?.closedAt ?? "") ?? "Undefined"}
+          </span>
+        );
+      },
+    },
+
+    {
+      accessorKey: "reason",
+      id: "closedBy.closedReason",
+      header: () => {
+        return (
+          <Button variant="ghost" className="px-0">
+            Reason
+          </Button>
+        );
+      },
+      cell: ({ row }) => {
+        return (
+          <>
+            <div>{row.original.closedBy?.closedReason ?? ""}</div>
+          </>
+        );
+      },
+    },
+
+    {
+      accessorKey: "reason",
+      id: "closedBy.closedReason",
+      header: () => {
+        return (
+          <Button variant="ghost" className="px-0">
+            Customer Response
+          </Button>
+        );
+      },
+      cell: ({ row }) => {
+        // Filtrar el último mensaje del usuario
+        const lastUserMessage = row.original.messages
+          ?.filter((msg: any) => msg.sentByType === "user")
+          .pop();
+
+        return (
+          <>
+            <div>{lastUserMessage?.content ?? ""}</div>
+          </>
+        );
+      },
+    },
+
+    {
+      accessorKey: "closedBy",
+      id: "user.name",
+      header: () => {
+        return (
+          <Button variant="ghost" className="px-0">
+            Closed By
+          </Button>
+        );
+      },
+      cell: ({ row }) => {
+        return (
+          <span className="text-nowrap">
+            {row.original.closedBy?.user?.name ?? ""}
+          </span>
+        );
+      },
+    },
+
+    {
+      accessorKey: "createdBy",
+      id: "createdBy.name",
+      header: () => {
+        return (
+          <Button variant="ghost" className="px-0">
+            Created By
+          </Button>
+        );
+      },
+      cell: ({ row }) => {
+        return (
+          <span className="text-nowrap">
+            {row.original.createdBy?.name ?? ""}
+          </span>
+        );
+      },
+    },
+
+    {
       accessorKey: "typeOfMessage",
       id: "template.isTwoWay",
       header: () => {
@@ -194,101 +294,6 @@ const useColumns = () => {
       },
       cell: ({ row }) => {
         return <span>{row.original.template?.name ?? "Undefined"}</span>;
-      },
-    },
-    {
-      accessorKey: "closed",
-      id: "closedBy.closedAt",
-      header: () => {
-        return (
-          <Button variant="ghost" className="px-0">
-            Closed
-          </Button>
-        );
-      },
-      cell: ({ row }) => {
-        return (
-          <span className="text-nowrap">
-            {formatDate(row.original.closedBy?.closedAt ?? "") ?? "Undefined"}
-          </span>
-        );
-      },
-    },
-    {
-      accessorKey: "createdBy",
-      id: "createdBy.name",
-      header: () => {
-        return (
-          <Button variant="ghost" className="px-0">
-            Created By
-          </Button>
-        );
-      },
-      cell: ({ row }) => {
-        return (
-          <span className="text-nowrap">
-            {row.original.createdBy?.name ?? ""}
-          </span>
-        );
-      },
-    },
-    {
-      accessorKey: "closedBy",
-      id: "user.name",
-      header: () => {
-        return (
-          <Button variant="ghost" className="px-0">
-            Closed By
-          </Button>
-        );
-      },
-      cell: ({ row }) => {
-        return (
-          <span className="text-nowrap">
-            {row.original.closedBy?.user?.name ?? ""}
-          </span>
-        );
-      },
-    },
-    {
-      accessorKey: "reason",
-      id: "closedBy.closedReason",
-      header: () => {
-        return (
-          <Button variant="ghost" className="px-0">
-            Reason
-          </Button>
-        );
-      },
-      cell: ({ row }) => {
-        return (
-          <>
-            <div>{row.original.closedBy?.closedReason ?? ""}</div>
-          </>
-        );
-      },
-    },
-    {
-      accessorKey: "reason",
-      id: "closedBy.closedReason",
-      header: () => {
-        return (
-          <Button variant="ghost" className="px-0">
-            Customer Response
-          </Button>
-        );
-      },
-      cell: ({ row }) => {
-        // Filtrar el último mensaje del usuario
-        const lastUserMessage = row.original.messages
-          ?.filter((msg: any) => msg.sentByType === "user")
-          .pop();
-
-        return (
-          <>
-            <div>{lastUserMessage?.content ?? ""}</div>
-          </>
-        );
       },
     },
   ];
